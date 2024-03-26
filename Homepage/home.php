@@ -17,8 +17,8 @@
         </div> 
         <div class="top" id="heading">
             <h1>Skill Match</h1>
-            <a href="client_login.php" class="btn btn-light" role="button">Client Login</a>
-            <a href="professional_login.php" class="btn btn-light" role="button">Student/Professional Login</a>
+            <a href="../login/login_client.php" class="btn btn-light" role="button">Client Login</a>
+            <a href="../login/login_user.php" class="btn btn-light" role="button">Student/Professional Login</a>
         </div>
     </div>
 
