@@ -1,4 +1,5 @@
 <?php
+include("../connect.php");
 session_start();
 $message = "";
 
@@ -196,8 +197,19 @@ if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["user
                         <div class="message text-danger"><?php echo $message; ?></div>
                     </div>
                     <div class="card-footer">
-                        <p>Already have an account? <a href="../login/login.php">Login here</a></p>
+                        <?php
+                        if (isset($_POST["user_type"]) && $_POST["user_type"] === 'client') {
+                            echo '<p>Already have an account? <a href="../login/login_client.php">Login here</a></p>';
+                        } else if (isset($_POST["user_type"]) && $_POST["user_type"] === 'professional') {
+                            echo '<p>Already have an account? <a href="../login/login_user.php">Login here</a></p>';
+                        } else {
+                            echo '<p>Already have an account? <a href="../login/login.php">Login here</a></p>';
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
-        </div
+        </div>
+    </div>
+</body>
+</html>
