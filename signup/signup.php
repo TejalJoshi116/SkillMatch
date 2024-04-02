@@ -1,5 +1,6 @@
 <?php
-include("../connect.php");
+include("../connect.php"); // Assuming this file includes your database connection
+
 session_start();
 $message = "";
 
@@ -11,15 +12,22 @@ if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["user
     $user_type = mysqli_real_escape_string($con, $_POST["user_type"]);
     $hash = hash('sha256', $password);
 
-    // Check if the username is already taken
-    $check_username_query = "SELECT * FROM users WHERE username='$username'";
+    // Check if the username is already taken in user_auth or client_auth tables
+    $check_username_query = "SELECT * FROM user_auth WHERE username='$username' UNION SELECT * FROM client_auth WHERE username='$username'";
     $check_username_result = mysqli_query($con, $check_username_query);
     if (mysqli_num_rows($check_username_result) > 0) {
         $message = "Username already exists. Please choose a different username.";
     } else {
-        // Insert new user into the database
-        $insert_query = "INSERT INTO users (username, password_hash, user_type) VALUES ('$username', '$hash', '$user_type')";
-        if (mysqli_query($con, $insert_query)) {
+        // Insert new user into the appropriate authentication table based on user_type
+        if ($user_type === 'user') {
+            $insert_query = "INSERT INTO user_auth (username, password_hash) VALUES ('$username', '$hash')";
+        } elseif ($user_type === 'client') {
+            $insert_query = "INSERT INTO client_auth (username, password_hash) VALUES ('$username', '$hash')";
+        } else {
+            $message = "Invalid user type.";
+        }
+
+        if (isset($insert_query) && mysqli_query($con, $insert_query)) {
             $message = "Registration successful. You can now login.";
         } else {
             $message = "Error: " . mysqli_error($con);
@@ -29,6 +37,7 @@ if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["user
     mysqli_close($con);
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -199,11 +208,14 @@ if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["user
                     <div class="card-footer">
                         <?php
                         if (isset($_POST["user_type"]) && $_POST["user_type"] === 'client') {
-                            echo '<p>Already have an account? <a href="../login/login_client.php">Login here</a></p>';
+                            echo '<p>Already have an account? <a href="../login/login_user.php">Login here</a></p>';
                         } else if (isset($_POST["user_type"]) && $_POST["user_type"] === 'professional') {
                             echo '<p>Already have an account? <a href="../login/login_user.php">Login here</a></p>';
                         } else {
-                            echo '<p>Already have an account? <a href="../login/login.php">Login here</a></p>';
+
+                            // +++ ADD A ERROR MSG HERE TELLING THEM TO SELECT A USERTYPE
+
+                            echo '<p>Already have an account? <a href="../login/login_user.php">Login here</a></p>';
                         }
                         ?>
                     </div>

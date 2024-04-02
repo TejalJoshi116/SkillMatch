@@ -1,43 +1,43 @@
 <?php
+include("../connect.php"); // Include your database connection file
 session_start();
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $con = mysqli_connect('localhost', 'root', '', 'skillmatch') or die('Unable To connect');
 
-    $username = mysqli_real_escape_string($con, $_POST["user_name"]);
-    $email = mysqli_real_escape_string($con, $_POST["email"]);
+    $username = mysqli_real_escape_string($con, $_POST["username"]);
     $password = mysqli_real_escape_string($con, $_POST["password"]);
     $hash = hash('sha256', $password);
-    $user_type = 'user'; // Assuming default user type is 'user'
 
-    // Check if username or email already exists
-    $check_query = "SELECT * FROM users WHERE username='$username' OR email='$email'";
-    $check_result = mysqli_query($con, $check_query);
+    // Check if the username and password match in user_auth table
+    $login_query = "SELECT * FROM user_auth WHERE username='$username' AND password_hash='$hash'";
+    $login_result = mysqli_query($con, $login_query);
 
-    if (mysqli_num_rows($check_result) > 0) {
-        $message = "Username or Email already exists!";
+    if (mysqli_num_rows($login_result) == 1) {
+        // Login successful, fetch user ID
+        $row = mysqli_fetch_assoc($login_result);
+        $user_id = $row['user_id'];
+
+        // Store user ID in session for future use
+        $_SESSION['user_id'] = $user_id;
+
+        // Redirect to dashboard or any other page
+        header("Location: ../user/user_home.php");
+        exit();
     } else {
-        // Insert new user into users table
-        $insert_query = "INSERT INTO users (username, email, password_hash, user_type) VALUES ('$username', '$email', '$hash', '$user_type')";
-        if (mysqli_query($con, $insert_query)) {
-            // Get the newly inserted user's ID
-            $user_id = mysqli_insert_id($con);
-
-            // Optionally, you can redirect the user to a login page after successful registration
-            header("Location: ../login/login.php");
-            exit();
-        } else {
-            $message = "Error registering user. Please try again later.";
-        }
+        $message = "Invalid username or password. Please try again.";
     }
 
     mysqli_close($con);
 }
 
 if (isset($_SESSION["user_id"])) {
-    header("Location: ../dashboard.php"); // Redirect to dashboard if already logged in
+    $message = "Already Logged in, redirecting to User Dashboard";
+
+    header("Location:  ../user/user_home.php"); // Redirect to dashboard if already logged in
     exit();
+    mysqli_close($con);
 }
 ?>
 
@@ -47,7 +47,7 @@ if (isset($_SESSION["user_id"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Sign Up</title>
+    <title>User Login</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
@@ -186,7 +186,7 @@ if (isset($_SESSION["user_id"])) {
         <div class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header">
-                    <h3>User Sign Up</h3>
+                    <h3>User Login</h3>
                 </div>
                 <div class="card-body">
                     <form name="frmUser" method="post">
@@ -215,7 +215,7 @@ if (isset($_SESSION["user_id"])) {
                     </form>
                 </div>
                 <div class="card-footer">
-                    <p class="signup-link">Already have an account? <a href="../login/login.php">Login here!</a></p>
+                    <p class="signup-link">New to SkillMatch? <a href="../signup/signup.php">Sign Up here!</a></p>
 
                     <div class="home-redirect">
                         <a href="../Homepage/home.php">Go back to homepage</a>
