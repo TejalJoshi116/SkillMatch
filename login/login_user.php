@@ -1,45 +1,36 @@
 <?php
-include("../connect.php"); // Include your database connection file
 session_start();
-$message = "";
+$message="";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (isset($_POST["username"]) && isset($_POST["password"])) {
+    // echo "here";
     $con = mysqli_connect('localhost', 'root', '', 'skillmatch') or die('Unable To connect');
 
     $username = mysqli_real_escape_string($con, $_POST["username"]);
-    $password = mysqli_real_escape_string($con, $_POST["password"]);
-    $hash = hash('sha256', $password);
+    $pwd = mysqli_real_escape_string($con, $_POST["password"]);
+    $hash = hash('sha256', $pwd);
 
-    // Check if the username and password match in user_auth table
-    $login_query = "SELECT * FROM user_auth WHERE username='$username' AND password_hash='$hash'";
-    $login_result = mysqli_query($con, $login_query);
+    $result = mysqli_query($con, "SELECT * FROM user_auth WHERE username='$username' AND password_hash='$hash'");
+    // if($result){$message = "Got a result";} 
+    $row  = mysqli_fetch_array($result);
+    
+    if (is_array($row)) {
+        $_SESSION["id"] = $row['user_id'];
+        $_SESSION["name"] = $row['username'];
 
-    if (mysqli_num_rows($login_result) == 1) {
-        // Login successful, fetch user ID
-        $row = mysqli_fetch_assoc($login_result);
-        $user_id = $row['user_id'];
-
-        // Store user ID in session for future use
-        $_SESSION['user_id'] = $user_id;
-
-        // Redirect to dashboard or any other page
-        header("Location: ../user/user_home.php");
+        // $message = "entering";
+        header("Location:../user/aboutus.php");
+        // header("Location:test.php");
         exit();
     } else {
-        $message = "Invalid username or password. Please try again.";
+        $message = "Invalid Username or Password!";
     }
-
-    mysqli_close($con);
 }
-
-if (isset($_SESSION["user_id"])) {
-    $message = "Already Logged in, redirecting to User Dashboard";
-
-    header("Location:  ../user/user_home.php"); // Redirect to dashboard if already logged in
-    exit();
-    mysqli_close($con);
+else{
+    // $message = "THIS IS THE ISSUE";
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -146,6 +137,11 @@ if (isset($_SESSION["user_id"])) {
           color: white; /* Set text color to white */
 
      }
+     .client_login-redirect a{
+          color: white; /* Set text color to white */
+
+     }
+
 
      .links a{
      margin-left: 4px;
@@ -191,26 +187,30 @@ if (isset($_SESSION["user_id"])) {
                 <div class="card-body">
                     <form name="frmUser" method="post">
                         <div class="message" style="color: red;"><?php echo $message; ?></div>
+                        
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <input type="text" name="user_name" class="form-control" placeholder="Username" required>
+                            <input type="text" name="username" class="form-control" placeholder="Username" required>
                         </div>
-                        <div class="input-group form-group">
+
+                        <!-- <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                             </div>
                             <input type="email" name="email" class="form-control" placeholder="Email" required>
-                        </div>
+                        </div> -->
+
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-key"></i></span>
                             </div>
                             <input type="password" name="password" class="form-control" placeholder="Password" required>
                         </div>
+
                         <div class="form-group">
-                            <input type="submit" value="Sign Up" class="btn float-right login_btn">
+                            <input type="submit" value="Login" class="btn float-right login_btn">
                         </div>
                     </form>
                 </div>
@@ -218,7 +218,10 @@ if (isset($_SESSION["user_id"])) {
                     <p class="signup-link">New to SkillMatch? <a href="../signup/signup.php">Sign Up here!</a></p>
 
                     <div class="home-redirect">
-                        <a href="../Homepage/home.php">Go back to homepage</a>
+                        <a href="../Homepage/home.php">Homepage</a>
+                    </div>
+                    <div class="client_login-redirect">
+                        <a href="login_client.php">Client Login</a>
                     </div>
                 </div>
             </div>

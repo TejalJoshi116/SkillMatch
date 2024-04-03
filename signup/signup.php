@@ -19,7 +19,7 @@ if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["user
         $message = "Username already exists. Please choose a different username.";
     } else {
         // Insert new user into the appropriate authentication table based on user_type
-        if ($user_type === 'user') {
+        if ($user_type === 'professional') {
             $insert_query = "INSERT INTO user_auth (username, password_hash) VALUES ('$username', '$hash')";
         } elseif ($user_type === 'client') {
             $insert_query = "INSERT INTO client_auth (username, password_hash) VALUES ('$username', '$hash')";
@@ -208,12 +208,12 @@ if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["user
                     <div class="card-footer">
                         <?php
                         if (isset($_POST["user_type"]) && $_POST["user_type"] === 'client') {
-                            echo '<p>Already have an account? <a href="../login/login_user.php">Login here</a></p>';
-                        } else if (isset($_POST["user_type"]) && $_POST["user_type"] === 'professional') {
+                            echo '<p>Already have an account? <a href="../login/login_client.php">Login here</a></p>';
+                        } else if (isset($_POST["user_type"]) && $_POST["user_type"] === 'user') {
                             echo '<p>Already have an account? <a href="../login/login_user.php">Login here</a></p>';
                         } else {
 
-                            // +++ ADD A ERROR MSG HERE TELLING THEM TO SELECT A USERTYPE
+                            // +++ Always goes to else as unless you press register, usertype is not selected
 
                             echo '<p>Already have an account? <a href="../login/login_user.php">Login here</a></p>';
                         }
