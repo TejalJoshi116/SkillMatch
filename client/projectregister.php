@@ -118,11 +118,11 @@ body {
 
 
 <div class="topnav">
-  <a  href="org_dashboard.php">Dashboard</a>
+  <a  href="client_dashboard.php">Dashboard</a>
   <a href="profile.php">Client Profile</a>
   <a class= "active" href="projectregister.php">Add New Project</a>
-  <a href="kyc.php">Know Your Club</a>
-  <a href="schedule.php">Schedule</a>
+  <!--<a href="kyc.php">Know Your Club</a>-->
+  <!--<a href="schedule.php">Schedule</a>-->
   <a href="filterdate.php">Filter Projects by Date</a>
   <a  href="aboutus.php">About The Team</a>
 <?php
@@ -136,7 +136,7 @@ if(isset($_SESSION["id"])) {
     }
     else{
 ?>
-<a href="../login/login_organizer.php">You are not logged in</a>
+<a href="../login/login_client.php">You are not logged in</a>
 <?php
     }
     ?>

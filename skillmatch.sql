@@ -1,36 +1,34 @@
--- Table for storing user authentication information
-CREATE TABLE user_authentication (
+-- Table for storing user authentication data
+CREATE TABLE user_auth (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL
 );
 
--- Table for storing client authentication information
-CREATE TABLE client_authentication (
+-- Table for storing client authentication data
+CREATE TABLE client_auth (
     client_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL
 );
 
--- Table for storing user data
-CREATE TABLE users (
-    user_id INT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    user_type ENUM('client', 'user') NOT NULL,
-    client_id INT, -- Foreign key for clients
-    FOREIGN KEY (client_id) REFERENCES clients(client_id)
-);
-
--- Table for storing client data
+-- Table for storing client information
 CREATE TABLE clients (
     client_id INT PRIMARY KEY,
     company_name VARCHAR(100) NOT NULL,
     contact_name VARCHAR(50),
     contact_email VARCHAR(100),
     contact_phone VARCHAR(20),
-    user_id INT, -- Foreign key for users
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    FOREIGN KEY (client_id) REFERENCES client_auth(client_id)
+);
+
+-- Table for storing user information
+CREATE TABLE users (
+    user_id INT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    user_type ENUM('client', 'user') NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user_auth(user_id)
 );
 
 -- Table for storing skills information
