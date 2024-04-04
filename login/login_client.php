@@ -1,40 +1,36 @@
 <?php
 session_start();
-$message = "";
+$message="";
 
-if (isset($_POST["user_name"]) && isset($_POST["password"])) {
+if (isset($_POST["username"]) && isset($_POST["password"])) {
+    // echo "here";
     $con = mysqli_connect('localhost', 'root', '', 'skillmatch') or die('Unable To connect');
 
-    $username = mysqli_real_escape_string($con, $_POST["user_name"]);
-    $password = mysqli_real_escape_string($con, $_POST["password"]);
-    $hash = hash('sha256', $password);
+    $username = mysqli_real_escape_string($con, $_POST["username"]);
+    $pwd = mysqli_real_escape_string($con, $_POST["password"]);
+    $hash = hash('sha256', $pwd);
 
-    // Modify the SQL query to check if the user is a client
-    $result = mysqli_query($con, "SELECT * FROM users u JOIN clients c ON u.user_id = c.user_id WHERE u.username='" . $username . "' AND u.password_hash = '$hash'");
-    $row = mysqli_fetch_array($result);
-
+    $result = mysqli_query($con, "SELECT * FROM client_auth WHERE username='$username' AND password_hash='$hash'");
+    // if($result){$message = "Got a result";} 
+    $row  = mysqli_fetch_array($result);
+    
     if (is_array($row)) {
-        $_SESSION["user_id"] = $row['user_id'];
-        $_SESSION["username"] = $row['username'];
-        $_SESSION["user_type"] = 'client'; // Set user type explicitly to client
+        $_SESSION["id"] = $row['client_id'];
+        $_SESSION["name"] = $row['username'];
 
-        // Update last login time
-        mysqli_query($con, "UPDATE users SET last_login = CURRENT_TIMESTAMP() WHERE user_id='" . $row['user_id'] . "'");
-
-        header("Location: ../dashboard.php"); // Redirect to dashboard or logged-in page
+        // $message = "entering";
+        header("Location:../client/aboutus.php");
+        // header("Location:test.php");
         exit();
     } else {
         $message = "Invalid Username or Password!";
     }
-
-    mysqli_close($con);
 }
-
-if (isset($_SESSION["user_id"])) {
-    header("Location: ../dashboard.php"); // Redirect to dashboard if already logged in
-    exit();
+else{
+    // $message = "THIS IS THE ISSUE";
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +38,7 @@ if (isset($_SESSION["user_id"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Login Page</title>
+    <title>Client Login Page</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
@@ -142,11 +138,15 @@ background-color: white;
 color: white;
 }
 
-home-redirect a{
+.home-redirect a{
      color: white; /* Set text color to white */
 
 }
 
+.user_login-redirect a{
+     color: white; /* Set text color to white */
+
+}
 
 .links a{
 margin-left: 4px;
@@ -191,17 +191,20 @@ margin-left: 4px;
         <div class="d-flex justify-content-center h-100">
             <div class="card">
                 <div class="card-header">
-                    <h3>Client Sign In</h3> <!-- Change the heading to indicate client sign-in -->
+                    <h3>Client Login</h3> <!-- Change the heading to indicate client sign-in -->
                 </div>
                 <div class="card-body">
+                    <!-- ++++++ DO WE CHNAGE THIS TO CLIENT??? -->
                     <form name="frmUser" method="post">
                         <div class="message" style="color: white;"><?php echo $message; ?></div>
+                        
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <input type="text" name="user_name" class="form-control" placeholder="Username" required>
+                            <input type="text" name="username" class="form-control" placeholder="Username" required>
                         </div>
+
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-key"></i></span>
@@ -209,6 +212,7 @@ margin-left: 4px;
                             <input type="password" name="password" class="form-control" placeholder="Password"
                                 required>
                         </div>
+                        
                         <div class="form-group">
                             <input type="submit" value="Login" class="btn float-right login_btn">
                         </div>
@@ -218,7 +222,10 @@ margin-left: 4px;
                     <p class="signup-link">New to SkillMatch? <a href="../signup/signup.php">Sign Up here!</a></p>
 
                     <div class="home-redirect">
-                         <a href="../Homepage/home.php">Go back to homepage</a>
+                         <a href="../Homepage/home.php">Homepage</a>
+                    </div>
+                    <div class="user_login-redirect">
+                        <a href="login_user.php">User Login</a>
                     </div>
                 </div>
             </
