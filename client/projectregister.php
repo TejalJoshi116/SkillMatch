@@ -118,13 +118,13 @@ body {
 
 
 <div class="topnav">
-  <a  href="client_dashboard.php">Dashboard</a>
+  <a href="client_dashboard.php">Dashboard</a>
   <a href="profile.php">Client Profile</a>
-  <a class= "active" href="projectregister.php">Add New Project</a>
-  <!--<a href="kyc.php">Know Your Club</a>-->
+  <a href="projectregister.php">Add New Project</a>
+  <!--<a href="kyc.php">Know Your Club</a-->
   <!--<a href="schedule.php">Schedule</a>-->
-  <a href="filterdate.php">Filter Projects by Date</a>
-  <a  href="aboutus.php">About The Team</a>
+  <a href="filterdate.php">Filter Project by Date</a>
+  <a class="active" href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
   ?>
@@ -160,44 +160,44 @@ if(isset($_SESSION["id"])) {
             </tr> <br> <br> 
             <tr>
                 <td>
-                    Project Date : 
+                    Project Upload Date : 
                     <input type= "date" id = "date_" name = "date_" size="20" required/>   
                 </td>   
             </tr> <br> <br> 
             <tr>
                 <td>
-                    Project Start Time : 
-                    <input type= "time" id = "start_time_" name = "start_time_" size="20"/>   
+                    Project Start Date : 
+                    <input type= "date" id = "date_" name = "date_" size="20" required/>    
                 </td>   
             </tr> <br> <br> 
             <tr>
                 <td>
-                    Project End Time : 
-                    <input type= "time" id = "end_time_" name = "end_time_" size="20"/>   
+                    Project End Date : 
+                    <input type= "date" id = "date_" name = "date_" size="20" required/>   
                 </td>   
             </tr> <br> <br> 
             <tr>
                 <td>
                     Project Description : 
-                    <textarea type= "text" id = "desc_" name = "desc_" placeholder="Describe your Project" maxlength="4096" cols="100" rows="5" required></textarea>
+                    <textarea type= "text" id = "desc_" name = "desc_" placeholder="Describe your project" maxlength="4096" cols="100" rows="5" required></textarea>
                 </td>   
             </tr> <br> <br> 
             <tr>
                 <td>
-                    Project Contact(Ph. no) : 
+                    Client Contact(Ph. no) : 
                     <input type= "text" id = "limit_" name = "conp_" placeholder="Phone no." maxlength="4096" size="10" required/>
                 </td>   
             </tr> <br> <br> 
             <tr>
                 <td>
-                    Project Contact(Name) : 
+                    Client Contact(Name) : 
                     <input type= "text" id = "limit_" name = "cone_" placeholder="Name" maxlength="4096" size="60" required/>
                 </td>   
             </tr> <br> <br> 
             <tr>
                 <td>
-                    Project Limit (5000 is default Value for No Limit) : 
-                    <input type= "number" id = "limit_" name = "limit_" placeholder="Max People Allowed" value=5000 maxlength="4096" size="60"/>   
+                    Project Applicants Limit (200 is default Value for No Limit) : 
+                    <input type= "number" id = "limit_" name = "limit_" placeholder="Max People Allowed" value=200 maxlength="4096" size="60"/>   
                 </td>   
             </tr> <br> <br> 
             <tr>
@@ -208,8 +208,8 @@ if(isset($_SESSION["id"])) {
                     <select name ="location_id" id = "location_id" required > 
                     <option disabled selected value> -- select an option -- </option>
                     <?php 
-                        $conn=mysqli_connect('localhost','root','','Project_management_nitc'); 
-                        $result=mysqli_query($conn,'SELECT Location_Id,Location_Name FROM Project_location ORDER BY Location_Name'); 
+                        $conn=mysqli_connect('localhost','root','','skillmatch'); 
+                        $result=mysqli_query($conn,'SELECT Location_Id,Location_Name FROM event_location ORDER BY Location_Name'); 
                         while($row=mysqli_fetch_assoc($result)) {
                             echo "<option value='$row[Location_Id]'>$row[Location_Name]</option>"; 
                         } 
@@ -225,10 +225,10 @@ if(isset($_SESSION["id"])) {
                     <select name ="type_id" id = "type_id" required > 
                     <option disabled selected value> -- select an option -- </option>
                     <?php 
-                        $conn=mysqli_connect('localhost','root','','Project_management_nitc'); 
-                        $result=mysqli_query($conn,'SELECT Project_Type_Id,Project_Type_Name FROM Project_type ORDER BY Project_Type_Name'); 
+                        $conn=mysqli_connect('localhost','root','','skillmatch'); 
+                        $result=mysqli_query($conn,'SELECT Event_Type_Id,Event_Type_Name FROM event_type ORDER BY Event_Type_Name'); 
                         while($row=mysqli_fetch_assoc($result)) {
-                            echo "<option value='$row[Project_Type_Id]'>$row[Project_Type_Name]</option>"; 
+                            echo "<option value='$row[Event_Type_Id]'>$row[Event_Type_Name]</option>"; 
                         } 
                     ?> 
                     </select>
@@ -242,8 +242,8 @@ if(isset($_SESSION["id"])) {
                     <select name ="status_id" id = "status_id" required > 
                     <option disabled selected value> -- select an option -- </option>
                     <?php 
-                        $conn=mysqli_connect('localhost','root','','Project_management_nitc'); 
-                        $result=mysqli_query($conn,'SELECT `Status_Id`,`Status` FROM Project_status ORDER BY Status'); 
+                        $conn=mysqli_connect('localhost','root','','skillmatch'); 
+                        $result=mysqli_query($conn,'SELECT `Status_Id`,`Status` FROM event_status ORDER BY Status'); 
                         while($row=mysqli_fetch_assoc($result)) {
                             echo "<option value='$row[Status_Id]'>$row[Status]</option>"; 
                         } 
@@ -253,16 +253,10 @@ if(isset($_SESSION["id"])) {
             </tr> <br><br>
             <tr>
                 <td>
-                    Project Fee :
-                </td>
-                <td>
-                    <select name ="fee"  required > 
-                    <option disabled selected value> -- select an option -- </option>
-                    <option value=0>No, There is no fee payment</option> 
-                    <option value=1>Yes, There is fee payment</option> 
-                    </select>
-                </td>
-            </tr> <br><br>
+                    Project Payment : 
+                    <input type= "text" id = "limit_" name = "conp_" placeholder="Compensation for project" maxlength="4096" size="10" required/>
+                </td>   
+            </tr> <br> <br> 
             <tr>
                 <td>
                     Picture (less than 2048 KB)
@@ -280,14 +274,14 @@ if(isset($_SESSION["id"])) {
             <br><br>    
 
         </form>
-        <h4><a href="org_dashboard.php"> Go Back to Dashboard</a></h4>
+        <h4><a href="client_dashboard.php"> Go Back to Dashboard</a></h4>
         <?php
 if(isset($_POST['name_']))
 {
-    $connect=mysqli_connect('localhost','root','','Project_management_nitc');
+    $connect=mysqli_connect('localhost','root','','skillmatch');
     $insert=false;
     //check connection
-    if(mysqli_connect_errno($connect))
+    if(mysqli_connect_errno())
     {
         echo 'Failed to connect to database: '.mysqli_connect_error();
     }
@@ -295,8 +289,8 @@ if(isset($_POST['name_']))
     //echo 'Connected Successfully!!';
         $name = $_POST['name_'];
         $date = $_POST['date_'];
-        $start = $_POST['start_time_'];
-        $end = $_POST['end_time_'];
+        $start = $_POST['date_'];
+        $end = $_POST['date_'];
         $desc = $_POST['desc_'];
         $limit = $_POST['limit_'];
         $cone=$_POST['cone_'];
@@ -310,30 +304,30 @@ if(isset($_POST['name_']))
         $loc =  $_POST["location_id"];
         $type =  $_POST["type_id"];
         $status =  $_POST["status_id"];
-        $fee=$_POST["fee"];
+        $fee=$_POST['conp_'];
       
         // $image = $_FILES['image']['tmp_name'];
         // $image = addslashes(file_get_contents($image))
         
-        $sql = "INSERT INTO `Project_management_nitc`.`Projects` (`Project_Name`,`Project_Date`,`Project_Start_Time`,`Description`,`Project_End_Time`,`Project_Limit`,`Project_Type_Id`,`Location_Id`,`Status_Id`,`fee`)
+        $sql = "INSERT INTO `skillmatch`.`events` (`Event_Name`,`Event_Date`,`Event_Start_Time`,`Description`,`Event_End_Time`,`Event_Limit`,`Event_Type_Id`,`Location_Id`,`Status_Id`,`fee`)
          VALUES ('$name','$date','$start','$desc','$end',$limit,'$type','$loc','$status',$fee)";
         if($connect->query($sql) == true){
             print "Successfully inserted". "<br>";
-            $query3=mysqli_query($connect,"select Project_Id,Project_Name from Projects
-             where  Project_Name='$name'")or die("Error: " . mysqli_error($connect));
+            $query3=mysqli_query($connect,"select Event_Id,Event_Name from events
+             where  Event_Name='$name'")or die("Error: " . mysqli_error($connect));
             $row3=mysqli_fetch_array($query3);
-            print "Your Project Id for ".$row3[1]. " is ".$row3[0]. " Save it for Future Reference."."<br>";
+            print "Your Event Id for ".$row3[1]. " is ".$row3[0]. " Save it for Future Reference."."<br>";
             $eve=$row3[0];
-            $sql1="INSERT INTO `Project_contact` (`Project_id`, `contact_no`, `Name`) VALUES ('$eve', '$conp', '$cone')";
+            $sql1="INSERT INTO `event_contact` (`event_id`, `contact_no`, `Name`) VALUES ('$eve', '$conp', '$cone')";
             $query3=mysqli_query($connect,$sql1)or die("Error: " . mysqli_error($connect));
             $dfg=$_SESSION['id'];
-            $sql2="INSERT INTO `Project_org_list` (`Project_Id`, `Organizer_id`) VALUES ('$eve', '$dfg')";
+            $sql2="INSERT INTO `event_org_list` (`Event_Id`, `Organizer_id`) VALUES ('$eve', '$dfg')";
             $query3=mysqli_query($connect,$sql2)or die("Error: " . mysqli_error($connect));
             // Flag for successful insertion
             $mess = $_POST["msg__"];
             if(!empty($mess))
             {
-                $sqlx = mysqli_query($connect,"INSERT INTO `messages`(`Project_Id`,`UserId`,`message`) VALUES ($eve,'ALL','$mess')") 
+                $sqlx = mysqli_query($connect,"INSERT INTO `messages`(`Event_Id`,`UserId`,`message`) VALUES ($eve,'ALL','$mess')") 
                 or die("Error No Notification: " . mysqli_error($connect));;
             }
             
@@ -366,7 +360,7 @@ if(isset($_POST['name_']))
             // $connect = mysqli_connect("localhost", "root", "", "photos"); 
         
                 // Get all the submitted data from the form 
-                $sql = "UPDATE `Projects` SET `Picture` = '$folder1' WHERE `Project_Id` = $row3[0]"; 
+                $sql = "UPDATE `events` SET `Picture` = '$folder1' WHERE `Event_Id` = $row3[0]"; 
         
                 // Execute query 
                 mysqli_query($connect, $sql); 

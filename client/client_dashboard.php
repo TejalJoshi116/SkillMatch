@@ -1,11 +1,11 @@
 <?php
   session_start();
-  if(isset($_POST['event_name']))
+  if(isset($_POST['project_name']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['event_name'];
-  header("Location:eventedit.php");
+  $_SESSION["projectid"]=$_POST['project_name'];
+  header("Location:projectedit.php");
   }
 }
 $flag = 0;
@@ -13,7 +13,7 @@ if(isset($_POST['rew']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['rew'];
+  $_SESSION["projectid"]=$_POST['rew'];
   header("Location:viewreview.php");
   }
 }
@@ -21,7 +21,7 @@ if(isset($_POST['reply']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['reply'];
+  $_SESSION["projectid"]=$_POST['reply'];
   header("Location:reply_queries.php");
   }
 }
@@ -29,7 +29,7 @@ if(isset($_POST['collab']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['collab'];
+  $_SESSION["projectid"]=$_POST['collab'];
   header("Location:addcollab.php");
   }
 }
@@ -37,7 +37,7 @@ if(isset($_POST["msgss"]))
 {
   if($_SESSION["id"])
   {
-    $_SESSION["eventid"]=$_POST['msgss'];
+    $_SESSION["projectid"]=$_POST['msgss'];
     header("Location:posted_messages.php");
   }
 }
@@ -45,7 +45,7 @@ if(isset($_POST['status']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['status'];
+  $_SESSION["projectid"]=$_POST['status'];
   header("Location:send_messages.php");
   }
 }
@@ -53,7 +53,7 @@ if(isset($_POST['regis']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['regis'];
+  $_SESSION["projectid"]=$_POST['regis'];
   header("Location:delete_registrants.php");
   }
 }
@@ -63,9 +63,9 @@ if(isset($_POST['del']))
 
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['del'];
-  $eve=$_SESSION["eventid"];
-  $conn=mysqli_connect('localhost','root','','event_management_nitc');
+  $_SESSION["projectid"]=$_POST['del'];
+  $eve=$_SESSION["projectid"];
+  $conn=mysqli_connect('localhost','root','','skillmatch');
   $delete=false;
   //check connion
   if(mysqli_connect_errno($conn))
@@ -74,12 +74,12 @@ if(isset($_POST['del']))
   }
   else{
       $id = $eve;
-      $result1=mysqli_query($conn,"DELETE FROM event_org_list WHERE Event_id = '$id'") or die("Error1: " . mysqli_error($conn));
-      $result2=mysqli_query($conn,"DELETE FROM event_contact WHERE Event_id = '$id'") or die("Error2: " . mysqli_error($conn));
-      $result3=mysqli_query($conn,"DELETE FROM registrants_list WHERE Event_id = '$id'") or die("Error3: " . mysqli_error($conn));
-      $result4=mysqli_query($conn,"DELETE FROM review WHERE event_id = '$id'") or die("Error4: " . mysqli_error($conn));
-      $result5=mysqli_query($conn,"DELETE FROM messages WHERE Event_Id = '$id'") or die("Error5: " . mysqli_error($conn));
-      $sql = "DELETE FROM `event_management_nitc`.`events` WHERE Event_Id = '$id'" or die("Error4: " . mysqli_error($conn));
+      $result1=mysqli_query($conn,"DELETE FROM project_client_list WHERE project_id = '$id'") or die("Error1: " . mysqli_error($conn));
+      $result2=mysqli_query($conn,"DELETE FROM project_contact WHERE project_id = '$id'") or die("Error2: " . mysqli_error($conn));
+      $result3=mysqli_query($conn,"DELETE FROM users_list WHERE project_id = '$id'") or die("Error3: " . mysqli_error($conn));
+      $result4=mysqli_query($conn,"DELETE FROM review WHERE project_id = '$id'") or die("Error4: " . mysqli_error($conn));
+      $result5=mysqli_query($conn,"DELETE FROM messages WHERE project_Id = '$id'") or die("Error5: " . mysqli_error($conn));
+      $sql = "DELETE FROM `skillmatch`.`projects` WHERE project_Id = '$id'" or die("Error4: " . mysqli_error($conn));
       if($conn->query($sql) == true){
           // print "Successfully Deleted". "<br>";
           
@@ -97,7 +97,7 @@ if(isset($_POST['del']))
       else{        
           echo "ERROR: $sql <br> $conn->error";
       }
-      // Close the database connion
+      // Close the database connection
       $conn->close();
   }
 }
@@ -107,9 +107,9 @@ if(isset($_POST['ert']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['ert'];
-  $eve=$_SESSION["eventid"];
-  $connect = mysqli_connect("localhost", "root", "", "event_management_nitc");  
+  $_SESSION["projectid"]=$_POST['ert'];
+  $eve=$_SESSION["projectid"];
+  $connect = mysqli_connect("localhost", "root", "", "skillmatch");  
       header('Content-Type: text/csv; charset=utf-8');  
       header('Content-Disposition: attachment; filename=data.csv'); 
       ob_start();
@@ -117,7 +117,7 @@ if(isset($_POST['ert']))
       $output = fopen("php://output", "w");  
       
       fputcsv($output, array('Registered Name', 'Roll No', 'Contact No', 'MailId','Timestamp'));  
-      $query = "SELECT u.Registered_Name,u.UserId,u.Contact_No,u.Mail_Id, rl.Time_Stamp from user u,registrants_list rl where u.UserId=rl.UserId and rl.Event_Id=$eve";  
+      $query = "SELECT u.Registered_Name,u.UserId,u.Contact_No,u.Mail_Id, rl.Time_Stamp from user u,registrants_list rl where u.UserId=rl.UserId and rl.project_Id=$eve";  
       $result = mysqli_query($connect, $query);  
       while($row = mysqli_fetch_assoc($result))  
       {  
@@ -134,9 +134,9 @@ if(isset($_POST['fee_']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['fee_'];
-  $eve=$_SESSION["eventid"];
-  $connect = mysqli_connect("localhost", "root", "", "event_management_nitc");  
+  $_SESSION["projectid"]=$_POST['fee_'];
+  $eve=$_SESSION["projectid"];
+  $connect = mysqli_connect("localhost", "root", "", "skillmatch");  
   
   $zip_file = $eve.'.zip';
   $zip = new ZipArchive();
@@ -144,7 +144,7 @@ if(isset($_POST['fee_']))
   {
 	  exit("message");
   }
-  $sq = mysqli_query($connect, "SELECT upload FROM registrants_list WHERE Event_Id = $eve");
+  $sq = mysqli_query($connect, "SELECT upload FROM registrants_list WHERE project_Id = $eve");
   while($rowzz = mysqli_fetch_array($sq)){
     $var = strrpos($rowzz[0],$eve."/");
     // echo $rowzz[0].$var."<br>";
@@ -249,7 +249,7 @@ body {
 
 
 <div class="topnahv">
-    <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >Event Management System, NITC</h3>
+    <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >SkillMatch</h3>
     
   
     
@@ -259,13 +259,12 @@ body {
 
 
 <div class="topnav">
-  <a class="active" href="client_dashboard.php">Dashboard</a>
+  <a  href="client_dashboard.php">Dashboard</a>
   <a href="profile.php">Client Profile</a>
-  <a href="projectregister.php">Add New Project</a>
-
-  <a href="kyc.php">Know Your Club</a>
-  <a href="schedule.php">Schedule</a>
-  <a href="filterdate.php">Filter Project by Date</a>
+  <a class= "active" href="projectregister.php">Add New Project</a>
+  <!--<a href="kyc.php">Know Your Club</a>-->
+  <!--<a href="schedule.php">Schedule</a>-->
+  <a href="filterdate.php">Filter Projects by Date</a>
   <a  href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
@@ -290,12 +289,12 @@ if(isset($_SESSION["id"])) {
 </div>
 <br>
 
-<h2 style="color:black;">List of Events Hosted By Your Club:</h2>
+<h2 style="color:black;">List of projects Hosted By Your Club:</h2>
 <br>
-<button type="button" class="collapsible">All Active Events</button>
+<button type="button" class="collapsible">All Active projects</button>
 <div class="card lg-12"   id = "content">
   <?php
-    $connect=mysqli_connect('localhost','root','','event_management_nitc');
+    $connect=mysqli_connect('localhost','root','','skillmatch');
     if(mysqli_connect_errno($connect))
     {
         echo 'Failed to connect to database: '.mysqli_connect_error();
@@ -304,21 +303,21 @@ if(isset($_SESSION["id"])) {
     {
         $idx = $_SESSION["id"];
         // echo $idx;
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date,e.Picture, L.Location_Name, S.Status, e.Event_Id, e.fee
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_organizer as eo
-        join event_org_list as eol
+        $query1=mysqli_query($connect,"select e.project_Name,e.project_Date,e.Picture, L.Location_Name, S.Status, e.project_Id, e.fee
+        from projects as e 
+        join project_location as L
+        join project_status as S 
+        join project_organizer as eo
+        join project_org_list as eol
         join organizer_type as o
         on e.Location_Id=L.Location_Id 
         and e.Status_Id=S.Status_Id
-        and e.Event_Id = eol.Event_Id 
+        and e.project_Id = eol.project_Id 
         and eol.Organizer_id = eo.Organizer_Id
         and eo.Organizer_Type_Id = o.Organizer_Type_Id 
-        where e.Event_Date >= CURDATE() 
+        where e.project_Date >= CURDATE() 
         AND eol.Organizer_id = '$idx'
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
+        order by e.project_Date") or die("Error: " . mysqli_error($connect));
         // Change Roll No. to Session Authentication Details
         echo '<div class="row">' ;
         while($row1=mysqli_fetch_array($query1))
@@ -335,8 +334,8 @@ if(isset($_SESSION["id"])) {
             <p class="card-text"style="color:gray;">Location: <?php echo $row1[3]; ?></p>
             <p class="card-text"style="color:gray;">Status:   <?php echo $row1[4]; ?></p>
             <form action="org_dashboard.php" method="post">
-            <input hidden type="text"  name="event_name" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Edit Event"/>
+            <input hidden type="text"  name="project_name" value="<?php echo $row1[5]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="Edit project"/>
             </form>
             <form action="org_dashboard.php" method="post">
             <input hidden type="text"  name="ert" value="<?php echo $row1[5]; ?>" />
@@ -349,7 +348,7 @@ if(isset($_SESSION["id"])) {
             </form>
             <form action="org_dashboard.php" method="post">
             <input hidden type="text"  name="del" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Delete Event" onclick="myfunction()"/>
+            <input  type="submit" class="btn btn-primary" value="Delete project" onclick="myfunction()"/>
             </form>
             <form action="org_dashboard.php" method="post">
             <input hidden type="text"  name="collab" value="<?php echo $row1[5]; ?>" />
@@ -395,10 +394,10 @@ if(isset($_SESSION["id"])) {
 
 
 <br><br>
-<button type="button" class="collapsible" >All Inactive Events</button>
+<button type="button" class="collapsible" >All Inactive projects</button>
 <div class="card lg-12"   id = "content">
 <?php
-    $connect=mysqli_connect('localhost','root','','event_management_nitc');
+    $connect=mysqli_connect('localhost','root','','skillmatch');
     if(mysqli_connect_errno($connect))
     {
         echo 'Failed to connect to database: '.mysqli_connect_error();
@@ -406,21 +405,21 @@ if(isset($_SESSION["id"])) {
     else
     { 
         $idx = $_SESSION["id"];
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date,e.Picture, L.Location_Name, S.Status, e.Event_Id , e.fee
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_organizer as eo
-        join event_org_list as eol
+        $query1=mysqli_query($connect,"select e.project_Name,e.project_Date,e.Picture, L.Location_Name, S.Status, e.project_Id , e.fee
+        from projects as e 
+        join project_location as L
+        join project_status as S 
+        join project_organizer as eo
+        join project_org_list as eol
         join organizer_type as o
         on e.Location_Id=L.Location_Id 
         and e.Status_Id=S.Status_Id
-        and e.Event_Id = eol.Event_Id 
+        and e.project_Id = eol.project_Id 
         and eol.Organizer_id = eo.Organizer_Id
         and eo.Organizer_Type_Id = o.Organizer_Type_Id 
-        where e.Event_Date < CURDATE() 
+        where e.project_Date < CURDATE() 
         AND eol.Organizer_id = '$idx'
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
+        order by e.project_Date") or die("Error: " . mysqli_error($connect));
         // Change Roll No. to Session Authentication Details
         echo '<div class="row">' ;
         while($row1=mysqli_fetch_array($query1))
@@ -437,8 +436,8 @@ if(isset($_SESSION["id"])) {
             <p class="card-text"style="color:gray;">Location: <?php echo $row1[3]; ?></p>
             <p class="card-text"style="color:gray;">Status:   <?php echo $row1[4]; ?></p>
             <form action="org_dashboard.php" method="post">
-            <input hidden type="text"  name="event_name" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Edit Event"/>
+            <input hidden type="text"  name="project_name" value="<?php echo $row1[5]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="Edit project"/>
             </form>
             <form action="org_dashboard.php" method="post">
             <input hidden type="text"  name="ert" value="<?php echo $row1[5]; ?>" />
@@ -450,7 +449,7 @@ if(isset($_SESSION["id"])) {
             </form>
             <form action="org_dashboard.php" method="post">
             <input hidden type="text"  name="del" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Delete Event"/>
+            <input  type="submit" class="btn btn-primary" value="Delete project"/>
             </form>
             <form action="org_dashboard.php" method="post">
             <input hidden type="text"  name="collab" value="<?php echo $row1[5]; ?>" />
@@ -508,7 +507,7 @@ var coll = document.getElementsByClassName("collapsible");
 var i;
 
 for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
+  coll[i].addprojectListener("click", function() {
     this.classList.toggle("active");
     var content = this.nextElementSibling;
     if (content.style.display === "block") {

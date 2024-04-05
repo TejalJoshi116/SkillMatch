@@ -179,22 +179,20 @@ body {
 
 
      <div class="topnahv">
-    <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >Event Management System, NITC</h3>
+    <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >SkillMatch</h3>
     
   
     
     
 </div>
 
-
-
 <div class="topnav">
-  <a  href="org_dashboard.php">Dashboard</a>
-  <a class="active" href="profile.php">Organizer Profile</a>
-  <a href="eventregister.php">Add New Event</a>
-  <a href="kyc.php">Know Your Club</a>
-  <a href="schedule.php">Schedule</a>
-  <a href="filterdate.php">Filter Events by Date</a>
+  <a  href="client_dashboard.php">Dashboard</a>
+  <a href="profile.php">Client Profile</a>
+  <a class= "active" href="projectregister.php">Add New Project</a>
+  <!--<a href="kyc.php">Know Your Club</a>-->
+  <!--<a href="schedule.php">Schedule</a>-->
+  <a href="filterdate.php">Filter Projects by Date</a>
   <a  href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
@@ -207,7 +205,7 @@ if(isset($_SESSION["id"])) {
     }
     else{
 ?>
-<a href="../login/login_organizer.php">You are not logged in</a>
+<a href="../login/login_client.php">You are not logged in</a>
 <?php
     }
     ?>
@@ -219,30 +217,28 @@ if(isset($_SESSION["id"])) {
 </div>
 <br>
 
-
-
 <!------ Include the above in your HEAD tag ---------->
 <?php 
-    $connect=mysqli_connect('localhost','root','','event_management_nitc');
+    $connect=mysqli_connect('localhost','root','','skillmatch');
     $ax = $_SESSION["id"];
-    if(mysqli_connect_errno($connect))
+    if(mysqli_connect_error())
     {
         echo 'Failed to connect to database: '.mysqli_connect_error();
     }
     else
     {   
-        $query1 = mysqli_query($connect,"SELECT eo.Organizer_Id, eo.Organizer_Name, eo.Description, 
-            eo.Email_Id, eo.Picture, ot.Organizer_type, ot.Organizer_Type_Id                                          
-            from event_organizer as eo 
-            join organizer_type as ot
-            on eo.Organizer_Type_Id = ot.Organizer_Type_Id
-            where eo.Organizer_Id='$ax'") or die("Error1: " . mysqli_error($connect));
+        $query1 = mysqli_query($connect,"SELECT pc.client_Id, pc.client_Name, pc.Description, 
+            pc.Email_Id, pc.Picture                                        
+            from project_client as pc
+            where pc.client_Id='$ax'") or die("Error1: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
         // echo "Thanks for the Input"."<br>";
     } 
     $connect->close();
 ?>
-    
+
+
+
 <div class="container emp-profile">
             <!-- <form method="post"> -->
                 <div class="row">
@@ -273,8 +269,8 @@ if(isset($_SESSION["id"])) {
                             <?php 
                                 if(isset($_POST["btnsubmit"]))
                                 {
-                                  $con=mysqli_connect('localhost','root','','event_management_nitc');
-                                    if(mysqli_connect_errno($con))
+                                  $con=mysqli_connect('localhost','root','','skillmatch');
+                                    if(mysqli_connect_error())
                                     {
                                         echo 'Failed to connect to database: '.mysqli_connect_error();
                                     }
@@ -289,10 +285,10 @@ if(isset($_SESSION["id"])) {
                                             $desc = $row1[2];
                                         }
                                         else{
-                                            mysqli_query($con,"UPDATE `event_organizer` 
+                                            mysqli_query($con,"UPDATE `project_client` 
                                           SET 
                                          `Description` = '$desc'
-                                          where `Organizer_Id`='$oid'") or die("Error2: " . mysqli_error($con));
+                                          where `client_Id`='$oid'") or die("Error2: " . mysqli_error($con));
                                         }
                                         
                                         if($email == ""){
@@ -302,10 +298,10 @@ if(isset($_SESSION["id"])) {
                                             $type = $row1[6];
                                         }
 
-                                        $queryasd=mysqli_query($con,"UPDATE `event_organizer` 
-                                          SET `Organizer_Type_Id` = $type,
+                                        $queryasd=mysqli_query($con,"UPDATE `project_client` 
+                                          <!--SET `Organizer_Type_Id` = $type,-->
                                          `Email_Id` = '$email'
-                                          where `Organizer_Id`='$oid'") or die("Error5: " . mysqli_error($con));
+                                          where `client_Id`='$oid'") or die("Error5: " . mysqli_error($con));
                                         
                                         $con->close();
                                     }
@@ -316,7 +312,7 @@ if(isset($_SESSION["id"])) {
                             ?>
                         
                         <?php 
-                            $connect=mysqli_connect('localhost','root','','event_management_nitc');
+                            $connect=mysqli_connect('localhost','root','','skillmatch');
                             $ax = $_SESSION["id"];
                             if(mysqli_connect_errno($connect))
                             {
@@ -324,13 +320,11 @@ if(isset($_SESSION["id"])) {
                             }
                             else
                             {   
-                                $query1 = mysqli_query($connect,"SELECT eo.Organizer_Id, eo.Organizer_Name,
-                                 eo.Description, eo.Email_Id, eo.Picture, ot.Organizer_type,ot.Organizer_Type_Id                                         
-                                from event_organizer as eo 
-                                join organizer_type as ot
-                                on eo.Organizer_Type_Id = ot.Organizer_Type_Id
-                                where eo.Organizer_Id='$ax'") or die("Error3: " . mysqli_error($connect));
-                                $row1=mysqli_fetch_array($query1);
+                                $query1 = mysqli_query($connect,"SELECT pc.client_Id, pc.client_Name, pc.Description, 
+                                pc.Email_Id, pc.Picture                                        
+                                from project_client as pc
+                                where pc.client_Id='$ax'") or die("Error1: " . mysqli_error($connect));
+                            $row1=mysqli_fetch_array($query1);
                                 // echo "Thanks for the Input"."<br>";
                             } 
                             $connect->close();?>
@@ -343,7 +337,7 @@ if(isset($_SESSION["id"])) {
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Organizer Name</label>
+                                                <label>Client Name</label>
                                             </div>
                                             <div class="col-md-6">
                                                 <p>
@@ -354,7 +348,7 @@ if(isset($_SESSION["id"])) {
 
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Organizer Email</label>
+                                                <label>Client Email</label>
                                             </div>
                                             <div class="col-md-6">
                                                 <!-- <p>
@@ -375,7 +369,7 @@ if(isset($_SESSION["id"])) {
 
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Organizer Description</label>
+                                                <label>Client Description</label>
                                             </div>
                                             <div class="col-md-6">
                                                 <textarea type= "text" id = "desc" maxlength="4096" cols="50" rows="10"
@@ -384,7 +378,7 @@ if(isset($_SESSION["id"])) {
                                             </div>
                                         </div>
 
-                                        <div class="row">
+                                        <!--<div class="row">
                                             <div class="col-md-6">
                                                 <label>Organizer Type</label>
                                             </div>
@@ -393,7 +387,7 @@ if(isset($_SESSION["id"])) {
                                                 <select name ="type" id = "type" > 
                                                 <option value= "<?php $row1[6]; ?>" selected><?php echo $row1[5]; ?></option>
                                                 <?php 
-                                                    $conn=mysqli_connect('localhost','root','','event_management_nitc'); 
+                                                    $conn=mysqli_connect('localhost','root','','skillmatch'); 
                                                     $result=mysqli_query($conn,'SELECT Organizer_Type_Id,Organizer_type
                                                         FROM organizer_type ORDER BY Organizer_type'); 
                                                     while($row=mysqli_fetch_array($result)) {
@@ -402,7 +396,7 @@ if(isset($_SESSION["id"])) {
                                                 ?> 
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div>-->
 
                                        
                                        
@@ -419,3 +413,8 @@ if(isset($_SESSION["id"])) {
         </div>
 </body>
 </html>
+
+
+
+
+
