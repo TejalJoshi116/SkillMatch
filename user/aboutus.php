@@ -82,14 +82,14 @@ body {
 .content {
   padding: 0 18px;
   display: none;
-  /overflow: hidden;/
+  /* /overflow: hidden;/ */
   background-color: #f1f1f1;
 }
 
 
 .paddingTB60 {padding:60px 0px 60px 0px;}
 .gray-bg {background: #F1F1F1 !important;}
-.about-title {}
+/* .about-title {} */
 .about-title h1 {color: #535353; font-size:45px;font-weight:600;}
 .about-title span {color: #AF0808; font-size:45px;font-weight:700;}
 .about-title h3 {color: #535353; font-size:23px;margin-bottom:24px;}
@@ -185,7 +185,7 @@ body {
 	transition:0.5s;
 }
 
-/our-team-main/
+/* /our-team-main/ */
 
 
 
@@ -210,14 +210,16 @@ body {
 
 
 <div class="topnav">
-  <a href="loggedinpage.php">Projects</a>
+  <a href="user_dashboard.php">Dashboard</a>	
+  
   <a href="profile.php">User Profile</a>
-  <a href="dashboard.php">Dashboard</a>
-  <a href="kyc.php">Know Your Club</a>
-  <a href="schedule.php">Schedule</a>
-  <a href="filterdate.php">Filter Projects By Date</a>
-  <a href="view_sent_queries.php">View Unresponded Queries</a>
-  <a href="user_notifications.php">View Notifications</a>
+  <a href="browse.php">Browse projects</a>
+  <a href="current_projects.php">Current Projects</a>
+  <!-- <a href="kyc.php">Know Your Club</a>
+  <a href="schedule.php">Schedule</a> -->
+  
+  <!-- <a href="view_sent_queries.php">View Unresponded Queries</a> -->
+  <!-- <a href="user_notifications.php">View Notifications</a> -->
   <a class= "active" href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {

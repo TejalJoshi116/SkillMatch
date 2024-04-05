@@ -82,14 +82,14 @@ body {
 .content {
   padding: 0 18px;
   display: none;
-  /overflow: hidden;/
+  /* overflow: hidden; */
   background-color: #f1f1f1;
 }
 
 
 .paddingTB60 {padding:60px 0px 60px 0px;}
 .gray-bg {background: #F1F1F1 !important;}
-.about-title {}
+/* .about-title {} */
 .about-title h1 {color: #535353; font-size:45px;font-weight:600;}
 .about-title span {color: #AF0808; font-size:45px;font-weight:700;}
 .about-title h3 {color: #535353; font-size:23px;margin-bottom:24px;}
@@ -185,7 +185,7 @@ body {
 	transition:0.5s;
 }
 
-/our-team-main/
+/* /our-team-main/ */
 
 
 
