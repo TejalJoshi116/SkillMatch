@@ -104,7 +104,7 @@ body {
 
 
      <div class="topnahv">
-    <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >Event Management System, NITC</h3>
+    <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >SkillMatch</h3>
     
   
     
@@ -114,13 +114,13 @@ body {
 
 
 <div class="topnav">
-  <a  href="org_dashboard.php">Dashboard</a>
-  <a href="profile.php">Organizer Profile</a>
-  <a href="eventregister.php">Add New Event</a>
-  <a href="kyc.php">Know Your Club</a>
-  <a href="schedule.php">Schedule</a>
-  <a href="filterdate.php">Filter Events by Date</a>
-  <a  href="aboutus.php">About The Team</a>
+  <a href="client_dashboard.php">Dashboard</a>
+  <a href="profile.php">Client Profile</a>
+  <a href="projectregister.php">Add New Project</a>
+  <!--<a href="kyc.php">Know Your Club</a-->
+  <!--<a href="schedule.php">Schedule</a>-->
+  <a href="filterdate.php">Filter Project by Date</a>
+  <a href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
   ?>
@@ -132,7 +132,7 @@ if(isset($_SESSION["id"])) {
     }
     else{
 ?>
-<a href="../login/login_organizer.php">You are not logged in</a>
+<a href="../login/login_client.php">You are not logged in</a>
 <?php
     }
     ?>
@@ -147,8 +147,8 @@ if(isset($_SESSION["id"])) {
 <body>
   <div style = "padding-left: 50px;">
   <?php
-  $connect=mysqli_connect('localhost','root','','event_management_nitc');
-  if(mysqli_connect_errno($connect))
+  $connect=mysqli_connect('localhost','root','','skillmatch');
+  if(mysqli_connect_errno())
   {
       echo 'Failed to connect to database: '.mysqli_connect_error();
   }
@@ -215,8 +215,8 @@ if(isset($_SESSION["id"])) {
     <tr>
         <td>
         <?php
-        $connect=mysqli_connect('localhost','root','','event_management_nitc');
-        if(mysqli_connect_errno($connect))
+        $connect=mysqli_connect('localhost','root','','skillmatch');
+        if(mysqli_connect_errno())
         {
             echo 'Failed to connect to database: '.mysqli_connect_error();
         }
@@ -240,7 +240,7 @@ if(isset($_SESSION["id"])) {
             <select name ="status_id" id = "status_id" required > 
                     <option disabled selected value> -- select an option -- </option>
                     <?php 
-                        $conn=mysqli_connect('localhost','root','','event_management_nitc'); 
+                        $conn=mysqli_connect('localhost','root','','skillmatch'); 
                         $result=mysqli_query($conn,'SELECT `Status_Id`,`Status` FROM event_status ORDER BY Status'); 
                         while($row=mysqli_fetch_assoc($result)) {
                             if($row['Status'] == $row1[1]){
@@ -282,7 +282,7 @@ if(isset($_SESSION["id"])) {
                     <?php 
                         $eve = $_SESSION['eventid'];
                         // echo "<option>".$eve."</option>";
-                        $conn=mysqli_connect('localhost','root','','event_management_nitc'); 
+                        $conn=mysqli_connect('localhost','root','','skillmatch'); 
                         $result=mysqli_query($conn,"SELECT u.UserId ,u.Registered_Name  FROM user as u 
                         JOIN registrants_list as rl
                         ON u.UserId = rl.UserId

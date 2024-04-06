@@ -242,21 +242,18 @@ h6 {
 
      <div class="topnahv">
     <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >SkillMatch</h3>
-    
-  
-    
-    
+
 </div>
 
 
-
 <div class="topnav">
-  <a href="client_dashboard.php">Dashboard</a>
-  <a href="profile.php">Client Profile</a>
-  <a href="projectregister.php">Add New Project</a>
-  <!--<a href="kyc.php">Know Your Club</a-->
-  <!--<a href="schedule.php">Schedule</a>-->
-  <a class="active" href="filterdate.php">Filter Project by Date</a>
+  <a href="loggedinpage.php">Project</a>
+  <a href="profile.php">User Profile</a>
+  <a href="dashboard.php">Dashboard</a>
+  <a class = "active" href="schedule.php">Schedule</a>
+  <a href="filterdate.php">Filter Event By Date</a>
+  <a href="view_sent_queries.php">View Unresponded Queries</a>
+  <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
@@ -269,7 +266,7 @@ if(isset($_SESSION["id"])) {
     }
     else{
 ?>
-<a href="../login/login_client.php">You are not logged in</a>
+<a href="../login/login_user.php">You are not logged in</a>
 <?php
     }
     ?>
@@ -280,20 +277,11 @@ if(isset($_SESSION["id"])) {
   
 </div>
 <br>
-
-<form action="filterdate.php" method="post">
-Start Date
-<input type= "date" id = "date_" name = "sdate_" value = <?php echo date("m/d/Y"); ?> size="20" /><br><br>
-End Date
-<input type= "date" id = "date_" name = "edate_" size="20" />
-<input type="submit" value="submit" name="submit">
-</form>
 <hr style="height:2px; color:black; background-color:black">
 <!-- <button type="button" class="collapsible" >All Active Events</button>
 <div class="card mb-3" style="width:400px"  id = "content"> -->
 <!-- <h4>Active Events: </h4> -->
 <?php
-    if(isset($_POST['submit'])){
     $connect=mysqli_connect('localhost','root','','skillmatch');
     if(mysqli_connect_errno())
     {
@@ -301,12 +289,6 @@ End Date
     }
     else
     {
-        
-        {
-            $sdate = $_POST['sdate_']; 
-            $edate =$_POST['edate_']; 
-        }
-
         $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date, 
         L.Location_Name, S.Status, ec.contact_no,e.Event_Id 
         from events as e 
@@ -315,14 +297,14 @@ End Date
         join event_contact as ec
         where e.Location_Id=L.Location_Id 
         and e.Status_Id=S.Status_Id 
-        and ec.Event_Id = e.Event_Id and e.Event_Date >='$sdate' and e.Event_Date <='$edate'
+        and ec.Event_Id = e.Event_Id and e.Event_Date >=CURDATE()
         order by e.Event_Date") or die("Error: " . mysqli_error($connect));
           
 
         
         echo "<table border='2'>
         <tr>
-        </tr>"."<h4>Events Scheduled Between ".$sdate." and ".$edate."</h4>"."<tr>
+        </tr>"."<h4>Active Events</h4>"."<tr>
         <th width='200px'>Event Name</th>
         <th>Event Date</th>
         <th>Location Name</th>
@@ -345,7 +327,7 @@ End Date
             join event_org_list as eol
             on e.Event_Id = eol.Event_Id
             and eol.Organizer_id= eo.Organizer_Id 
-            WHERE eol.Event_id =  $row1[5] and e.Event_Date >='$sdate' and e.Event_Date <='$edate' 
+            WHERE eol.Event_id =  $row1[5] and e.Event_Date >=CURDATE() 
             order by e.Event_Date") or die("Error: " . mysqli_error($connect));?>
             <td> <?php 
                 $zz = mysqli_query($connect,"select COUNT(*)
@@ -354,7 +336,7 @@ End Date
                 join event_org_list as eol
                 on e.Event_Id = eol.Event_Id
                 and eol.Organizer_id= eo.Organizer_Id 
-                WHERE eol.Event_id =  $row1[5] and e.Event_Date >='$sdate' and e.Event_Date <='$edate'
+                WHERE eol.Event_id =  $row1[5] and e.Event_Date >=CURDATE() 
                 order by e.Event_Date") or die("Error: " . mysqli_error($connect));   
                 $z1 = mysqli_fetch_array($zz);
                 while($row2=mysqli_fetch_array($query2)) 
@@ -365,7 +347,7 @@ End Date
                     else{
                         echo $row2[0]." and ";
                     }
-                    $z1[0] = $z1[0]-1;  
+                    $z1[0] = $z1[0]-1;
                 }
                 
             ?></td>
@@ -379,11 +361,91 @@ End Date
         }
     }
     echo "<br>";
-    $connect->close(); }    
+    $connect->close(); 
 ?>
 <!-- </div> -->
 <!-- <h4>Inactive Events: </h4> -->
+<?php
+    $connect=mysqli_connect('localhost','root','','skillmatch');
+    if(mysqli_connect_errno())
+    {
+        echo 'Failed to connect to database: '.mysqli_connect_error();
+    }
+    else
+    {
+        
+        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date, 
+        L.Location_Name, S.Status, ec.contact_no,e.Event_Id 
+        from events as e 
+        join event_location as L
+        join event_status as S 
+        join event_contact as ec
+        on e.Location_Id=L.Location_Id 
+        and e.Status_Id=S.Status_Id 
+        and ec.event_id = e.Event_Id 
+        where e.Event_Date < CURDATE()
+        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
+        // echo "<br>";
+        echo "<table border='2'>
+        <tr>
+        </tr>"."<hr><h4>Inactive Events</h4>"."<tr>
+        <th width='200px'>Event Name</th>
+        <th>Event Date</th>
+        <th>Location Name</th>
+        <th>Status</th>
+        <th width='200px'>Organizing Clubs</th>
+        <th>Contacts</th>
+        </tr>";
+        // Execute the query
+        while($row1=mysqli_fetch_array($query1))
+        {
+            echo "<tr>";
+            echo "<td>" . $row1[0] . "</td>";
+            echo "<td>" . $row1[1] . "</td>";
+            echo "<td>" . $row1[2] . "</td>";
+            echo "<td>" . $row1[3] . "</td>";
+            $query2 = mysqli_query($connect,"select eo.Organizer_Name
+            from events as e 
+            join event_organizer as eo
+            join event_org_list as eol
+            on e.Event_Id = eol.Event_Id
+            and eol.Organizer_id= eo.Organizer_Id 
+            WHERE eol.Event_id =  $row1[5]  
+            order by e.Event_Date") or die("Error: " . mysqli_error($connect));?>
+            <td> <?php 
+                $zz = mysqli_query($connect,"select COUNT(*)
+                from events as e 
+                join event_organizer as eo
+                join event_org_list as eol
+                on e.Event_Id = eol.Event_Id
+                and eol.Organizer_id= eo.Organizer_Id 
+                WHERE eol.Event_id =  $row1[5] and e.Event_Date >=CURDATE() 
+                order by e.Event_Date") or die("Error: " . mysqli_error($connect));   
+                $z1 = mysqli_fetch_array($zz);
+                while($row2=mysqli_fetch_array($query2)) 
+                {
+                    if($z1[0] ==1){
+                        echo $row2[0];
+                    }
+                    else{
+                        echo $row2[0]." and ";
+                    }
+                    $z1[0] = $z1[0]-1;
+                }
+                
+            ?></td>
 
+            <?php
+            echo "<td>" . $row1[4] . "</td>";
+            echo "</tr>"; 
+
+
+            
+        }
+    }
+    $connect->close(); 
+?>
+
+    
 </body>
 </html>
- 

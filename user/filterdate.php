@@ -242,21 +242,18 @@ h6 {
 
      <div class="topnahv">
     <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >SkillMatch</h3>
-    
-  
-    
-    
+
 </div>
 
 
-
 <div class="topnav">
-  <a href="client_dashboard.php">Dashboard</a>
-  <a href="profile.php">Client Profile</a>
-  <a href="projectregister.php">Add New Project</a>
-  <!--<a href="kyc.php">Know Your Club</a-->
-  <!--<a href="schedule.php">Schedule</a>-->
-  <a class="active" href="filterdate.php">Filter Project by Date</a>
+  <a href="loggedinpage.php">Events</a>
+  <a href="profile.php">User Profile</a>
+  <a href="dashboard.php">Dashboard</a>
+  <a href="schedule.php">Schedule</a>
+  <a classs = "active" href="filterdate.php">Filter Event By Date</a>
+  <a href="view_sent_queries.php">View Unresponded Queries</a>
+  <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
@@ -269,7 +266,7 @@ if(isset($_SESSION["id"])) {
     }
     else{
 ?>
-<a href="../login/login_client.php">You are not logged in</a>
+<a href="../login/login_user.php">You are not logged in</a>
 <?php
     }
     ?>
@@ -280,7 +277,6 @@ if(isset($_SESSION["id"])) {
   
 </div>
 <br>
-
 <form action="filterdate.php" method="post">
 Start Date
 <input type= "date" id = "date_" name = "sdate_" value = <?php echo date("m/d/Y"); ?> size="20" /><br><br>
@@ -386,4 +382,3 @@ End Date
 
 </body>
 </html>
- 

@@ -19,7 +19,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
         $_SESSION["name"] = $row['username'];
 
         // $message = "entering";
-        header("Location:../user/aboutus.php");
+        header("Location:../User/aboutus.php");
         // header("Location:test.php");
         exit();
     } else {

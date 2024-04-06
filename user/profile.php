@@ -1,5 +1,6 @@
 <?php
     session_start();
+// echo $_SESSION["name"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -46,9 +47,6 @@ body {
 .topnav-right {
   float: right;
 }
-
-#responsive-image {  width: 100%;  height: 200px; } 
-
 .collapsible {
   background-color: #777;
   color: white;
@@ -60,12 +58,29 @@ body {
   outline: none;
   font-size: 15px;
 }
+
+/* .active, .collapsible:hover {
+  background-color: #555;
+} */
+
 .content {
   padding: 0 18px;
   display: none;
   /overflow: hidden;/
   background-color: #f1f1f1;
 }
+
+
+
+
+
+
+
+/* 
+
+body{ 
+     background: -webkit-linear-gradient(left, #3931af, #00c6ff); 
+} */
 .emp-profile{
     padding: 3%;
     margin-top: 3%;
@@ -136,6 +151,7 @@ body {
     padding: 14%;
     margin-top: -15%;
 }
+#responsive-image {  width: 200px;  height: 200px; } 
 .profile-work p{
     font-size: 12px;
     color: #818182;
@@ -166,8 +182,8 @@ body {
 }
 #page5{
     position:relative;
-    left:355px;
-    bottom:95px;
+    left:365px;
+    bottom:90px;
 }
 
 </style>
@@ -180,21 +196,18 @@ body {
 
      <div class="topnahv">
     <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >SkillMatch</h3>
-    
-  
-    
-    
+
 </div>
 
 
-
 <div class="topnav">
-  <a href="client_dashboard.php">Dashboard</a>
-  <a class="active" href="profile.php">Client Profile</a>
-  <a href="projectregister.php">Add New Project</a>
-  <!--<a href="kyc.php">Know Your Club</a-->
-  <!--<a href="schedule.php">Schedule</a>-->
-  <a href="filterdate.php">Filter Project by Date</a>
+  <a href="loggedinpage.php">Projects</a>
+  <a class = "active" href="profile.php">User Profile</a>
+  <a href="dashboard.php">Dashboard</a>
+  <a href="schedule.php">Schedule</a>
+  <a href="filterdate.php">Filter Projects By Date</a>
+  <a href="view_sent_queries.php">View Unresponded Queries</a>
+  <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
@@ -207,7 +220,7 @@ if(isset($_SESSION["id"])) {
     }
     else{
 ?>
-<a href="../login/login_client.php">You are not logged in</a>
+<a href="../login/login_user.php">You are not logged in</a>
 <?php
     }
     ?>
@@ -231,32 +244,39 @@ if(isset($_SESSION["id"])) {
     }
     else
     {   
-        $query1 = mysqli_query($connect,"SELECT eo.Organizer_Id, eo.Organizer_Name, eo.Description, 
-            eo.Email_Id, eo.Picture, ot.Organizer_type, ot.Organizer_Type_Id                                          
-            from event_organizer as eo 
-            join organizer_type as ot
-            on eo.Organizer_Type_Id = ot.Organizer_Type_Id
-            where eo.Organizer_Id='$ax'") or die("Error1: " . mysqli_error($connect));
+        $query1 = mysqli_query($connect,"SELECT u.UserId, u.Display_Name, u.Picture,
+            u.Last_Login_Info,u.Registered_name, u.Contact_No, u.Mail_Id, ua.Password                                           
+            from user as u 
+            join user_authentication as ua
+            on u.UserId = ua.UserId
+            where u.UserId='$ax'") or die("Error: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
         // echo "Thanks for the Input"."<br>";
     } 
-    $connect->close();
-?>
+    $connect->close();?>
     
 <div class="container emp-profile">
             <!-- <form method="post"> -->
                 <div class="row">
                     <div class="col-md-4">
                         <div class="profile-img">
-                            <img src= <?php $msgx = "../".$row1[4]; echo $msgx; ?> id="responsive-image" alt=""/>
+                            <img src= <?php $msgx = "../".$row1[2]; echo $msgx; ?> id="responsive-image" alt=""/>
+                            <!-- <div class="file btn btn-lg btn-primary">
+                                Change Photo
+                                 <input type="file" name="file"/> -->
+                            <!-- </div> --> 
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="profile-head">
                                     <h3>
                                         <?php 
-                                        echo $row1[1]; ?>
+                                        echo $row1[4]; ?>
                                     </h3>
+                                    <!-- <h6>
+                                        Web Developer and Designer
+                                    </h6> -->
+                                    <!-- <p class="proile-rating">RANKINGS : <span>8/10</span></p> -->
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
@@ -266,45 +286,40 @@ if(isset($_SESSION["id"])) {
                                 </li> -->
                             </ul>
                         </div>
-                    </div>
-                    <form action="profile.php" method="POST">
+                    </div><form action="profile.php" method="POST">
                     <div class="col-md-2">
-                        <input type="submit"  name="btnsubmit" value="Edit Profile"/>
+                        <input type="submit"  name="btnAddMore" value="Edit Profile"/>
                             <?php 
-                                if(isset($_POST["btnsubmit"]))
+                                if(isset($_POST["btnAddMore"]))
                                 {
                                   $con=mysqli_connect('localhost','root','','skillmatch');
-                                    if(mysqli_connect_errno())
+                                    if(mysqli_connect_errno($con))
                                     {
                                         echo 'Failed to connect to database: '.mysqli_connect_error();
                                     }
                                     else
                                     {   
-                                           
-                                        $oid=$_SESSION["id"];
-                                        $desc = $_POST['desc'];
+                                        $uid=$_SESSION["id"];
+                                        $name = $_POST['dname'];
                                         $email = $_POST['email'];
-                    
-                                        if($desc == ""){
-                                            $desc = $row1[2];
+                                        $number = $_POST['number'];
+                                        if($name == ""){
+                                            $name = $row1[1];
                                         }
-                                        else{
-                                            mysqli_query($con,"UPDATE `event_organizer` 
-                                          SET 
-                                         `Description` = '$desc'
-                                          where `Organizer_Id`='$oid'") or die("Error2: " . mysqli_error($con));
-                                        }
-                                        
                                         if($email == ""){
-                                            $email = $row1[3];
+                                            $email = $row1[6];
                                         }
-                                        
+                                        if($number == ""){
+                                            $number = $row1[5];
+                                        }
 
-                                        $queryasd=mysqli_query($con,"UPDATE `event_organizer` 
-                                          SET `Email_Id` = '$email'
-                                          where `Organizer_Id`='$oid'") or die("Error5: " . mysqli_error($con));
+                                        $queryasd=mysqli_query($con,"UPDATE `user` SET `Display_Name` = '$name',
+                                         `Contact_No` = '$number',
+                                         `Mail_Id` = '$email'
+                                         where `UserId`='$uid'") or die("Error: " . mysqli_error($con));
                                         
                                         $con->close();
+
                                     }
                                 }
 
@@ -321,12 +336,12 @@ if(isset($_SESSION["id"])) {
                             }
                             else
                             {   
-                                $query1 = mysqli_query($connect,"SELECT eo.Organizer_Id, eo.Organizer_Name,
-                                 eo.Description, eo.Email_Id, eo.Picture, ot.Organizer_type,ot.Organizer_Type_Id                                         
-                                from event_organizer as eo 
-                                join organizer_type as ot
-                                on eo.Organizer_Type_Id = ot.Organizer_Type_Id
-                                where eo.Organizer_Id='$ax'") or die("Error3: " . mysqli_error($connect));
+                                $query1 = mysqli_query($connect,"SELECT u.UserId, u.Display_Name, u.Picture,
+                                    u.Last_Login_Info,u.Registered_name, u.Contact_No, u.Mail_Id                                          
+                                    from user as u 
+                                    join user_authentication as ua
+                                    on u.UserId = ua.UserId
+                                    where u.UserId='$ax'") or die("Error: " . mysqli_error($connect));
                                 $row1=mysqli_fetch_array($query1);
                                 // echo "Thanks for the Input"."<br>";
                             } 
@@ -338,52 +353,99 @@ if(isset($_SESSION["id"])) {
                     <div class="col-md-8">
                         <div class="tab-content profile-tab" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                        
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Client Name</label>
+                                                <label>UserID</label>
                                             </div>
                                             <div class="col-md-6">
                                                 <p>
-                                                    <?php echo $row1[1]; ?>
+                                                    <?php echo $row1[0]; ?>
                                                 </p>
                                             </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Client Email</label>
+                                                <label>Registered Name</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <!-- <p>
-                                                  
-                                                </p> -->
-                                                <?php
-                                                    $prtxx=$row1[3];
-                                                    if($row1[3] == "")
-                                                    {
-                                                        $prtxx = "Not Added Yet";
-                                                    }
-                                                    ?>
-                                                <input type= "text" id = "email"  
-                                                placeholder = "<?php echo $prtxx; ?>"
-                                                name = "email"/>
+                                                <p>
+                                                    <?php echo $row1[4]; ?>
+                                                </p>
                                             </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Client Description</label>
+                                                <label>Last Login Info</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <textarea type= "text" id = "desc" maxlength="4096" cols="50" rows="10"
-                                                placeholder = "<?php echo $row1[2]; ?>" name = "desc"></textarea>
-                                                
+                                                <p>
+                                                  <?php echo $row1[3]; ?>
+                                                </p>
                                             </div>
                                         </div>
 
-                                    
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Display Name</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <?php
+                                                    $prt1=$row1[1];
+                                                    if($row1[1] == "")
+                                                    {
+                                                        $prt1 = "Not Added Yet";
+                                                    }
 
-                                       
+                                                    ?>
+                                                <input type= "text" id = "dname"  
+                                                placeholder = "<?php echo $prt1; ?>"
+                                                name = "dname"/>
+            
+                                            
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Email ID</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <?php
+                                                    $prt2=$row1[6];
+                                                    if($row1[6] == "")
+                                                    {
+                                                        $prt2 = "Not Added Yet";
+                                                    }
+
+                                                    ?>
+                                                <input type= "text" id = "email"  
+                                                    placeholder = "<?php echo $prt2; ?>"
+                                                    name = "email"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Phone</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <?php
+                                                $prt3=$row1[5];
+                                                if($row1[5] == "")
+                                                {
+                                                    $prt3 = "Not Added Yet";
+                                                }
+
+                                                ?>
+                                                <input type= "text" id = "number"  
+                                                    placeholder = "<?php echo $prt3; ?>"
+                                                    name = "number"/>
+                                                    
+                                            </div>
+                                        </div>
                                        
                                         <a href = "changepwd.php">Change Password </a> <br>
                                         <a href = "changedp.php">Change Profile Photo </a>

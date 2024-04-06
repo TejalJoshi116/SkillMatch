@@ -120,11 +120,11 @@ body {
 <div class="topnav">
   <a href="client_dashboard.php">Dashboard</a>
   <a href="profile.php">Client Profile</a>
-  <a href="projectregister.php">Add New Project</a>
+  <a class="active" href="projectregister.php">Add New Project</a>
   <!--<a href="kyc.php">Know Your Club</a-->
   <!--<a href="schedule.php">Schedule</a>-->
   <a href="filterdate.php">Filter Project by Date</a>
-  <a class="active" href="aboutus.php">About The Team</a>
+  <a  href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
   ?>

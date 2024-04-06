@@ -119,7 +119,7 @@ margin-left: 4px;
 <?php 
     $connect=mysqli_connect('localhost','root','','skillmatch');
     $ax = $_SESSION["id"];
-    if(mysqli_connect_errno($connect))
+    if(mysqli_connect_errno())
     {
         echo 'Failed to connect to database: '.mysqli_connect_error();
     }
@@ -129,17 +129,18 @@ margin-left: 4px;
         {
             if($_POST["npassword"] == $_POST["cpassword"])
             {
-                $query1 = mysqli_query($connect,"SELECT oa.Password                                          
-                from organizer_authentication as oa
-                where oa.Organizer_Id='$ax'") or die("Error: " . mysqli_error($connect));
+                $query1 = mysqli_query($connect,"SELECT ua.Password                                          
+                from user_authentication as ua
+                where ua.UserId='$ax'") or die("Error: " . mysqli_error($connect));
                 $row1=mysqli_fetch_array($query1);
                 $hash = hash('sha256', (get_magic_quotes_gpc() ? stripslashes($_POST['oldpwd']) : $_POST['oldpwd']));
                 if($hash == $row1[0])
                 {
                     $newpwd = $_POST['npassword'];
                     $hash1 = hash('sha256', (get_magic_quotes_gpc() ? stripslashes($newpwd) : $newpwd));
-                    $q1 = mysqli_query($connect, "UPDATE `organizer_authentication`
-                        SET `Password` = '$hash1' WHERE `Organizer_Id` = '$ax'")
+                    $q1 = mysqli_query($connect, "UPDATE `user_authentication`
+                        SET `Password` = '$hash1' WHERE `UserId` = '$ax'")
+
                         or die("Error: " . mysqli_error($connect));
                     
                     echo "<h3 style='color:white;'><center>"."Successfully Updated Password. "."</center></h3>"."<center><h3 style='color:white;'>"."Redirecting to Profile Page.....".'</center></h3>';

@@ -47,7 +47,6 @@ body {
 .topnav-right {
   float: right;
 }
-#responsive-image {  width: 200px;  height: 200px; } 
 .collapsible {
   background-color: #777;
   color: white;
@@ -71,17 +70,6 @@ body {
   background-color: #f1f1f1;
 }
 
-
-
-
-
-
-
-/* 
-
-body{ 
-     background: -webkit-linear-gradient(left, #3931af, #00c6ff); 
-} */
 .emp-profile{
     padding: 3%;
     margin-top: 3%;
@@ -182,10 +170,10 @@ body{
 }
 #page5{
     position:relative;
-    left:365px;
-    bottom:105px;
+    left:360px;
+    bottom:110px;
 }
-
+#responsive-image {  width: 200px;  height: 200px; } 
 </style>
 </head>
 
@@ -195,23 +183,21 @@ body{
 
 
 
+
      <div class="topnahv">
     <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >SkillMatch</h3>
-    
-  
-    
-    
+
 </div>
 
 
-
 <div class="topnav">
-  <a href="client_dashboard.php">Dashboard</a>
-  <a class="active" href="profile.php">Client Profile</a>
-  <a href="projectregister.php">Add New Project</a>
-  <!--<a href="kyc.php">Know Your Club</a-->
-  <!--<a href="schedule.php">Schedule</a>-->
-  <a href="filterdate.php">Filter Project by Date</a>
+  <a href="loggedinpage.php">Projects</a>
+  <a class = "active" href="profile.php">User Profile</a>
+  <a href="dashboard.php">Dashboard</a>
+  <a href="schedule.php">Schedule</a>
+  <a href="filterdate.php">Filter Event By Date</a>
+  <a href="view_sent_queries.php">View Unresponded Queries</a>
+  <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
@@ -224,7 +210,7 @@ if(isset($_SESSION["id"])) {
     }
     else{
 ?>
-<a href="../login/login_organizer.php">You are not logged in</a>
+<a href="../login/login_user.php">You are not logged in</a>
 <?php
     }
     ?>
@@ -245,14 +231,14 @@ if(isset($_SESSION["id"])) {
             echo 'Failed to connect to database: '.mysqli_connect_error();
         }
         else {
-            $query1 = mysqli_query($connect,"SELECT eo.Organizer_Id, eo.Organizer_Name, eo.Description, 
-            eo.Email_Id, eo.Picture, ot.Organizer_type, ot.Organizer_Type_Id                                          
-            from event_organizer as eo 
-            join organizer_type as ot
-            on eo.Organizer_Type_Id = ot.Organizer_Type_Id
-            where eo.Organizer_Id='$ax'") or die("Error: " . mysqli_error($connect));
+            $query1 = mysqli_query($connect,"SELECT u.UserId, u.Display_Name, u.Picture,
+                u.Last_Login_Info,u.Registered_name, u.Contact_No, u.Mail_Id, ua.Password                                           
+                from user as u 
+                join user_authentication as ua
+                on u.UserId = ua.UserId
+                where u.UserId='$ax'") or die("Error: " . mysqli_error($connect));
             $row1=mysqli_fetch_array($query1);
-            $output_dir = "../upload/";
+            $output_dir = "../Profiles/";
             $filename = $_FILES['file']['name']; 
             $tempname = $_FILES['file']['tmp_name'];
 
@@ -270,23 +256,23 @@ if(isset($_SESSION["id"])) {
                     $folder1 = "NULL";
                 }
                 else{
-                    $folder = "../upload/".$filename;
-                    $folder1 = "upload/".$filename; 
+                    $folder = "../Profiles/".$filename;
+                    $folder1 = "Profiles/".$filename; 
 
                 }
 
-                $sql = "UPDATE `event_organizer` SET `Picture` = '$folder1' WHERE `Organizer_Id` = '$ax'"; 
+                $sql = "UPDATE `user` SET `Picture` = '$folder1' WHERE `UserId` = '$ax'"; 
         
                 // Execute query 
                 $qzzz = mysqli_query($connect, $sql); 
 
                 if (move_uploaded_file($tempname, $folder))  { 
                     $msg = "Image uploaded successfully"."<br>"; 
-                    echo $msg;
+                    // echo $msg;
                 }
                 else{ 
                     $msg = "Failed to upload image"."<br>"; 
-                    echo $msg;
+                    // echo $msg;
                 }
             }
                 
@@ -307,12 +293,12 @@ if(isset($_SESSION["id"])) {
     }
     else
     {   
-        $query1 = mysqli_query($connect,"SELECT eo.Organizer_Id, eo.Organizer_Name, eo.Description, 
-        eo.Email_Id, eo.Picture, ot.Organizer_type, ot.Organizer_Type_Id                                          
-        from event_organizer as eo 
-        join organizer_type as ot
-        on eo.Organizer_Type_Id = ot.Organizer_Type_Id
-        where eo.Organizer_Id='$ax'") or die("Error: " . mysqli_error($connect));
+        $query1 = mysqli_query($connect,"SELECT u.UserId, u.Display_Name, u.Picture,
+            u.Last_Login_Info,u.Registered_name, u.Contact_No, u.Mail_Id, ua.Password                                           
+            from user as u 
+            join user_authentication as ua
+            on u.UserId = ua.UserId
+            where u.UserId='$ax'") or die("Error: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
         // echo "Thanks for the Input"."<br>";
     } 
@@ -324,7 +310,7 @@ if(isset($_SESSION["id"])) {
                 <div class="row">
                     <div class="col-md-4">
                         <div class="profile-img">
-                            <img src= <?php $msg1 =  "../".$row1[4]; echo $msg1;?> id="responsive-image" alt=""/>
+                            <img src= <?php $msg1 =  "../".$row1[2]; echo $msg1; ?> id="responsive-image" alt=""/>
                             <!-- <div class="file btn btn-lg btn-primary">
                                 Change Photo
                                 <input type="file" name="file"/>
@@ -335,7 +321,7 @@ if(isset($_SESSION["id"])) {
                         <div class="profile-head">
                                     <h3>
                                         <?php 
-                                        echo $row1[1]; ?>
+                                        echo $row1[4]; ?>
                                     </h3>
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
@@ -359,8 +345,8 @@ if(isset($_SESSION["id"])) {
                                         <input type= "file" id = "file" name = "file" /> 
                                     </div>
                                 </div> 
-                                <br> 
-                                <input type="submit" value="Submit" name="submit"/> 
+                                <br>
+                                <input type="submit" value="Submit" name="submit"/>
                                 <input type="reset" value="Reset"/> <br>
                                 <a href = "profile.php">Go Back To Profile Page</a> 
                             </div>

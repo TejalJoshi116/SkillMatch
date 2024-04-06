@@ -203,7 +203,13 @@ body {
 
 
 
-<div class="topnahv">
+<body>
+<script src =  "js/jquery.js"></script>
+     <script src = "js/bootstrap.min.js"></script>
+    
+
+
+     <div class="topnahv">
     <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >SkillMatch</h3>
     
   

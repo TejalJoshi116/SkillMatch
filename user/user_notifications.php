@@ -1,5 +1,21 @@
-<?php 
-session_start();?>
+<?php
+session_start();
+if(isset($_POST['rep']))
+{
+  if(isset($_SESSION["id"]))
+  {
+    $connect=mysqli_connect('localhost','root','','skillmatch');
+    if(mysqli_connect_errno())
+    {
+        echo 'Failed to connect to database: '.mysqli_connect_error();
+    }
+    else{
+      $msg_id=$_POST['rep'];
+      $sqlz = mysqli_query($connect, "DELETE FROM messages WHERE message_id= $msg_id ") or die("Error2: " . mysqli_error($connect));
+  }
+}
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -83,29 +99,25 @@ body {
 
 </style>
 </head>
-
+</head>
 <body>
 <script src =  "js/jquery.js"></script>
      <script src = "js/bootstrap.min.js"></script>
 
-
      <div class="topnahv">
     <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >SkillMatch</h3>
-    
-  
-    
-    
+
 </div>
 
 
-
 <div class="topnav">
-  <a href="client_dashboard.php">Dashboard</a>
-  <a href="profile.php">Client Profile</a>
-  <a href="projectregister.php">Add New Project</a>
-  <!--<a href="kyc.php">Know Your Club</a-->
-  <!--<a href="schedule.php">Schedule</a>-->
-  <a href="filterdate.php">Filter Project by Date</a>
+  <a href="loggedinpage.php">Events</a>
+  <a href="profile.php">User Profile</a>
+  <a href="dashboard.php">Dashboard</a>
+  <a href="schedule.php">Schedule</a>
+  <a href="filterdate.php">Filter Event By Date</a>
+  <a href="view_sent_queries.php">View Unresponded Queries</a>
+  <a class = "active" href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
@@ -118,7 +130,7 @@ if(isset($_SESSION["id"])) {
     }
     else{
 ?>
-<a href="../login/login_client.php">You are not logged in</a>
+<a href="../login/login_user.php">You are not logged in</a>
 <?php
     }
     ?>
@@ -129,32 +141,28 @@ if(isset($_SESSION["id"])) {
   
 </div>
 <br>
-<h2 style = "color:green;"><center> Messages For the Event </center></h2>
 
 <?php 
-    
-    if(isset($_SESSION["eventid"])){
+    if(isset($_SESSION["id"])){
         $connect=mysqli_connect('localhost','root','','skillmatch');
         if(mysqli_connect_errno())
         {
             echo 'Failed to connect to database: '.mysqli_connect_error();
         }
         else{
-            $eve = $_SESSION["eventid"]; 
-            $sql = mysqli_query($connect,"SELECT u.UserId, u.Registered_Name, m.Timestamp, m.message, e.Event_Name FROM events as e JOIN messages as m JOIN user as u
-            ON e.Event_Id = m.Event_ID AND u.UserId = m.UserId WHERE e.Event_Id= '$eve'  ORDER BY m.Timestamp DESC LIMIT 10")  or die("Error2: " . mysqli_error($connect));;
-
-
+            $id = $_SESSION["id"];
+            $sql = mysqli_query($connect,"SELECT e.Event_Name, m.Timestamp, m.message, m.message_id FROM events as e JOIN messages as m
+            ON e.Event_Id = m.Event_ID WHERE m.UserId= '$id' OR m.UserId = 'ALL'  ORDER BY m.Timestamp DESC")  or die("Error2: " . mysqli_error($connect));;
             ?>
-
+            
             <div class="not">
             <table class="table">
                 <thead class="thead-dark">
                 <tr>
                     <th scope="col">Timestamp</th>
-                    <th scope="col">User Id</th>
-                    <th scope="col">Registered Name</th>
+                    <th scope="col">Event Name</th>
                     <th scope="col">Message</th>
+                    <th scope="col">Mark as read</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -162,10 +170,17 @@ if(isset($_SESSION["id"])) {
             while($row = mysqli_fetch_array($sql))
             {
                 echo "<tr>";
-                echo "<th scope='row'>".$row[2]."</th>";
+                echo "<th scope='row'>".$row[1]."</th>";
                 echo "<td>".$row[0]."</td>";
-                echo "<td>".$row[1]."</td>";
-                echo "<td>".$row[3]."</td>";
+                echo "<td>".$row[2]."</td>";
+                ?>
+                <td>
+                <form action="user_notifications.php" method="post">
+                <input hidden type="text"  name="rep" value="<?php echo $row[3]; ?>" />
+                <input  type="submit" class="btn btn-danger"  value="Delete"/>
+                </form>
+                </td>
+                <?php
                 echo "</tr>";
             }
         }
@@ -205,6 +220,9 @@ if(isset($_SESSION["id"])) {
 </table>
 </div>
 
+
+
+    
 </body>
 
 </html>

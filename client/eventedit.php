@@ -4,10 +4,10 @@ session_start();
 <?php
 if(isset($_POST['submit']))
 {
-    $connect=mysqli_connect('localhost','root','','event_management_nitc');
+    $connect=mysqli_connect('localhost','root','','skillmatch');
     $insert=false;
     //check connection
-    if(mysqli_connect_errno($connect))
+    if(mysqli_connect_errno())
     {
         echo 'Failed to connect to database: '.mysqli_connect_error();
     }
@@ -19,9 +19,9 @@ if(isset($_POST['submit']))
         {
             $date = $_POST['date_'];  
         }
-        if(isset($_POST['start_time_']))
+        if(isset($_POST['date_']))
         {
-            $start = $_POST['start_time_'];  
+            $start = $_POST['date_'];  
         }
         if(isset($_POST['end_time_']))
         {
@@ -53,7 +53,7 @@ if(isset($_POST['submit']))
         }
         if(isset($_POST["fee"]))
         {
-            $fee = $_POST["fee"];  
+            $fee = $_POST['conp_'];  
         }
 
 
@@ -89,7 +89,7 @@ if(isset($_POST['submit']))
             mysqli_query($connect,"UPDATE events SET Event_Type_Id = $type WHERE Event_Id = $eve") or die("Error2: " . mysqli_error($connect));
             
         }
-        if(($fee == 0) || ($fee ==1)){ 
+        if(!empty($fee)){ 
             mysqli_query($connect,"UPDATE events SET fee = $fee WHERE Event_Id = $eve") or die("Error2: " . mysqli_error($connect));
             
         }
@@ -204,7 +204,7 @@ body {
 
 
      <div class="topnahv">
-    <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >Event Management System, NITC</h3>
+    <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >SkillMatch</h3>
     
   
     
@@ -214,13 +214,13 @@ body {
 
 
 <div class="topnav">
-  <a  href="org_dashboard.php">Dashboard</a>
-  <a href="profile.php">Organizer Profile</a>
-  <a href="eventregister.php">Add New Event</a>
-  <a href="kyc.php">Know Your Club</a>
-  <a href="schedule.php">Schedule</a>
-  <a href="filterdate.php">Filter Events by Date</a>
-  <a  href="aboutus.php">About The Team</a>
+  <a class="active" href="client_dashboard.php">Dashboard</a>
+  <a href="profile.php">Client Profile</a>
+  <a href="projectregister.php">Add New Project</a>
+  <!--<a href="kyc.php">Know Your Club</a-->
+  <!--<a href="schedule.php">Schedule</a>-->
+  <a href="filterdate.php">Filter Project by Date</a>
+  <a href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
   ?>
@@ -232,7 +232,7 @@ if(isset($_SESSION["id"])) {
     }
     else{
 ?>
-<a href="../login/login_organizer.php">You are not logged in</a>
+<a href="../login/login_client.php">You are not logged in</a>
 <?php
     }
     ?>
@@ -245,8 +245,8 @@ if(isset($_SESSION["id"])) {
 <br>
   
   <?php
-    $connect=mysqli_connect('localhost','root','','event_management_nitc');
-    if(mysqli_connect_errno($connect))
+    $connect=mysqli_connect('localhost','root','','skillmatch');
+    if(mysqli_connect_errno())
     {
         echo 'Failed to connect to database: '.mysqli_connect_error();
     }
@@ -275,7 +275,7 @@ if(isset($_SESSION["id"])) {
     <form enctype="multipart/form-data" action="eventedit.php" method="post">
             <tr>
                 <td>
-                    Event Name : 
+                    Project Name : 
 </td>
 <td>
                     <input type= "text" id = "name_" name = "name_" placeholder="<?php echo $row1[1]; ?>" maxlength="128" size="60" disabled required/>   
@@ -283,7 +283,7 @@ if(isset($_SESSION["id"])) {
             </tr> <br> <br> 
             <tr>
                 <td>
-                    Event Date : 
+                 Project Date : 
                     </td>
 <td>
                     <input type= "date" id = "date_" name = "date_" value="<?php echo $row1[2]; ?>" size="20" />   
@@ -291,23 +291,23 @@ if(isset($_SESSION["id"])) {
             </tr> <br> <br> 
             <tr>
                 <td>
-                    Event Start Time : 
+                Project Start date : 
                     </td>
 <td>
-                    <input type= "time" id = "start_time_" name = "start_time_" value="<?php echo $row1[3]; ?>" size="20"/>   
+                    <input type= "date" id = "date_" name = "date_" value="<?php echo $row1[2]; ?>" size="20" />    
                 </td>   
             </tr> <br> <br> 
             <tr>
                 <td>
-                    Event End Time : 
+                Project End date : 
                     </td>
 <td>
-                    <input type= "time" id = "end_time_" name = "end_time_" value="<?php echo $row1[5]; ?>" size="20"/>   
+                    <input type= "date" id = "date_" name = "date_" value="<?php echo $row1[2]; ?>" size="20" />   
                 </td>   
             </tr> <br> <br> 
             <tr>
                 <td>
-                    Event Description : 
+                Project Description : 
                     </td>
 <td>
                     <textarea type= "text" id = "desc_" name = "desc_" placeholder="<?php echo $row1[4]; ?>" maxlength="4096" cols="100" rows="5"></textarea>
@@ -316,7 +316,7 @@ if(isset($_SESSION["id"])) {
 
             <tr>
                 <td>
-                    Event Limit : 
+                Project Limit : 
                     </td>
 <td>
                     <input type= "number"  name = "limit_" placeholder="<?php echo $row1[6]; ?>" maxlength="4096" size="60"/>   
@@ -324,14 +324,14 @@ if(isset($_SESSION["id"])) {
             </tr> <br> <br> 
             <tr>
                 <td>
-                    Event Location :
+                Project Location :
  
                 </td>
                 <td>
                     <select name ="location_id" id = "location_id" > 
                     <option selected value><?php echo $row8[0]; ?></option>
                     <?php 
-                        $conn=mysqli_connect('localhost','root','','event_management_nitc'); 
+                        $conn=mysqli_connect('localhost','root','','skillmatch'); 
                         $result=mysqli_query($conn,'SELECT Location_Id,Location_Name FROM event_location ORDER BY Location_Name'); 
                         while($row=mysqli_fetch_assoc($result)) {
                             echo "<option value='$row[Location_Id]'>$row[Location_Name]</option>"; 
@@ -342,13 +342,13 @@ if(isset($_SESSION["id"])) {
             </tr> <br><br>
             <tr>
                 <td>
-                    Event Type :
+                Project Type :
                 </td>
                 <td>
                     <select name ="type_id" id = "type_id" > 
                     <option selected value><?php echo $row7[0]; ?></option>
                     <?php 
-                        $conn=mysqli_connect('localhost','root','','event_management_nitc'); 
+                        $conn=mysqli_connect('localhost','root','','skillmatch'); 
                         $result=mysqli_query($conn,'SELECT Event_Type_Id,Event_Type_Name FROM event_type ORDER BY Event_Type_Name'); 
                         while($row=mysqli_fetch_assoc($result)) {
                             echo "<option value='$row[Event_Type_Id]'>$row[Event_Type_Name]</option>"; 
@@ -359,10 +359,10 @@ if(isset($_SESSION["id"])) {
             </tr> <br><br>
             <tr>
                 <td>
-                    Event Fee :
+                Project payment :
                 </td>
                 <td>
-                    <select name ="fee" id = "fee"> 
+                    <select name ="conp_" id = "limit_"> 
                     <option selected value = "<?php echo $row1[11]?>"><?php 
                     if($row1[11])
                     {

@@ -213,7 +213,6 @@ body {
   <a href="loggedinpage.php">Projects</a>
   <a href="profile.php">User Profile</a>
   <a href="dashboard.php">Dashboard</a>
-  <a href="kyc.php">Know Your Club</a>
   <a href="schedule.php">Schedule</a>
   <a href="filterdate.php">Filter Projects By Date</a>
   <a href="view_sent_queries.php">View Unresponded Queries</a>
