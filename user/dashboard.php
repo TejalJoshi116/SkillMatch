@@ -130,7 +130,20 @@ if(isset($_SESSION["id"])) {
       <a href="../login/login_user.php">You are not logged in</a>
     
 <?php
-    }
+}
+?>
+<a href="../login/logout.php">Logout</a>
+
+</div>
+     
+</div>
+<br>
+
+<h2 style="color:black;">List of Projects Registered In:</h2>
+<br>
+<button type="button" class="collapsible">All Active Projects</button>
+<div class="card lg-12"   id = "content">
+  <?php
     $connect=mysqli_connect('localhost','root','','skillmatch');
     if(mysqli_connect_errno())
     {

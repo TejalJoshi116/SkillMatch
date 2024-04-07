@@ -248,6 +248,7 @@ if(isset($_SESSION["id"])) {
             u.Last_Login_Info,u.Registered_Name, u.Contact_No, u.Mail_Id,ua.password_hash                                          
             FROM user AS u 
             join user_auth as ua
+            on u.UserId = ua.UserId
             WHERE u.UserId='$ax'") or die("Error: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
     } 
@@ -263,7 +264,10 @@ if(isset($_SESSION["id"])) {
         </div>
         <div class="col-md-6">
             <div class="profile-head">
-                <h3><?php echo $row1[4]; ?></h3>
+                <h3>
+                    <?php 
+                    echo $row1[4]; ?>
+                </h3>
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
@@ -273,7 +277,7 @@ if(isset($_SESSION["id"])) {
         </div>
         <form action="profile.php" method="POST">
             <div class="col-md-2">
-                <input type="submit" name="btnAddMore" value="Edit Profile"/>
+                <input type="submit"  name="btnAddMore" value="Edit Profile"/>
                 <?php 
                     if(isset($_POST["btnAddMore"]))
                     {
@@ -298,10 +302,10 @@ if(isset($_SESSION["id"])) {
                                 $number = $row1[5];
                             }
 
-                            $queryasd=mysqli_query($con,"UPDATE `user` SET `Display_Name` = '$name',
-                                `Contact_No` = '$number',
-                                `Mail_Id` = '$email'
-                                WHERE `UserId`='$uid'") or die("Error: " . mysqli_error($con));
+                            $queryasd=mysqli_query($con,"UPDATE user SET Display_Name = '$name',
+                                Contact_No = '$number',
+                                Mail_Id = '$email'
+                                WHERE UserId='$uid'") or die("Error: " . mysqli_error($con));
                             
                             $con->close();
 
@@ -320,6 +324,8 @@ if(isset($_SESSION["id"])) {
                         $query1 = mysqli_query($connect,"SELECT u.UserId, u.Display_Name, u.Picture,
                             u.Last_Login_Info,u.Registered_name, u.Contact_No, u.Mail_Id                                          
                             FROM user AS u 
+                            join user_auth as ua
+                            on u.UserId = ua.UserId
                             WHERE u.UserId='$ax'") or die("Error: " . mysqli_error($connect));
                         $row1=mysqli_fetch_array($query1);
                     } 
@@ -327,7 +333,7 @@ if(isset($_SESSION["id"])) {
                     $connect->close();
                 ?>
             </div>
-        </form>
+        
     </div>
     <div class="row" id="page5">
         <div class="col-md-8">
@@ -369,8 +375,10 @@ if(isset($_SESSION["id"])) {
                                 {
                                     $prt1 = "Not Added Yet";
                                 }
-                            ?>
-                            <input type="text" id="dname" placeholder="<?php echo $prt1; ?>" name="dname"/>
+                                ?>
+                            <input type= "text" id = "dname" 
+                            placeholder="<?php echo $prt1; ?>" 
+                            name="dname"/>
                         </div>
                     </div>
                     <div class="row">
@@ -385,7 +393,9 @@ if(isset($_SESSION["id"])) {
                                     $prt2 = "Not Added Yet";
                                 }
                             ?>
-                            <input type="text" id="email" placeholder="<?php echo $prt2; ?>" name="email"/>
+                            <input type="text" id="email" 
+                            placeholder="<?php echo $prt2; ?>" 
+                            name="email"/>
                         </div>
                     </div>
                     <div class="row">
@@ -400,7 +410,9 @@ if(isset($_SESSION["id"])) {
                                     $prt3 = "Not Added Yet";
                                 }
                             ?>
-                            <input type="text" id="number" placeholder="<?php echo $prt3; ?>" name="number"/>
+                            <input type="text" id="number"
+                             placeholder="<?php echo $prt3; ?>" 
+                             name="number"/>
                         </div>
                     </div>
                     <a href="changepwd.php">Change Password</a> <br>
