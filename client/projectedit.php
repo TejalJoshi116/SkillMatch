@@ -257,9 +257,9 @@ if(isset($_SESSION["id"])) {
         $query1=mysqli_query($connect,"SELECT * FROM projects WHERE project_Id='$eve'") or die("Error1: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
         //echo $row1[1];
-        $l=$row1[8];
-        $query4=mysqli_query($connect,"SELECT project_Type_Name FROM project_type WHERE project_Type_Id='$row1[7]'") or die("Error4: " . mysqli_error($connect));
-        $row7=mysqli_fetch_array($query4);
+        $l=$row1[7];
+        //$query4=mysqli_query($connect,"SELECT project_Type_Name FROM project_type WHERE project_Type_Id='$row1[7]'") or die("Error4: " . mysqli_error($connect));
+       // $row7=mysqli_fetch_array($query4);
         //$query5=mysqli_query($connect,"SELECT `Status` FROM event_status WHERE Status_Id='$row1[9]'") or die("Error5: " . mysqli_error($connect));
         //$row6=mysqli_fetch_array($query5);
         //echo $row1[1];
@@ -269,7 +269,7 @@ if(isset($_SESSION["id"])) {
 </div>
 
     <body>
-    <form enctype="multipart/form-data" action="eventedit.php" method="post">
+    <form enctype="multipart/form-data" action="projectedit.php" method="post">
             <tr>
                 <td>
                     Project Name : 

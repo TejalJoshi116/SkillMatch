@@ -12,55 +12,60 @@ if(isset($_POST["upload"]))
       $d1=$_SESSION["project_name"];
       $query1=mysqli_query($connect,"SELECT project_Id from projects where project_Name='$d1'") or die("Error: " . mysqli_error($connect));
       $row1=mysqli_fetch_array($query1);
-          //echo "HELLO";
-  // echo $row1[0];
-    $a1=$_SESSION["id"];
-    
-    $output_dir = "../Documents/".$row1[0]."/";
-    // echo $output_dir;
-    $filename = $_FILES['file']['name']; 
-    $tempname = $_FILES['file']['tmp_name'];
-
-    $filename = str_replace(' ', '_', $filename);
-    $tempname = str_replace(' ', '_', $tempname);
-    $ext = pathinfo($filename, PATHINFO_EXTENSION);
-    // echo $ext;
-    if(isset($filename) && !empty($filename)){
-      if (!file_exists($output_dir))
-      {
-          @mkdir($output_dir, 0777);
-          //echo "Hello";
-      }   
       
-      if($filename == ""){
-          $folder ="NULL";
-          $folder1 = "NULL";
-      }
-      else{
-          $folder  = "../Documents/".$row1[0]."/".$a1."_receipt.".$ext;
-          $folder1 = "../Documents/".$row1[0]."/".$a1."_receipt.".$ext; 
-
-      }
-
+      $a1=$_SESSION["id"];
       
-
-      if (move_uploaded_file($tempname, $folder))  { 
-          $msg = "File uploaded successfully"; 
-          $query2=mysqli_query($connect,"INSERT into applicants_list (UserId, project_Id) values('$a1',$row1[0])") or die("Error: " . mysqli_error($connect));
-          $sql = "UPDATE `applicants_list` SET `upload` = '$folder1' WHERE `UserId` = '$a1' AND `project_Id` = $row1[0]"; 
-          $qzzz = mysqli_query($connect, $sql); 
-          echo "<h3><center>".$msg."</center></h3>".'<center><h3>'."Redirecting to Events Page.....".'</center></h3>';
-          echo "<script>setTimeout(\"location.href = 'register.php';\",2500);</script>";
+      // Check if entry already exists
+      $check_query = mysqli_query($connect, "SELECT * FROM applicants_list WHERE UserId='$a1' AND project_Id='{$row1['project_Id']}'");
+      if(mysqli_num_rows($check_query) > 0) {
+          echo "<h3><center>You have already registered!</center></h3>";
+          echo "<script>setTimeout(\"location.href = 'register.php';\", 2500);</script>";
+          exit; // Exit script execution
       }
-      else{ 
-          $msg = "Failed to upload documents/ receipt"."<br>"; 
-          echo $msg;
-          echo "<script>setTimeout(\"location.href = 'register_fee.php';\",2500);</script>";
+      
+      $output_dir = "../Documents/".$row1[0]."/";
+      
+      $filename = $_FILES['file']['name']; 
+      $tempname = $_FILES['file']['tmp_name'];
+
+      $filename = str_replace(' ', '_', $filename);
+      $tempname = str_replace(' ', '_', $tempname);
+      $ext = pathinfo($filename, PATHINFO_EXTENSION);
+      
+      if(isset($filename) && !empty($filename)){
+          if (!file_exists($output_dir))
+          {
+              @mkdir($output_dir, 0777);
+          }   
+          
+          if($filename == ""){
+              $folder ="NULL";
+              $folder1 = "NULL";
+          }
+          else{
+              $folder  = "../Documents/".$row1[0]."/".$a1."_receipt.".$ext;
+              $folder1 = "../Documents/".$row1[0]."/".$a1."_receipt.".$ext; 
+
+          }
+
+          if (move_uploaded_file($tempname, $folder))  { 
+              $msg = "File uploaded successfully"; 
+              $query2=mysqli_query($connect,"INSERT into applicants_list (UserId, project_Id) values('$a1',$row1[0])") or die("Error: " . mysqli_error($connect));
+              $sql = "UPDATE `applicants_list` SET `upload` = '$folder1' WHERE `UserId` = '$a1' AND `project_Id` = $row1[0]"; 
+              $qzzz = mysqli_query($connect, $sql); 
+              echo "<h3><center>".$msg."</center></h3>".'<center><h3>'."Redirecting to Events Page.....".'</center></h3>';
+              echo "<script>setTimeout(\"location.href = 'register.php';\",2500);</script>";
+          }
+          else{ 
+              $msg = "Failed to upload documents/ receipt"."<br>"; 
+              echo $msg;
+              echo "<script>setTimeout(\"location.href = 'register_fee.php';\",2500);</script>";
+          }
       }
   }
   $connect->close();    
-  }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
