@@ -154,13 +154,13 @@ if(isset($_POST["msg"]))
     else
     {   
         $msg=$_POST["msg"];
-        $d1=$_SESSION['eventname'];
+        $d1=$_SESSION['project_name'];
         // $que=$_POST["msg"];
-        $query1=mysqli_query($connect,"SELECT Event_Id from events where Event_Name='$d1'") or die("Error1: " . mysqli_error($connect));
+        $query1=mysqli_query($connect,"SELECT project_Id from projects where project_Name='$d1'") or die("Error1: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
         $eve=$row1[0];
         $a1=$_SESSION["id"];
-        $query2=mysqli_query($connect,"INSERT INTO `queries` (`UserId`,`Event_Id`,`Query` ) VALUES ('$usr',$eve,'$msg')") or die("Error2: " . mysqli_error($connect));
+        $query2=mysqli_query($connect,"INSERT INTO `queries` (`UserId`,`project_Id`,`Query` ) VALUES ('$usr',$eve,'$msg')") or die("Error2: " . mysqli_error($connect));
         echo "Query Successfully Sent to the Organizer."."<br>";
       }    
   $connect->close();    

@@ -274,8 +274,7 @@ if(isset($_SESSION["id"])) {
     
   </div>
   
-  
-</div>
+  </div>
 <br>
 <form action="filterdate.php" method="post">
 Start Date
@@ -285,9 +284,6 @@ End Date
 <input type="submit" value="submit" name="submit">
 </form>
 <hr style="height:2px; color:black; background-color:black">
-<!-- <button type="button" class="collapsible" >All Active Events</button>
-<div class="card mb-3" style="width:400px"  id = "content"> -->
-<!-- <h4>Active Events: </h4> -->
 <?php
     if(isset($_POST['submit'])){
     $connect=mysqli_connect('localhost','root','','skillmatch');
@@ -303,16 +299,13 @@ End Date
             $edate =$_POST['edate_']; 
         }
 
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date, 
-        L.Location_Name, S.Status, ec.contact_no,e.Event_Id 
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_contact as ec
-        where e.Location_Id=L.Location_Id 
-        and e.Status_Id=S.Status_Id 
-        and ec.Event_Id = e.Event_Id and e.Event_Date >='$sdate' and e.Event_Date <='$edate'
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
+        $query1=mysqli_query($connect,"SELECT p.project_Name, p.project_Date, pl.Location_Name, ps.Status, pc.contact_no, p.project_Id
+        FROM projects AS p
+        JOIN project_location AS pl ON p.Location_Id = pl.Location_Id
+        JOIN project_status AS ps ON p.Status_Id = ps.Status_Id
+        JOIN project_contact AS pc ON p.project_Id = pc.project_Id
+        WHERE p.project_Date >= '$sdate' AND p.project_Date <= '$edate'
+        ORDER BY p.project_Date") or die("Error: " . mysqli_error($connect));
           
 
         
@@ -335,23 +328,15 @@ End Date
             echo "<td>" . $row1[1] . "</td>";
             echo "<td>" . $row1[2] . "</td>";
             echo "<td>" . $row1[3] . "</td>";
-            $query2 = mysqli_query($connect,"select eo.Organizer_Name
-            from events as e 
-            join event_organizer as eo
-            join event_org_list as eol
-            on e.Event_Id = eol.Event_Id
-            and eol.Organizer_id= eo.Organizer_Id 
-            WHERE eol.Event_id =  $row1[5] and e.Event_Date >='$sdate' and e.Event_Date <='$edate' 
-            order by e.Event_Date") or die("Error: " . mysqli_error($connect));?>
+            $query2 = mysqli_query($connect,"SELECT c.client_Name
+            FROM projects AS p
+            JOIN project_client_list AS pcl ON p.project_Id = pcl.project_Id
+            JOIN client AS c ON pcl.client_id = c.client_id
+            WHERE p.project_Id = $row1[5] AND p.project_Date >= '$sdate' AND p.project_Date <= '$edate'") or die("Error: " . mysqli_error($connect));?>
             <td> <?php 
-                $zz = mysqli_query($connect,"select COUNT(*)
-                from events as e 
-                join event_organizer as eo
-                join event_org_list as eol
-                on e.Event_Id = eol.Event_Id
-                and eol.Organizer_id= eo.Organizer_Id 
-                WHERE eol.Event_id =  $row1[5] and e.Event_Date >='$sdate' and e.Event_Date <='$edate'
-                order by e.Event_Date") or die("Error: " . mysqli_error($connect));   
+                $zz = mysqli_query($connect,"SELECT COUNT(*)
+                FROM project_client_list AS pcl
+                WHERE pcl.project_Id = $row1[5] AND p.project_Date >= '$sdate' AND p.project_Date <= '$edate'") or die("Error: " . mysqli_error($connect));
                 $z1 = mysqli_fetch_array($zz);
                 while($row2=mysqli_fetch_array($query2)) 
                 {
@@ -369,16 +354,10 @@ End Date
             <?php
             echo "<td>" . $row1[4] . "</td>";
             echo "</tr>"; 
-
-
-            
         }
     }
     echo "<br>";
     $connect->close(); }    
 ?>
-<!-- </div> -->
-<!-- <h4>Inactive Events: </h4> -->
-
 </body>
 </html>

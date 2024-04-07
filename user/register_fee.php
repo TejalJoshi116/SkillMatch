@@ -2,15 +2,15 @@
 session_start();
 if(isset($_POST["upload"]))
 {
-  $connect=mysqli_connect('localhost','root','','event_management_nitc');
-  if(mysqli_connect_errno($connect))
+  $connect=mysqli_connect('localhost','root','','skillmatch');
+  if(mysqli_connect_errno())
   {
       echo 'Failed to connect to database: '.mysqli_connect_error();
   }
   else
   {   
-      $d1=$_SESSION["eventname"];
-      $query1=mysqli_query($connect,"SELECT Event_Id from events where Event_Name='$d1'") or die("Error: " . mysqli_error($connect));
+      $d1=$_SESSION["project_name"];
+      $query1=mysqli_query($connect,"SELECT project_Id from projects where project_Name='$d1'") or die("Error: " . mysqli_error($connect));
       $row1=mysqli_fetch_array($query1);
           //echo "HELLO";
   // echo $row1[0];
@@ -46,16 +46,16 @@ if(isset($_POST["upload"]))
 
       if (move_uploaded_file($tempname, $folder))  { 
           $msg = "File uploaded successfully"; 
-          $query2=mysqli_query($connect,"INSERT into registrants_list (UserID,Event_Id) values('$a1',$row1[0])") or die("Error: " . mysqli_error($connect));
-          $sql = "UPDATE `registrants_list` SET `upload` = '$folder1' WHERE `UserId` = '$a1' AND `Event_Id` = $row1[0]"; 
+          $query2=mysqli_query($connect,"INSERT into applicants_list (UserId, project_Id) values('$a1',$row1[0])") or die("Error: " . mysqli_error($connect));
+          $sql = "UPDATE `applicants_list` SET `upload` = '$folder1' WHERE `UserId` = '$a1' AND `project_Id` = $row1[0]"; 
           $qzzz = mysqli_query($connect, $sql); 
           echo "<h3><center>".$msg."</center></h3>".'<center><h3>'."Redirecting to Events Page.....".'</center></h3>';
-          echo "<script>setTimeout(\"location.href = 'register.php';\",1500);</script>";
+          echo "<script>setTimeout(\"location.href = 'register.php';\",2500);</script>";
       }
       else{ 
           $msg = "Failed to upload documents/ receipt"."<br>"; 
           echo $msg;
-          echo "<script>setTimeout(\"location.href = 'register_fee.php';\",1500);</script>";
+          echo "<script>setTimeout(\"location.href = 'register_fee.php';\",2500);</script>";
       }
   }
   $connect->close();    
@@ -217,7 +217,7 @@ if(isset($_SESSION["id"])) {
 <div style = "padding-left: 50px;">
 
 <?php
-echo "<h3 style = 'color: green;'> Upload your Fee Payment Receipt (Max 2048 KB)</h3>";
+echo "<h3 style = 'color: green;'> Upload your Resume (Max 2048 KB)</h3>";
     ?>
     <form enctype="multipart/form-data" action="register_fee.php" method="post">
     <input type="file" name="file" id="file" required/> <br> <br>

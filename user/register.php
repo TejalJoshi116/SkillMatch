@@ -1,6 +1,7 @@
+<!-- DB, Register fee remove -->
 <?php
 session_start();
-// echo $_SESSION["eventname"];
+// echo $_SESSION["project_name"];
 if(isset($_POST["Delrew"]))
 {
   $review_id=$_POST["Delr"];
@@ -12,8 +13,8 @@ if(isset($_POST["Delrew"]))
     }
     else
     {   
-        //$d1=$_SESSION["eventname"];
-        $query1=mysqli_query($connect,"DELETE FROM `review` where `Review_Id`=$review_id") or die("Error: " . mysqli_error($connect));
+        //$d1=$_SESSION["project_name"];
+        $query1=mysqli_query($connect,"DELETE FROM review where Review_Id=$review_id") or die("Error: " . mysqli_error($connect));
         // $row1=mysqli_fetch_array($query1);
 
     }    
@@ -30,15 +31,15 @@ if(isset($_POST["register"]))
     }
     else
     {   
-        $d1=$_SESSION["eventname"];
-        $query1=mysqli_query($connect,"SELECT Event_Id,fee from events where Event_Name='$d1'") or die("Error: " . mysqli_error($connect));
+        $d1=$_SESSION["project_name"];
+        $query1=mysqli_query($connect,"SELECT project_Id, fee from projects where project_Name='$d1'") or die("Error: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
       }    
   // echo $row1[0];
   $a1=$_SESSION["id"];
   if(!$row1[1])
   {
-  $query2=mysqli_query($connect,"INSERT into registrants_list (UserID,Event_Id) values('$a1',$row1[0])") or die("Error: " . mysqli_error($connect));
+  $query2=mysqli_query($connect,"INSERT into project_client_list (UserId, project_Id) values('$a1', $row1[0])") or die("Error: " . mysqli_error($connect));
   }
   else
   {
@@ -58,12 +59,12 @@ if(isset($_POST["review"]))
     }
     else
     {   
-        $d1=$_SESSION["eventname"];
-        $query1=mysqli_query($connect,"SELECT Event_Id from events where Event_Name='$d1'") or die("Error: " . mysqli_error($connect));
+        $d1=$_SESSION["project_name"];
+        $query1=mysqli_query($connect,"SELECT project_Id from projects where project_Name='$d1'") or die("Error: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
         $eve=$row1[0];
         $a1=$_SESSION["id"];
-        $query2=mysqli_query($connect,"INSERT into review (Review_Description,Review_Title,UserId,event_id) values('$gh_2','$gh_1','$a1',$eve)") or die("Error: " . mysqli_error($connect));
+        $query2=mysqli_query($connect,"INSERT into review (Review_Description, Review_Title, UserId, project_Id) values('$gh_2','$gh_1','$a1',$eve)") or die("Error: " . mysqli_error($connect));
       }    
   $connect->close();    
 }
@@ -76,8 +77,8 @@ if(isset($_POST["deregister"]))
     }
     else
     {   
-        $d1=$_SESSION["eventname"];
-        $query1=mysqli_query($connect,"SELECT Event_Id,fee from events where Event_Name='$d1'") or die("Error: " . mysqli_error($connect));
+        $d1=$_SESSION["project_name"];
+        $query1=mysqli_query($connect,"SELECT project_Id, fee from projects where project_Name='$d1'") or die("Error: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
 
       }    
@@ -85,23 +86,24 @@ if(isset($_POST["deregister"]))
   $a1=$_SESSION["id"];
   if(!$row1[1])
   {
-  $query2=mysqli_query($connect,"DELETE from registrants_list where UserID='$a1' and Event_Id=$row1[0] ") or die("Error: " . mysqli_error($connect));
+  $query2=mysqli_query($connect,"DELETE from project_client_list where UserId='$a1' and project_Id=$row1[0] ") or die("Error: " . mysqli_error($connect));
   }
   else
   {
-    $query3=mysqli_query($connect,"Select upload from registrants_list where UserID='$a1' and Event_Id=$row1[0] ") or die("Error: " . mysqli_error($connect));
+    $query3=mysqli_query($connect,"Select upload from project_client_list where UserId='$a1' and project_Id=$row1[0] ") or die("Error: " . mysqli_error($connect));
     $upl=mysqli_fetch_array($query3);
     if (!unlink($upl[0])) {  
       echo $upl[0]."cannot be deleted due to an error";  
   }  
   else {  
       //echo $upl[0]. "has been deleted"; 
-      $query4=mysqli_query($connect,"DELETE from registrants_list where UserID='$a1' and Event_Id=$row1[0] ") or die("Error: " . mysqli_error($connect)); 
+      $query4=mysqli_query($connect,"DELETE from project_client_list where UserId='$a1' and project_Id=$row1[0] ") or die("Error: " . mysqli_error($connect)); 
   } 
   }
   $connect->close();    
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -263,41 +265,41 @@ if(isset($_SESSION["id"])) {
     }
     else
     {   
-        $d1=$_SESSION["eventname"];
-        $query1=mysqli_query($connect,"SELECT * from events where Event_Name='$d1'") or die("Error: " . mysqli_error($connect));
+        $d1=$_SESSION["project_name"];
+        $query1=mysqli_query($connect,"SELECT * FROM projects WHERE project_Name='$d1'") or die("Error: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
 
       }
       $connect->close();
-  ?>
-<img  src="<?php echo "../".$row1[10]; ?>" width="325px" height="400px" alt="" style="padding-left:20px;">
+?>
+<img  src="<?php echo "../".$row1 ['Picture']; ?>" width="325px" height="400px" alt="" style="padding-left:20px;">
 <div class="text">
-<h3 id="head1"><?php echo $row1[1]; ?></h3>
+<h3 id="head1"><?php echo $row1 ['project_Name']; ?></h3>
 <?php
-if($row1[2]== NULL)
+if($row1 ['project_Start_Time'] == NULL)
 {
-  $row1[2]="--:--:--";
+  $row1 ['project_Start_Time'] = "--:--:--";
 } 
 ?>
-<button type="button" class="btn btn-success"><?php echo $row1[2]; ?></button>
+<button type="button" class="btn btn-success"><?php echo $row1 ['project_Start_Time']; ?></button>
 <?php
-if($row1[3]== NULL)
+if($row1 ['project_End_Time'] == NULL)
 {
-  $row1[3]="--:--:--";
+  $row1 ['project_End_Time'] = "--:--:--";
 } 
 ?>
-<button type="button" class="btn btn-success"><?php echo $row1[3]; ?></button>
+<button type="button" class="btn btn-success"><?php echo $row1 ['project_End_Time']; ?></button>
 <?php
-if($row1[5]== NULL)
+if($row1 ['fee'] == NULL)
 {
-  $row1[5]="--:--:--";
+  $row1 ['fee'] = "--:--:--";
 } 
 ?>
-<button type="button" class="btn btn-success"><?php echo $row1[5];  ?></button>
+<button type="button" class="btn btn-success"><?php echo $row1 ['fee'];  ?></button>
 <br>
 <h4>Description:</h4>
 <textarea rows="8" cols="200" disabled="disabled" style="width:500px;">
-<?php echo $row1[4]; ?>
+<?php echo $row1 ['Description']; ?>
 
 </textarea>
 
@@ -310,63 +312,56 @@ if(mysqli_connect_errno())
 }
 else
 {   
-    $d1=$_SESSION["eventname"];
-    $query1=mysqli_query($connect,"SELECT Event_Limit,Event_Id from events where Event_Name='$d1'") or die("Error: " . mysqli_error($connect));
+    $d1=$_SESSION["project_name"];
+    $query1=mysqli_query($connect,"SELECT project_Limit,project_Id from projects where project_Name='$d1'") or die("Error: " . mysqli_error($connect));
     $row1=mysqli_fetch_array($query1);
-    $cc=$row1[0];
-    $eve = $row1[1];
-    //echo $row1[1];
-    $query1=mysqli_query($connect,"SELECT COUNT(UserId) FROM registrants_list WHERE Event_Id=$row1[1];") or die("Error: " . mysqli_error($connect));
+    $cc=$row1 ['project_Limit'];
+    $eve = $row1 ['project_Id'];
+    $query1 = mysqli_query($connect, "SELECT COUNT(UserId) FROM project_client_list WHERE project_Id={$row1['project_Id']}") or die("Error: " . mysqli_error($connect));
+
     $row=mysqli_fetch_array($query1);
     $c=$row[0];
     
     $a1=$_SESSION["id"];
-    $d1=$_SESSION["eventname"];
+    $d1=$_SESSION["project_name"];
     
-    $query1=mysqli_query($connect,"SELECT * FROM registrants_list WHERE UserId='$a1' and Event_Id =$row1[1]") or die("Errorb: " . mysqli_error($connect));
+    $query1=mysqli_query($connect,"SELECT * FROM project_client_list WHERE UserId='$a1' and project_Id ={$row1['project_Id']}") or die("Errorb: " . mysqli_error($connect));
     $row1=mysqli_fetch_array($query1);
-    // echo $row1."<br>";
-    // echo $row1[]."<br>";
-    
     $flag=1;  
-    // echo $rowst[0]." ".$c." ".$cc." ".(is_array($row1))." ".$flag."<br>";
-    $query2 = mysqli_query($connect,"SELECT Status_Id FROM events WHERE Event_Name='$d1'") or die("Errorb: " . mysqli_error($connect));
+    
+    $query2 = mysqli_query($connect,"SELECT Status_Id FROM projects WHERE project_Name='$d1'") or die("Errorb: " . mysqli_error($connect));
     $rowst=mysqli_fetch_array($query2);
-    if(($c < $cc) && ($rowst[0] == 9) ){
-      $queryx = mysqli_query($connect,"UPDATE events as e SET e.Status_Id = '1' WHERE Event_Id =$eve") or die("Errorb: " . mysqli_error($connect));
-      $rowst[0] =1;
+    if(($c < $cc) && ($rowst['Status_Id'] == 9) ){
+      $queryx = mysqli_query($connect,"UPDATE projects as p SET p.Status_Id = 1 WHERE project_Id =$eve") or die("Errorb: " . mysqli_error($connect));
+      $rowst['Status_Id'] = 1;
     }
     if($c == $cc){
-      $query3 = mysqli_query($connect,"UPDATE events as e SET e.Status_Id = '9' WHERE Event_Id =$eve") or die("Errorb: " . mysqli_error($connect));
+      $query3 = mysqli_query($connect,"UPDATE projects as p SET p.Status_Id = 9 WHERE project_Id =$eve") or die("Errorb: " . mysqli_error($connect));
     }
-    // $query2 = mysqli_query($connect,"SELECT Status_Id FROM events WHERE Event_Name='$d1'") or die("Errorb: " . mysqli_error($connect));
-    // $rowst=mysqli_fetch_array($query2);
-    if( ($rowst[0]==2) || ($rowst[0]==3) || ($rowst[0]==6) || ($rowst[0]==8) || ($rowst[0]==9) )
+    
+    if( ($rowst['Status_Id'] == 2) || ($rowst['Status_Id'] == 3) || ($rowst['Status_Id'] == 6) || ($rowst['Status_Id'] == 8) || ($rowst['Status_Id'] == 9) )
     {
       $flag=0;
     }
     
-    // echo ((is_array($row1)) &&( $c<$cc) && ($flag))."<br>"; 
-    // echo $rowst[0]." ".$c." ".$cc." ".(is_array($row1))." ".$flag."<br>";
-
     if((is_array($row1))) {    
 ?>
 <form action="register.php" method="post">
-<input type="submit" name="deregister" id="bt1" class="btn btn-danger" value=Deregister />
+<input type="submit" name="deregister" id="bt1" class="btn btn-danger" value=Withdraw_Application />
 </form>
 <?php
-} else if(($c<$cc) && ($flag ==1)){
+} else if(($c < $cc) && ($flag == 1)){
 ?>
 <form action="register.php" method="post">
-<input type="submit" name="register" id="bt3" class="btn btn-warning" value=Register />
+<input type="submit" name="register" id="bt3" class="btn btn-warning" value=Apply />
 </form>
 <?php
-        }else if ($flag==0 || $c==$cc){
+        }else if ($flag == 0 || $c == $cc){
 ?>
 <button type="button" class="btn btn-success">
   <?php 
-    $x = mysqli_query($connect,"SELECT s.Status FROM events as e JOIN event_status  as s
-    ON e.Status_Id = s.Status_Id  WHERE Event_Id =$eve") or die("Errorb: " . mysqli_error($connect));
+    $x = mysqli_query($connect,"SELECT s.Status FROM projects as p JOIN project_status as s
+    ON p.Status_Id = s.Status_Id  WHERE project_Id =$eve") or die("Errorb: " . mysqli_error($connect));
     $rowzz=mysqli_fetch_array($x);
     echo $rowzz[0]; ?>
   </button>
@@ -382,11 +377,11 @@ else
     }
     else
     {   
-        $d1=$_SESSION["eventname"];
-        $query1=mysqli_query($connect,"SELECT Event_Limit,Event_Id from events where Event_Name='$d1'") or die("Error: " . mysqli_error($connect));
+        $d1=$_SESSION["project_name"];
+        $query1=mysqli_query($connect,"SELECT project_Limit,project_Id from projects where project_Name='$d1'") or die("Error: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
-        $cc=$row1[0];
-        $query1=mysqli_query($connect,"SELECT COUNT(UserId) FROM registrants_list WHERE Event_Id=$row1[1];") or die("Error: " . mysqli_error($connect));
+        $cc=$row1 ['project_Limit'];
+        $query1=mysqli_query($connect,"SELECT COUNT(UserId) FROM project_client_list WHERE project_Id={$row1['project_Id']}") or die("Error: " . mysqli_error($connect));
         $row=mysqli_fetch_array($query1);
         $c=$row[0];
         ?>
@@ -409,12 +404,11 @@ $connect=mysqli_connect('localhost','root','','skillmatch');
     else
     {   
         $a1=$_SESSION["id"];
-        $query1=mysqli_query($connect,"SELECT Picture from user where UserId='$a1'") or die("Error: " . mysqli_error($connect));
+        $query1=mysqli_query($connect,"SELECT Picture from `user` where UserId='$a1'") or die("Error: " . mysqli_error($connect));
         $zxc=mysqli_fetch_array($query1);
       }    
   ?>
-<img class="img-thumbnail" src=<?php echo "../".$zxc[0]; ?> id="responsive-image" alt=""><br>
-<!-- <h4><?php // echo " "." ".$_SESSION["name"]; ?></h4> -->
+<img class="img-thumbnail" src=<?php echo "../".$zxc['Picture']; ?> id="responsive-image" alt=""><br>
 <div class=par>
 <div class="tet">
 <br><br>  
@@ -423,11 +417,8 @@ $connect=mysqli_connect('localhost','root','','skillmatch');
 <form action="register.php" method="post">
 
 <input type="text" name="review_title" placeholder="Review Title" style="width: 350px; height: 30px;"><br><br>
-<!-- <input type="text" style="width: 500px; height: 20px;"> -->
 
- <textarea name="review" rows="3" cols="20"  style="width:500px;">
-
-</textarea> 
+<textarea name="review" rows="3" cols="20"  style="width:500px;"></textarea> 
 <br>
 <button type="submit" class="btn btn-info">Post</button>
 </form>
@@ -448,43 +439,42 @@ $connect=mysqli_connect('localhost','root','','skillmatch');
     }
     else
     {
-        $d1=$_SESSION["eventname"];
-        $query1=mysqli_query($connect,"SELECT Event_Id from events where Event_Name='$d1'") or die("Error: " . mysqli_error($connect));
+        $d1=$_SESSION["project_name"];
+        $query1=mysqli_query($connect,"SELECT project_Id from projects where project_Name='$d1'") or die("Error: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
-        $eve=$row1[0];
-        $query1=mysqli_query($connect,"Select Review_Title,Review_Description,UserId,Review_Id,Timestamp from review where event_id=$eve") or die("Error: " . mysqli_error($connect));
+        $eve=$row1 ['project_Id'];
+        $query1=mysqli_query($connect,"Select Review_Title,Review_Description,UserId,Review_Id,Timestamp from review where project_id=$eve") or die("Error: " . mysqli_error($connect));
         $count=1;
         echo '<p style="text-align:left">';
         while($row1=mysqli_fetch_array($query1))
         {
           //echo $count;
-          $query2=mysqli_query($connect,"Select Display_Name,Picture from user where UserId='$row1[2]'") or die("Error: " . mysqli_error($connect));
+          $query2=mysqli_query($connect,"Select Display_Name,Picture from `user` where UserId='$row1[2]'") or die("Error: " . mysqli_error($connect));
           $ust=mysqli_fetch_array($query2)
   ?>
          <div class="card mb-3" style="max-width: 1500px;">
             <div class="row g-0">
                 <div class="col-md-1">
-                <img src="../<?php echo $ust[1]; ?>" id="responsive-image1" alt="../Profiles/default.jpeg">
+                <img src="../<?php echo $ust['Picture']; ?>" id="responsive-image1" alt="../Profiles/default.jpeg">
 
                 </div>
                 <div class="col-md-9">
                 <div class="card-body">
                 
-                <h5 class="card-text"><?php echo $row1[0]; ?></h5>
-                <p class="card-text"><?php echo $row1[1]; ?></p>
+                <h5 class="card-text"><?php echo $row1 ['Review_Title']; ?></h5>
+                <p class="card-text"><?php echo $row1 ['Review_Description']; ?></p>
                 <?php
-                if($row1[2]==$_SESSION["id"])
+                if($row1 ['UserId']==$_SESSION["id"])
                 {
                 ?>
                 <form action="register.php" method="post">
-                <input hidden type="text"   value="<?php echo $row1[3];?>" name="Delr"/>
+                <input hidden type="text"   value="<?php echo $row1 ['Review_Id'];?>" name="Delr"/>
                 <input type="submit" name="Delrew" id="bt3" class="btn btn-danger" value=Delete />
                 </form>
                 <?php
                 }
                 ?>
-                <!-- <p class = "card-title">Posted by </p> -->
-                <p class="card-text"><small class="text-muted"><?php echo 'Posted By '.$ust[0].' at '.$row1[4]; ?></small></p>
+                <p class="card-text"><small class="text-muted"><?php echo 'Posted By '.$ust['Display_Name'].' at '.$row1 ['Timestamp']; ?></small></p>
                 </div>
               </div>
             </div>

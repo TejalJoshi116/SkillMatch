@@ -251,7 +251,7 @@ h6 {
   <a href="profile.php">User Profile</a>
   <a href="dashboard.php">Dashboard</a>
   <a class = "active" href="schedule.php">Schedule</a>
-  <a href="filterdate.php">Filter Event By Date</a>
+  <a href="filterdate.php">Filter project By Date</a>
   <a href="view_sent_queries.php">View Unresponded Queries</a>
   <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
@@ -278,9 +278,9 @@ if(isset($_SESSION["id"])) {
 </div>
 <br>
 <hr style="height:2px; color:black; background-color:black">
-<!-- <button type="button" class="collapsible" >All Active Events</button>
+<!-- <button type="button" class="collapsible" >All Active projects</button>
 <div class="card mb-3" style="width:400px"  id = "content"> -->
-<!-- <h4>Active Events: </h4> -->
+<!-- <h4>Active projects: </h4> -->
 <?php
     $connect=mysqli_connect('localhost','root','','skillmatch');
     if(mysqli_connect_errno())
@@ -289,24 +289,24 @@ if(isset($_SESSION["id"])) {
     }
     else
     {
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date, 
-        L.Location_Name, S.Status, ec.contact_no,e.Event_Id 
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_contact as ec
+        $query1=mysqli_query($connect,"select e.project_Name,e.project_Date, 
+        L.Location_Name, S.Status, ec.contact_no,e.project_Id 
+        from projects as e 
+        join project_location as L
+        join project_status as S 
+        join project_contact as ec
         where e.Location_Id=L.Location_Id 
         and e.Status_Id=S.Status_Id 
-        and ec.Event_Id = e.Event_Id and e.Event_Date >=CURDATE()
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
+        and ec.project_Id = e.project_Id and e.project_Date >=CURDATE()
+        order by e.project_Date") or die("Error: " . mysqli_error($connect));
           
 
         
         echo "<table border='2'>
         <tr>
-        </tr>"."<h4>Active Events</h4>"."<tr>
-        <th width='200px'>Event Name</th>
-        <th>Event Date</th>
+        </tr>"."<h4>Active projects</h4>"."<tr>
+        <th width='200px'>project Name</th>
+        <th>project Date</th>
         <th>Location Name</th>
         <th>Status</th>
         <th width='200px'>Organizing Clubs</th>
@@ -321,23 +321,23 @@ if(isset($_SESSION["id"])) {
             echo "<td>" . $row1[1] . "</td>";
             echo "<td>" . $row1[2] . "</td>";
             echo "<td>" . $row1[3] . "</td>";
-            $query2 = mysqli_query($connect,"select eo.Organizer_Name
-            from events as e 
-            join event_organizer as eo
-            join event_org_list as eol
-            on e.Event_Id = eol.Event_Id
-            and eol.Organizer_id= eo.Organizer_Id 
-            WHERE eol.Event_id =  $row1[5] and e.Event_Date >=CURDATE() 
-            order by e.Event_Date") or die("Error: " . mysqli_error($connect));?>
+            $query2 = mysqli_query($connect,"select eo.client_Name
+            from projects as e 
+            join client as eo
+            join project_client_list as eol
+            on e.project_Id = eol.project_Id
+            and eol.client_id= eo.client_id 
+            WHERE eol.project_id =  $row1[5] and e.project_Date >=CURDATE() 
+            order by e.project_Date") or die("Error: " . mysqli_error($connect));?>
             <td> <?php 
                 $zz = mysqli_query($connect,"select COUNT(*)
-                from events as e 
-                join event_organizer as eo
-                join event_org_list as eol
-                on e.Event_Id = eol.Event_Id
-                and eol.Organizer_id= eo.Organizer_Id 
-                WHERE eol.Event_id =  $row1[5] and e.Event_Date >=CURDATE() 
-                order by e.Event_Date") or die("Error: " . mysqli_error($connect));   
+                from projects as e 
+                join client as eo
+                join project_client_list as eol
+                on e.project_Id = eol.project_Id
+                and eol.client_id= eo.client_id 
+                WHERE eol.project_Id =  $row1[5] and e.project_Date >=CURDATE() 
+                order by e.project_Date") or die("Error: " . mysqli_error($connect));   
                 $z1 = mysqli_fetch_array($zz);
                 while($row2=mysqli_fetch_array($query2)) 
                 {
@@ -364,7 +364,7 @@ if(isset($_SESSION["id"])) {
     $connect->close(); 
 ?>
 <!-- </div> -->
-<!-- <h4>Inactive Events: </h4> -->
+<!-- <h4>Inactive projects: </h4> -->
 <?php
     $connect=mysqli_connect('localhost','root','','skillmatch');
     if(mysqli_connect_errno())
@@ -374,23 +374,23 @@ if(isset($_SESSION["id"])) {
     else
     {
         
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date, 
-        L.Location_Name, S.Status, ec.contact_no,e.Event_Id 
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_contact as ec
+        $query1=mysqli_query($connect,"select e.project_Name,e.project_Date, 
+        L.Location_Name, S.Status, ec.contact_no,e.project_Id 
+        from projects as e 
+        join project_location as L
+        join project_status as S 
+        join project_contact as ec
         on e.Location_Id=L.Location_Id 
         and e.Status_Id=S.Status_Id 
-        and ec.event_id = e.Event_Id 
-        where e.Event_Date < CURDATE()
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
+        and ec.project_Id = e.project_Id 
+        where e.project_Date < CURDATE()
+        order by e.project_Date") or die("Error: " . mysqli_error($connect));
         // echo "<br>";
         echo "<table border='2'>
         <tr>
-        </tr>"."<hr><h4>Inactive Events</h4>"."<tr>
-        <th width='200px'>Event Name</th>
-        <th>Event Date</th>
+        </tr>"."<hr><h4>Inactive projects</h4>"."<tr>
+        <th width='200px'>project Name</th>
+        <th>project Date</th>
         <th>Location Name</th>
         <th>Status</th>
         <th width='200px'>Organizing Clubs</th>
@@ -405,22 +405,22 @@ if(isset($_SESSION["id"])) {
             echo "<td>" . $row1[2] . "</td>";
             echo "<td>" . $row1[3] . "</td>";
             $query2 = mysqli_query($connect,"select eo.Organizer_Name
-            from events as e 
-            join event_organizer as eo
-            join event_org_list as eol
-            on e.Event_Id = eol.Event_Id
-            and eol.Organizer_id= eo.Organizer_Id 
-            WHERE eol.Event_id =  $row1[5]  
-            order by e.Event_Date") or die("Error: " . mysqli_error($connect));?>
+            from projects as e 
+            join client as eo
+            join project_client_list as eol
+            on e.project_Id = eol.project_Id
+            and eol.client_id= eo.client_id 
+            WHERE eol.project_Id =  $row1[5]  
+            order by e.project_Date") or die("Error: " . mysqli_error($connect));?>
             <td> <?php 
                 $zz = mysqli_query($connect,"select COUNT(*)
-                from events as e 
-                join event_organizer as eo
-                join event_org_list as eol
-                on e.Event_Id = eol.Event_Id
-                and eol.Organizer_id= eo.Organizer_Id 
-                WHERE eol.Event_id =  $row1[5] and e.Event_Date >=CURDATE() 
-                order by e.Event_Date") or die("Error: " . mysqli_error($connect));   
+                from projects as e 
+                join client as eo
+                join project_client_list as eol
+                on e.project_Id = eol.project_Id
+                and eol.client_id= eo.client_id 
+                WHERE eol.project_id =  $row1[5] and e.project_Date >=CURDATE() 
+                order by e.project_Date") or die("Error: " . mysqli_error($connect));   
                 $z1 = mysqli_fetch_array($zz);
                 while($row2=mysqli_fetch_array($query2)) 
                 {

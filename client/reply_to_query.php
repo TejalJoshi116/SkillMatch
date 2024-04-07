@@ -1,3 +1,4 @@
+<!-- DB -->
 <?php 
 session_start();
 ?>
@@ -91,7 +92,7 @@ body {
 
 
      <div class="topnahv">
-    <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >Event Management System, NITC</h3>
+    <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >SkillMatch</h3>
     
   
     
@@ -132,15 +133,15 @@ if(isset($_SESSION["id"])) {
 <br>
 <?php
     if(isset($_SESSION["queryid"])){
-        $connect=mysqli_connect('localhost','root','','event_management_nitc');
+        $connect=mysqli_connect('localhost','root','','skillmatch');
         if(mysqli_connect_errno($connect))
         {
             echo 'Failed to connect to database: '.mysqli_connect_error();
         }
         else{
             $rep = $_SESSION["queryid"]; 
-            $sql = mysqli_query($connect,"SELECT u.UserId, u.Registered_Name, q.Timestamp, q.Query, e.Event_Name, q.Query_Id FROM events as e JOIN queries as q JOIN user as u
-            ON e.Event_Id = q.Event_Id AND u.UserId = q.UserId WHERE q.Query_Id= $rep ")  or die("Error2: " . mysqli_error($connect));
+            $sql = mysqli_query($connect,"SELECT u.UserId, u.Registered_Name, q.Timestamp, q.Query, p.project_Name, q.Query_Id FROM projects as p JOIN queries as q JOIN user as u
+            ON p.project_Id = q.project_Id AND u.UserId = q.UserId WHERE q.Query_Id= $rep ")  or die("Error2: " . mysqli_error($connect));
             
             // <!-- <input hidden type="text" class="btn btn-primary" style= "" value="Reply"/> -->
             
@@ -176,21 +177,21 @@ if(isset($_SESSION["id"])) {
  </form>   
 <?php
     if(isset($_POST["reply_"])){
-    $connect=mysqli_connect('localhost','root','','event_management_nitc');
+    $connect=mysqli_connect('localhost','root','','skillmatch');
     if(mysqli_connect_errno($connect))
     {
         echo 'Failed to connect to database: '.mysqli_connect_error();
     }
     else{
         $rep = $_SESSION["queryid"];
-        $eve = $_SESSION["eventid"];
+        $eve = $_SESSION["project_Id"];
         $reply=$_POST["reply_"]; 
-        $sql = mysqli_query($connect,"SELECT u.UserId, u.Registered_Name, q.Timestamp, q.Query, e.Event_Name, q.Query_Id, q.Event_Id FROM events as e JOIN queries as q JOIN user as u
-        ON e.Event_Id = q.Event_Id AND u.UserId = q.UserId WHERE q.Query_Id= $rep ")  or die("Error2: " . mysqli_error($connect));
+        $sql = mysqli_query($connect,"SELECT u.UserId, u.Registered_Name, q.Timestamp, q.Query, p.project_Name, q.Query_Id, q.project_Id FROM projects as p JOIN queries as q JOIN user as u
+        ON p.project_Id = q.project_Id AND u.UserId = q.UserId WHERE q.Query_Id= $rep ")  or die("Error2: " . mysqli_error($connect));
         $rowx = mysqli_fetch_array($sql);
         
         $reply = "Dear ".$rowx[1].", the answer to your Query \'".$rowx[3]."\' is: ".$reply;
-        $sqlx = mysqli_query($connect, "INSERT INTO `messages`(`Event_Id`,`UserId`,`message`) VALUES ($eve,'$rowx[0]','$reply')") or die("Error2: " . mysqli_error($connect));
+        $sqlx = mysqli_query($connect, "INSERT INTO `messages`(`project_Id`,`UserId`,`message`) VALUES ($eve,'$rowx[0]','$reply')") or die("Error2: " . mysqli_error($connect));
         //echo "Successfully Replied to the Query";
         $sqlz = mysqli_query($connect, "DELETE FROM queries WHERE Query_Id= $rep ") or die("Error2: " . mysqli_error($connect));
         echo "<h3><center>"."Successfully Replied to the Query".'</center></h3>';

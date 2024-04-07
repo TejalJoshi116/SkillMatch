@@ -1,11 +1,11 @@
 <?php
 session_start();
 //echo $_SESSION["name"];
-if(isset($_POST['event_name']))
+if(isset($_POST['project_name']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventname"]=$_POST['event_name'];
+  $_SESSION["project_name"]=$_POST['project_name'];
   header("Location:register.php");
   }
 }
@@ -13,7 +13,7 @@ if(isset($_POST['ask']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventname"]=$_POST["ask"];
+  $_SESSION["project_name"]=$_POST["ask"];
   header("Location:send_query.php");
   }
 }
@@ -107,11 +107,11 @@ body {
 
 
 <div class="topnav">
-  <a href="loggedinpage.php">Events</a>
+  <a href="loggedinpage.php">Project</a>
   <a href="profile.php">User Profile</a>
   <a class= "active" href="dashboard.php">Dashboard</a>
   <a href="schedule.php">Schedule</a>
-  <a href="filterdate.php">Filter Event By Date</a>
+  <a href="filterdate.php">Filter Project By Date</a>
   <a href="view_sent_queries.php">View Unresponded Queries</a>
   <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
@@ -124,25 +124,13 @@ if(isset($_SESSION["id"])) {
 
     <?php
     }
-    else{
-?>
-<a href="../login/login_user.php">You are not logged in</a>
+    else
+    {
+      ?>
+      <a href="../login/login_user.php">You are not logged in</a>
+    
 <?php
     }
-    ?>
-    <a href="../login/logout.php">Logout</a>
-    
-  </div>
-  
-  
-</div>
-<br>
-
-<h2 style="color:black;">List of Projects Registered In:</h2>
-<br>
-<button type="button" class="collapsible">All Active Projects</button>
-<div class="card lg-12"   id = "content">
-  <?php
     $connect=mysqli_connect('localhost','root','','skillmatch');
     if(mysqli_connect_errno())
     {
@@ -150,24 +138,37 @@ if(isset($_SESSION["id"])) {
     }
     else
     {
+
       $a1=$_SESSION["id"];
-        $query1=mysqli_query($connect,"select distinct e.Event_Name,e.Event_Date,e.Picture, L.Location_Name, S.Status 
-        from events as e 
-        join event_location as L
-        join registrants_list as R
-        join event_status as S 
-        join event_organizer as eo
-        join event_org_list as eol
-        join organizer_type as o
-        on e.Location_Id=L.Location_Id 
-        and e.Status_Id=S.Status_Id
-        and e.Event_Id = eol.Event_Id 
-        and R.Event_Id = e.Event_Id
-        and eol.Organizer_id = eo.Organizer_Id
-        and eo.Organizer_Type_Id = o.Organizer_Type_Id 
-        where e.Event_Date >= CURDATE() 
-        AND R.UserId = '$a1'
-        order by e.Event_Date") or die("Error: new0 " . mysqli_error($connect));
+      $query1 = mysqli_query($connect, "SELECT DISTINCT p.project_Name, p.project_Date, p.Picture, ps.Status 
+      FROM projects AS p 
+      JOIN applicants_list AS al ON al.project_Id = p.project_Id
+      JOIN project_status AS ps ON p.Status_Id = ps.Status_Id
+      JOIN project_client_list AS pcl ON pcl.project_Id = p.project_Id
+      JOIN client AS c ON pcl.client_id = c.client_id
+      WHERE p.project_Date >= CURDATE() 
+      AND al.UserId = '$a1'
+      ORDER BY p.project_Date") 
+      or die("Error: new0 " . mysqli_error($connect));
+  
+      // $a1=$_SESSION["id"];
+      //   $query1=mysqli_query($connect,"select distinct p.project_Name, p.project_Date, p.Picture, pl.Location_Name, ps.Status 
+      //   from projects as p 
+      //   join project_location as pl
+      //   join applicants_list as al
+      //   join project_status as ps 
+      //   join client as c
+      //   join project_client_list as pcl
+      //   join client_type as ct
+      //   on p.Location_Id=pl.Location_Id 
+      //   and p.Status_Id=ps.Status_Id
+      //   and p.project_Id = pcl.project_Id 
+      //   and al.project_Id = p.project_Id
+      //   and pcl.client_id = c.client_id
+      //   and c.client_id = ct.client_id 
+      //   where p.project_Date >= CURDATE() 
+      //   AND al.UserId = '$a1'
+      //   order by p.project_Date") or die("Error: new0 " . mysqli_error($connect));
         // Change Roll No. to Session Authentication Details
         echo '<div class="row">' ;
         while($row1=mysqli_fetch_array($query1))
@@ -182,11 +183,11 @@ if(isset($_SESSION["id"])) {
           ?>
             <h4 class="card-title"><?php echo $row1[0]; ?></h4>
             <p class="card-text"style="color:gray;">Date:     <?php echo $row1[1]; ?></p>
-            <p class="card-text"style="color:gray;">Location: <?php echo $row1[3]; ?></p>
-            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[4]; ?></p>
+            
+            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[3]; ?></p>
             <form action="dashboard.php" method="post">
-            <input hidden type="text"  name="event_name" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="View Event"/>
+            <input hidden type="text"  name="project_name" value="<?php echo $row1[0]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="View Project"/>
             </form>
             <form action="dashboard.php" method="post">
             <input hidden type="text"  name="ask" value="<?php echo $row1[0]; ?>" />
@@ -206,7 +207,7 @@ if(isset($_SESSION["id"])) {
 
 
 <br><br>
-<button type="button" class="collapsible" >All Inactive Events</button>
+<button type="button" class="collapsible" >All Inactive Projects</button>
 <div class="card lg-12"   id = "content">
 <?php
     $connect=mysqli_connect('localhost','root','','skillmatch');
@@ -217,23 +218,17 @@ if(isset($_SESSION["id"])) {
     else
     {
         $a1=$_SESSION["id"];
-        $query1=mysqli_query($connect,"select distinct e.Event_Name,e.Event_Date,e.Picture, L.Location_Name, S.Status 
-        from events as e 
-        join event_location as L
-        join registrants_list as R
-        join event_status as S 
-        join event_organizer as eo
-        join event_org_list as eol
-        join organizer_type as o
-        on e.Location_Id = L.Location_Id 
-        and e.Status_Id=S.Status_Id
-        and e.Event_Id = eol.Event_Id 
-        and R.Event_Id = e.Event_Id
-        and eol.Organizer_id = eo.Organizer_Id
-        and eo.Organizer_Type_Id = o.Organizer_Type_Id 
-        where e.Event_Date < CURDATE() 
-        AND R.UserId = '$a1'
-        order by e.Event_Date") or die("Error: new1" . mysqli_error($connect));
+        $query1 = mysqli_query($connect, "SELECT DISTINCT p.project_Name, p.project_Date, p.Picture, ps.Status 
+                                  FROM projects AS p 
+                                  JOIN applicants_list AS al ON p.project_Id = al.project_Id
+                                  JOIN project_status AS ps ON p.Status_Id = ps.Status_Id
+                                  JOIN project_client_list AS pcl ON p.project_Id = pcl.project_Id
+                                  JOIN client AS c ON pcl.client_id = c.client_id
+                                  WHERE p.project_Date < CURDATE() 
+                                  AND al.UserId = '$a1'
+                                  ORDER BY p.project_Date") 
+          or die("Error: new1 " . mysqli_error($connect));
+
         // Change Roll No. to Session Authentication Details
         echo '<div class="row">' ;
         while($row1=mysqli_fetch_array($query1))
@@ -248,11 +243,11 @@ if(isset($_SESSION["id"])) {
           ?>
             <h4 class="card-title"><?php echo $row1[0]; ?></h4>
             <p class="card-text"style="color:gray;">Date:     <?php echo $row1[1]; ?></p>
-            <p class="card-text"style="color:gray;">Location: <?php echo $row1[3]; ?></p>
-            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[4]; ?></p>
+            
+            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[3]; ?></p>
             <form action="dashboard.php" method="post">
-            <input hidden type="text"  name="event_name" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="View Event"/>
+            <input hidden type="text"  name="project_name" value="<?php echo $row1[0]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="View Project"/>
             </form>
             <form action="dashboard.php" method="post">
             <input hidden type="text"  name="ask" value="<?php echo $row1[0]; ?>" />
@@ -275,7 +270,7 @@ if(isset($_SESSION["id"])) {
 
   
 <br>
-
+    
 <script>
 var coll = document.getElementsByClassName("collapsible");
 var i;
@@ -291,6 +286,7 @@ for (i = 0; i < coll.length; i++) {
     }
   });
 }
+
 </script>
 
         

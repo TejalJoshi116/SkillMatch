@@ -1,11 +1,12 @@
+<!-- DB -->
 <?php
   session_start();
-  if(isset($_POST['event_name']))
+  if(isset($_POST['project_name']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['event_name'];
-  header("Location:eventedit.php");
+  $_SESSION["project_Id"]=$_POST['project_name'];
+  header("Location:projectedit.php");
   }
 }
 $flag = 0;
@@ -13,7 +14,7 @@ if(isset($_POST['rew']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['rew'];
+  $_SESSION["project_Id"]=$_POST['rew'];
   header("Location:viewreview.php");
   }
 }
@@ -21,7 +22,7 @@ if(isset($_POST['reply']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['reply'];
+  $_SESSION["project_Id"]=$_POST['reply'];
   header("Location:reply_queries.php");
   }
 }
@@ -29,7 +30,7 @@ if(isset($_POST['collab']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['collab'];
+  $_SESSION["project_Id"]=$_POST['collab'];
   header("Location:addcollab.php");
   }
 }
@@ -37,7 +38,7 @@ if(isset($_POST["msgss"]))
 {
   if($_SESSION["id"])
   {
-    $_SESSION["eventid"]=$_POST['msgss'];
+    $_SESSION["project_Id"]=$_POST['msgss'];
     header("Location:posted_messages.php");
   }
 }
@@ -45,7 +46,7 @@ if(isset($_POST['status']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['status'];
+  $_SESSION["project_Id"]=$_POST['status'];
   header("Location:send_messages.php");
   }
 }
@@ -53,62 +54,52 @@ if(isset($_POST['regis']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['regis'];
+  $_SESSION["project_Id"]=$_POST['regis'];
   header("Location:delete_registrants.php");
   }
 }
 
-if(isset($_POST['del']))
-{
-
-  if($_SESSION["id"])
-  {
-  $_SESSION["eventid"]=$_POST['del'];
-  $eve=$_SESSION["eventid"];
-  $conn=mysqli_connect('localhost','root','','skillmatch');
-  $delete=false;
-  //check connion
-  if(mysqli_connect_errno())
-  {
-      echo 'Failed to conn to database: '.mysqli_conn_error();
-  }
-  else{
-      $id = $eve;
-      $result1=mysqli_query($conn,"DELETE FROM event_org_list WHERE Event_id = '$id'") or die("Error1: " . mysqli_error($conn));
-      $result2=mysqli_query($conn,"DELETE FROM event_contact WHERE Event_id = '$id'") or die("Error2: " . mysqli_error($conn));
-      $result3=mysqli_query($conn,"DELETE FROM registrants_list WHERE Event_id = '$id'") or die("Error3: " . mysqli_error($conn));
-      $result4=mysqli_query($conn,"DELETE FROM review WHERE event_id = '$id'") or die("Error4: " . mysqli_error($conn));
-      $result5=mysqli_query($conn,"DELETE FROM messages WHERE Event_Id = '$id'") or die("Error5: " . mysqli_error($conn));
-      $sql = "DELETE FROM `skillmatch`.`events` WHERE Event_Id = '$id'" or die("Error4: " . mysqli_error($conn));
-      if($conn->query($sql) == true){
-          // print "Successfully Deleted". "<br>";
-          
-          $delete = true;
-          $result='<div class="alert alert-warning alert-dismissible fade show" role="alert">
-          <strong>Form</strong> Sucessfully submitted.
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-          </button>
-          </div>';
-          echo "<center>".'Deleting........'."</center>"."<br>";
-        echo '<center><br>'."Redirecting to Dashboard.....".'</center>';
-        echo "<script>setTimeout(\"location.href = 'org_dashboard.php';\",3000);</script>";
+if(isset($_POST['del'])) {
+  if($_SESSION["id"]) {
+      $_SESSION["project_Id"]=$_POST['del'];
+      $eve=$_SESSION["project_Id"];
+      $conn=mysqli_connect('localhost','root','','skillmatch');
+      $delete=false;
+      if(mysqli_connect_errno()) {
+          echo 'Failed to connect to database: '.mysqli_connect_error();
+      } else {
+          $id = $eve;
+          $result1=mysqli_query($conn,"DELETE FROM project_client_list WHERE project_Id = '$id'") or die("Error1: " . mysqli_error($conn));
+          $result2=mysqli_query($conn,"DELETE FROM project_contact WHERE project_Id = '$id'") or die("Error2: " . mysqli_error($conn));
+          $result3=mysqli_query($conn,"DELETE FROM applicants_list WHERE project_Id = '$id'") or die("Error3: " . mysqli_error($conn));
+          $result4=mysqli_query($conn,"DELETE FROM review WHERE project_Id = '$id'") or die("Error4: " . mysqli_error($conn));
+          $result5=mysqli_query($conn,"DELETE FROM messages WHERE project_Id = '$id'") or die("Error5: " . mysqli_error($conn));
+          $sql = "DELETE FROM `skillmatch`.`projects` WHERE project_Id = '$id'" or die("Error6: " . mysqli_error($conn));
+          if($conn->query($sql) == true){
+              $delete = true;
+              $result='<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <strong>Form</strong> Successfully submitted.
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>';
+              echo "<center>".'Deleting........'."</center>"."<br>";
+              echo '<center><br>'."Redirecting to Dashboard.....".'</center>';
+              echo "<script>setTimeout(\"location.href = 'org_dashboard.php';\",3000);</script>";
+          } else {        
+              echo "ERROR: $sql <br> $conn->error";
+          }
+          $conn->close();
       }
-      else{        
-          echo "ERROR: $sql <br> $conn->error";
-      }
-      // Close the database connion
-      $conn->close();
   }
-}
 } 
 
 if(isset($_POST['ert']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['ert'];
-  $eve=$_SESSION["eventid"];
+  $_SESSION["project_Id"]=$_POST['ert'];
+  $eve=$_SESSION["project_Id"];
   $connect = mysqli_connect("localhost", "root", "", "skillmatch");  
       header('Content-Type: text/csv; charset=utf-8');  
       header('Content-Disposition: attachment; filename=data.csv'); 
@@ -134,8 +125,8 @@ if(isset($_POST['fee_']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventid"]=$_POST['fee_'];
-  $eve=$_SESSION["eventid"];
+  $_SESSION["project_Id"]=$_POST['fee_'];
+  $eve=$_SESSION["project_Id"];
   $connect = mysqli_connect("localhost", "root", "", "skillmatch");  
   
   $zip_file = $eve.'.zip';
@@ -289,11 +280,11 @@ if(isset($_SESSION["id"])) {
 </div>
 <br>
 
-<h2 style="color:black;">List of Projects Hosted By Your Club:</h2>
+<h2 style="color:black;">List of Projects:</h2>
 <br>
 <button type="button" class="collapsible">All Active Projects</button>
 <div class="card lg-12"   id = "content">
-  <?php
+<?php
     $connect=mysqli_connect('localhost','root','','skillmatch');
     if(mysqli_connect_errno())
     {
@@ -303,21 +294,29 @@ if(isset($_SESSION["id"])) {
     {
         $idx = $_SESSION["id"];
         // echo $idx;
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date,e.Picture, L.Location_Name, S.Status, e.Event_Id, e.fee
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_organizer as eo
-        join event_org_list as eol
-        join organizer_type as o
-        on e.Location_Id=L.Location_Id 
-        and e.Status_Id=S.Status_Id
-        and e.Event_Id = eol.Event_Id 
-        and eol.Organizer_id = eo.Organizer_Id
-        and eo.Organizer_Type_Id = o.Organizer_Type_Id 
-        where e.Event_Date >= CURDATE() 
-        AND eol.Organizer_id = '$idx'
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
+        $query1 = mysqli_query($connect, "SELECT p.project_Name, p.project_Date, p.Picture, p.project_Id, p.fee
+        FROM projects AS p 
+        JOIN project_client_list AS pcl ON p.project_Id = pcl.project_Id
+        JOIN client AS c ON pcl.client_id = c.client_id
+        WHERE p.project_Date >= CURDATE() 
+        AND pcl.client_id = '$idx'
+        ORDER BY p.project_Date") or die("Error: " . mysqli_error($connect));
+
+        // $query1=mysqli_query($connect,"select p.project_Name, p.project_Date, p.Picture, pl.Location_Name, ps.Status, p.project_Id, p.fee
+        // from projects as p 
+        // join project_location as pl
+        // join project_status as ps
+        // join client as c
+        // join project_client_list as pcl
+        // join client_type as ct
+        // on p.Location_Id=pl.Location_Id 
+        // and p.Status_Id=ps.Status_Id
+        // and p.project_Id = pcl.project_Id 
+        // and pcl.client_id = c.client_id
+        // and c.client_Type_Id = ct.client_Type_Id 
+        // where p.project_Date >= CURDATE() 
+        // AND pcl.client_id = '$idx'
+        // order by p.project_Date") or die("Error: " . mysqli_error($connect));
         // Change Roll No. to Session Authentication Details
         echo '<div class="row">' ;
         while($row1=mysqli_fetch_array($query1))
@@ -326,41 +325,38 @@ if(isset($_SESSION["id"])) {
           echo '<div class="card" style="width: 22rem;">' ;
           ?>
           <img class="card-img-top" width="300px" height="300px" src="<?php echo "../".$row1[2]; ?>" alt="Card image">
+          
          <?php
             echo '<div class="card-body">';
           ?>
             <h4 class="card-title"><?php echo $row1[0]; ?></h4>
             <p class="card-text"style="color:gray;">Date:     <?php echo $row1[1]; ?></p>
-            <p class="card-text"style="color:gray;">Location: <?php echo $row1[3]; ?></p>
-            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[4]; ?></p>
+            <p class="card-text"style="color:gray;">Fee: Rs. <?php echo $row1[4]; ?></p>
+            <!-- <p class="card-text"style="color:gray;">Status:   -->
+              <!-- <?php echo $row1[4]; ?></p> --> 
             <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="event_name" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Edit Event"/>
+            <input hidden type="text"  name="project_name" value="<?php echo $row1[5]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="Edit Project"/>
             </form>
             <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="ert" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Download Registrants list"/>
-            </form>
-            </form>
-            <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="rew" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="View Reviews"/>
+            <input hidden type="text"  name="download_registrants" value="<?php echo $row1[5]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="Download Applicants list"/>
             </form>
             <form action="client_dashboard.php" method="post">
             <input hidden type="text"  name="del" value="<?php echo $row1[5]; ?>" />
             <input  type="submit" class="btn btn-primary" value="Delete Event" onclick="myfunction()"/>
             </form>
-            <form action="client_dashboard.php" method="post">
+            <!-- <form action="client_dashboard.php" method="post">
             <input hidden type="text"  name="collab" value="<?php echo $row1[5]; ?>" />
             <input  type="submit" class="btn btn-primary" value="Collaboration Options"/>
-            </form>
+            </form> -->
             <form action="client_dashboard.php" method="post">
             <input hidden type="text"  name="msgss" value="<?php echo $row1[5]; ?>" />
             <input  type="submit" class="btn btn-primary" value="View Sent Messages"/>
             </form>
             <form action="client_dashboard.php" method="post">
             <input hidden type="text"  name="status" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Send Notification to All Registrants"/>
+            <input  type="submit" class="btn btn-primary" value="Send Notification to All Applicants"/>
             </form>
             <form action="client_dashboard.php" method="post">
             <input hidden type="text"  name="reply" value="<?php echo $row1[5]; ?>" />
@@ -368,19 +364,9 @@ if(isset($_SESSION["id"])) {
             </form>
             <form action="client_dashboard.php" method="post">
             <input hidden type="text"  name="regis" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Delete Registrants"/>
-            </form>
+            <input  type="submit" class="btn btn-primary" value="Delete Applicants"/>
           <?php
-          if($row1[6])
-          {
-            ?>
-            </form>
-            <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="fee_" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Download zip of User Fee Receipts"/>
-            </form>
-            <?php
-          }
+          
           echo '</div>';
           echo '</div>';
           echo '</div>';
@@ -393,10 +379,10 @@ if(isset($_SESSION["id"])) {
 </div>
 
 
-<br><br>
+<!-- <br><br>
 <button type="button" class="collapsible" >All Inactive Projects</button>
-<div class="card lg-12"   id = "content">
-<?php
+<div class="card lg-12"   id = "content"> -->
+<!-- <?php
     $connect=mysqli_connect('localhost','root','','skillmatch');
     if(mysqli_connect_errno())
     {
@@ -405,21 +391,21 @@ if(isset($_SESSION["id"])) {
     else
     { 
         $idx = $_SESSION["id"];
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date,e.Picture, L.Location_Name, S.Status, e.Event_Id , e.fee
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_organizer as eo
-        join event_org_list as eol
-        join organizer_type as o
-        on e.Location_Id=L.Location_Id 
-        and e.Status_Id=S.Status_Id
-        and e.Event_Id = eol.Event_Id 
-        and eol.Organizer_id = eo.Organizer_Id
-        and eo.Organizer_Type_Id = o.Organizer_Type_Id 
-        where e.Event_Date < CURDATE() 
-        AND eol.Organizer_id = '$idx'
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
+        $query1=mysqli_query($connect,"select p.project_Name, p.project_Date, p.Picture, pl.Location_Name, ps.Status, p.project_Id , p.fee
+        from projects as p 
+        join project_location as pl
+        join project_status as ps
+        join client as c
+        join project_client_list as pcl
+        join client_type as ct
+        on p.Location_Id=pl.Location_Id 
+        and p.Status_Id=ps.Status_Id
+        and p.project_Id = pcl.project_Id 
+        and pcl.client_id = c.client_id
+        and c.client_Type_Id = ct.client_Type_Id 
+        where p.project_Date < CURDATE() 
+        AND pcl.client_id = '$idx'
+        order by p.project_Date") or die("Error: " . mysqli_error($connect));
         // Change Roll No. to Session Authentication Details
         echo '<div class="row">' ;
         while($row1=mysqli_fetch_array($query1))
@@ -436,48 +422,17 @@ if(isset($_SESSION["id"])) {
             <p class="card-text"style="color:gray;">Location: <?php echo $row1[3]; ?></p>
             <p class="card-text"style="color:gray;">Status:   <?php echo $row1[4]; ?></p>
             <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="event_name" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Edit Event"/>
+            <input hidden type="text"  name="project_Id" value="<?php echo $row1[5]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="Edit Project"/>
             </form>
-            <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="ert" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Download Registrants list"/>
-            </form>
-            <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="rew" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="View Reviews"/>
-            </form>
-            <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="del" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Delete Event"/>
-            </form>
-            <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="collab" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Collaboration Options"/>
-            </form>
-            <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="msgss" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="View Sent Messages"/>
-            </form>
-            <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="status" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Send Notification to All Registrants"/>
-            </form>
-            <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="regis" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Delete Registrants"/>
-            </form>
-            <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="reply" value="<?php echo $row1[5]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Reply/ Address Queries"/>
-            </form>
+            <!-- More form actions here -->
           <?php
           if($row1[6])
           {
             ?>
             </form>
             <form action="client_dashboard.php" method="post">
-            <input hidden type="text"  name="fee_" value="<?php echo $row1[5]; ?>" />
+            <input hidden type="text"  name="download_fee_receipts" value="<?php echo $row1[5]; ?>" />
             <input  type="submit" class="btn btn-primary" value="Download zip of User Fee Receipts"/>
             </form>
             <?php
@@ -490,14 +445,10 @@ if(isset($_SESSION["id"])) {
         echo '</div>';
       }
     $connect->close();
-?>
-</div>
+?> -->
+<!-- </div> -->
 
 <br><br>
-
-
-  
-<br>
 
 <script>
 

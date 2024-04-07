@@ -1,3 +1,4 @@
+<!-- DB but error -->
 <?php
 session_start();
 ?>
@@ -13,7 +14,7 @@ if(isset($_POST['submit']))
     }
     else{
     //echo 'Connected Successfully!!';
-        $eve=$_SESSION["eventid"];
+        $eve=$_SESSION["project_Id"];
         //$name = $_POST['name_'];
         if(isset($_POST['date_']))
         {
@@ -58,39 +59,39 @@ if(isset($_POST['submit']))
 
 
         if(!empty($name)){ 
-            mysqli_query($connect,"UPDATE events SET Event_Name = $name WHERE Event_Id = $eve") or die("Error2: " . mysqli_error($connect));
+            mysqli_query($connect,"UPDATE projects SET project_Name = $name WHERE project_Id = $eve") or die("Error2: " . mysqli_error($connect));
             
         }
         if(!empty($date)){ 
-            mysqli_query($connect,"UPDATE events SET Event_Date = '$date' WHERE Event_Id = $eve") or die("Error2: " . mysqli_error($connect));
+            mysqli_query($connect,"UPDATE projects SET project_Date = '$date' WHERE project_Id = $eve") or die("Error2: " . mysqli_error($connect));
             
         }
         if(!empty($start)){ 
-            mysqli_query($connect,"UPDATE events SET Event_Start_Time = '$start' WHERE Event_Id = $eve") or die("Error2: " . mysqli_error($connect));
+            mysqli_query($connect,"UPDATE projects SET project_Start_Time = '$start' WHERE project_Id = $eve") or die("Error2: " . mysqli_error($connect));
             
         }
         if(!empty($end)){ 
-            mysqli_query($connect,"UPDATE events SET Event_End_Time = '$end' WHERE Event_Id = $eve") or die("Error2: " . mysqli_error($connect));
+            mysqli_query($connect,"UPDATE projects SET project_End_Time = '$end' WHERE project_Id = $eve") or die("Error2: " . mysqli_error($connect));
             
         }
         if(!empty($desc)){ 
-            mysqli_query($connect,"UPDATE events SET Description = '$desc' WHERE Event_Id = $eve") or die("Error2: " . mysqli_error($connect));
+            mysqli_query($connect,"UPDATE projects SET Description = '$desc' WHERE project_Id = $eve") or die("Error2: " . mysqli_error($connect));
             
         }
         if(!empty($limit)){ 
-            mysqli_query($connect,"UPDATE events SET Event_Limit = $limit WHERE Event_Id = $eve") or die("Error2: " . mysqli_error($connect));
+            mysqli_query($connect,"UPDATE projects SET project_Limit = $limit WHERE project_Id = $eve") or die("Error2: " . mysqli_error($connect));
             
         }
         if(!empty($loc)){ 
-            mysqli_query($connect,"UPDATE events SET Location_Id = $loc WHERE Event_Id = $eve") or die("Error2: " . mysqli_error($connect));
+            mysqli_query($connect,"UPDATE projects SET Location_Id = $loc WHERE project_Id = $eve") or die("Error2: " . mysqli_error($connect));
             
         }
         if(!empty($type)){ 
-            mysqli_query($connect,"UPDATE events SET Event_Type_Id = $type WHERE Event_Id = $eve") or die("Error2: " . mysqli_error($connect));
+            mysqli_query($connect,"UPDATE projects SET project_Type_Id = $type WHERE project_Id = $eve") or die("Error2: " . mysqli_error($connect));
             
         }
         if(!empty($fee)){ 
-            mysqli_query($connect,"UPDATE events SET fee = $fee WHERE Event_Id = $eve") or die("Error2: " . mysqli_error($connect));
+            mysqli_query($connect,"UPDATE projects SET fee = $fee WHERE project_Id = $eve") or die("Error2: " . mysqli_error($connect));
             
         }
 
@@ -243,8 +244,7 @@ if(isset($_SESSION["id"])) {
   
 </div>
 <br>
-  
-  <?php
+<?php
     $connect=mysqli_connect('localhost','root','','skillmatch');
     if(mysqli_connect_errno())
     {
@@ -252,18 +252,15 @@ if(isset($_SESSION["id"])) {
     }
     else
     {
-        $eve=$_SESSION["eventid"];
+        $eve=$_SESSION["project_Id"];
         //echo $eve;
-        $query1=mysqli_query($connect,"SELECT * from events where Event_Id='$eve'") or die("Error1: " . mysqli_error($connect));
+        $query1=mysqli_query($connect,"SELECT * FROM projects WHERE project_Id='$eve'") or die("Error1: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
         //echo $row1[1];
         $l=$row1[8];
-        $query2=mysqli_query($connect,"SELECT Location_Name from event_location where Location_Id='$l'") or die("Error2: " . mysqli_error($connect));
-        $row8=mysqli_fetch_array($query2);
-        $l_name=$row8[0];;
-        $query4=mysqli_query($connect,"SELECT Event_Type_Name from event_type where event_type_id='$row1[7]'") or die("Error4: " . mysqli_error($connect));
+        $query4=mysqli_query($connect,"SELECT project_Type_Name FROM project_type WHERE project_Type_Id='$row1[7]'") or die("Error4: " . mysqli_error($connect));
         $row7=mysqli_fetch_array($query4);
-        //$query5=mysqli_query($connect,"SELECT `Status` FROM event_status where Status_Id='$row1[9]'") or die("Error5: " . mysqli_error($connect));
+        //$query5=mysqli_query($connect,"SELECT `Status` FROM event_status WHERE Status_Id='$row1[9]'") or die("Error5: " . mysqli_error($connect));
         //$row6=mysqli_fetch_array($query5);
         //echo $row1[1];
     }
@@ -276,40 +273,40 @@ if(isset($_SESSION["id"])) {
             <tr>
                 <td>
                     Project Name : 
-</td>
-<td>
+                </td>
+                <td>
                     <input type= "text" id = "name_" name = "name_" placeholder="<?php echo $row1[1]; ?>" maxlength="128" size="60" disabled required/>   
                 </td>   
             </tr> <br> <br> 
             <tr>
                 <td>
                  Project Date : 
-                    </td>
-<td>
+                </td>
+                <td>
                     <input type= "date" id = "date_" name = "date_" value="<?php echo $row1[2]; ?>" size="20" />   
                 </td>   
             </tr> <br> <br> 
             <tr>
                 <td>
                 Project Start date : 
-                    </td>
-<td>
+                </td>
+                <td>
                     <input type= "date" id = "date_" name = "date_" value="<?php echo $row1[2]; ?>" size="20" />    
                 </td>   
             </tr> <br> <br> 
             <tr>
                 <td>
                 Project End date : 
-                    </td>
-<td>
+                </td>
+                <td>
                     <input type= "date" id = "date_" name = "date_" value="<?php echo $row1[2]; ?>" size="20" />   
                 </td>   
             </tr> <br> <br> 
             <tr>
                 <td>
                 Project Description : 
-                    </td>
-<td>
+                </td>
+                <td>
                     <textarea type= "text" id = "desc_" name = "desc_" placeholder="<?php echo $row1[4]; ?>" maxlength="4096" cols="100" rows="5"></textarea>
                 </td>   
             </tr> <br> <br> 
@@ -317,43 +314,25 @@ if(isset($_SESSION["id"])) {
             <tr>
                 <td>
                 Project Limit : 
-                    </td>
-<td>
+                </td>
+                <td>
                     <input type= "number"  name = "limit_" placeholder="<?php echo $row1[6]; ?>" maxlength="4096" size="60"/>   
                 </td>   
             </tr> <br> <br> 
-            <tr>
-                <td>
-                Project Location :
- 
-                </td>
-                <td>
-                    <select name ="location_id" id = "location_id" > 
-                    <option selected value><?php echo $row8[0]; ?></option>
-                    <?php 
-                        $conn=mysqli_connect('localhost','root','','skillmatch'); 
-                        $result=mysqli_query($conn,'SELECT Location_Id,Location_Name FROM event_location ORDER BY Location_Name'); 
-                        while($row=mysqli_fetch_assoc($result)) {
-                            echo "<option value='$row[Location_Id]'>$row[Location_Name]</option>"; 
-                        } 
-                    ?> 
-                    </select>
-                </td>
-            </tr> <br><br>
             <tr>
                 <td>
                 Project Type :
                 </td>
                 <td>
                     <select name ="type_id" id = "type_id" > 
-                    <option selected value><?php echo $row7[0]; ?></option>
-                    <?php 
-                        $conn=mysqli_connect('localhost','root','','skillmatch'); 
-                        $result=mysqli_query($conn,'SELECT Event_Type_Id,Event_Type_Name FROM event_type ORDER BY Event_Type_Name'); 
-                        while($row=mysqli_fetch_assoc($result)) {
-                            echo "<option value='$row[Event_Type_Id]'>$row[Event_Type_Name]</option>"; 
-                        } 
-                    ?> 
+                        <option selected value="<?php echo $row7[0]; ?>"><?php echo $row7[0]; ?></option>
+                        <?php 
+                            $conn=mysqli_connect('localhost','root','','skillmatch'); 
+                            $result=mysqli_query($conn,'SELECT project_Type_Id,project_Type_Name FROM project_type ORDER BY project_Type_Name'); 
+                            while($row=mysqli_fetch_assoc($result)) {
+                                echo "<option value='$row[project_Type_Id]'>$row[project_Type_Name]</option>"; 
+                            } 
+                        ?> 
                     </select>
                 </td>
             </tr> <br><br>
@@ -363,23 +342,20 @@ if(isset($_SESSION["id"])) {
                 </td>
                 <td>
                     <select name ="conp_" id = "limit_"> 
-                    <option selected value = "<?php echo $row1[11]?>"><?php 
-                    if($row1[11])
-                    {
-                        echo "Yes, There is fee payment";
-                        echo "</option>";
-                        echo "<option value=0>No, There is no fee payment</option> ";
-                    }
-                    else
-                    {
-                        echo "No, There is no fee payment";
-                        echo "</option>";
-                        echo "<option value=1>Yes, There is fee payment</option> ";
-                    }
-                    ?>
-                    <!-- </option>
-                    <option value=0>No, There is no fee payment</option> 
-                    <option value=1>Yes, There is fee payment</option>  -->
+                        <option selected value = "<?php echo $row1[11]?>"><?php 
+                        if($row1[11])
+                        {
+                            echo "Yes, There is fee payment";
+                            echo "</option>";
+                            echo "<option value=0>No, There is no fee payment</option> ";
+                        }
+                        else
+                        {
+                            echo "No, There is no fee payment";
+                            echo "</option>";
+                            echo "<option value=1>Yes, There is fee payment</option> ";
+                        }
+                        ?>
                     </select>
                 </td>
             </tr> <br><br> 
@@ -391,4 +367,3 @@ if(isset($_SESSION["id"])) {
         
     </body>
 </html>
-

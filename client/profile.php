@@ -196,205 +196,157 @@ body {
   <!--<a href="schedule.php">Schedule</a>-->
   <a href="filterdate.php">Filter Project by Date</a>
   <a href="aboutus.php">About The Team</a>
-<?php
+  <?php
 if(isset($_SESSION["id"])) {
   ?>
-
   <div class="topnav-right">
     <a href="#"><?php echo "Welcome, ". $_SESSION["name"]."!"; ?></a>
-
-    <?php
-    }
-    else{
+<?php
+}
+else{
 ?>
 <a href="../login/login_client.php">You are not logged in</a>
 <?php
-    }
-    ?>
-    <a href="../login/logout.php">Logout</a>
-    
-  </div>
-  
-  
+}
+?>
+<a href="../login/logout.php">Logout</a>
+</div>
 </div>
 <br>
 
-
-
 <!------ Include the above in your HEAD tag ---------->
 <?php 
-    $connect=mysqli_connect('localhost','root','','skillmatch');
-    $ax = $_SESSION["id"];
-    if(mysqli_connect_errno())
-    {
-        echo 'Failed to connect to database: '.mysqli_connect_error();
-    }
-    else
-    {   
-        $query1 = mysqli_query($connect,"SELECT eo.Organizer_Id, eo.Organizer_Name, eo.Description, 
-            eo.Email_Id, eo.Picture, ot.Organizer_type, ot.Organizer_Type_Id                                          
-            from event_organizer as eo 
-            join organizer_type as ot
-            on eo.Organizer_Type_Id = ot.Organizer_Type_Id
-            where eo.Organizer_Id='$ax'") or die("Error1: " . mysqli_error($connect));
-        $row1=mysqli_fetch_array($query1);
-        // echo "Thanks for the Input"."<br>";
-    } 
-    $connect->close();
+$connect=mysqli_connect('localhost','root','','skillmatch');
+$ax = $_SESSION["id"];
+if(mysqli_connect_errno())
+{
+    echo 'Failed to connect to database: '.mysqli_connect_error();
+}
+else
+{   
+    $query1 = mysqli_query($connect,"SELECT client_id, client_Name, Description, 
+        Email_Id, Picture, client_Type_Id                                          
+        FROM client
+        WHERE client_id='$ax'") or die("Error1: " . mysqli_error($connect));
+    $row1=mysqli_fetch_array($query1);
+} 
+$connect->close();
 ?>
-    
+
 <div class="container emp-profile">
-            <!-- <form method="post"> -->
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="profile-img">
-                            <img src= <?php $msgx = "../".$row1[4]; echo $msgx; ?> id="responsive-image" alt=""/>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="profile-head">
-                                    <h3>
-                                        <?php 
-                                        echo $row1[1]; ?>
-                                    </h3>
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
-                                </li>
-                                <!-- <li class="nav-item">
-                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>
-                                </li> -->
-                            </ul>
-                        </div>
-                    </div>
-                    <form action="profile.php" method="POST">
-                    <div class="col-md-2">
-                        <input type="submit"  name="btnsubmit" value="Edit Profile"/>
-                            <?php 
-                                if(isset($_POST["btnsubmit"]))
-                                {
-                                  $con=mysqli_connect('localhost','root','','skillmatch');
-                                    if(mysqli_connect_errno())
-                                    {
-                                        echo 'Failed to connect to database: '.mysqli_connect_error();
-                                    }
-                                    else
-                                    {   
-                                           
-                                        $oid=$_SESSION["id"];
-                                        $desc = $_POST['desc'];
-                                        $email = $_POST['email'];
-                    
-                                        if($desc == ""){
-                                            $desc = $row1[2];
-                                        }
-                                        else{
-                                            mysqli_query($con,"UPDATE `event_organizer` 
-                                          SET 
-                                         `Description` = '$desc'
-                                          where `Organizer_Id`='$oid'") or die("Error2: " . mysqli_error($con));
-                                        }
-                                        
-                                        if($email == ""){
-                                            $email = $row1[3];
-                                        }
-                                        
-
-                                        $queryasd=mysqli_query($con,"UPDATE `event_organizer` 
-                                          SET `Email_Id` = '$email'
-                                          where `Organizer_Id`='$oid'") or die("Error5: " . mysqli_error($con));
-                                        
-                                        $con->close();
-                                    }
-                                }
-
-                                       
-                                
-                            ?>
-                        
-                        <?php 
-                            $connect=mysqli_connect('localhost','root','','skillmatch');
-                            $ax = $_SESSION["id"];
-                            if(mysqli_connect_errno())
-                            {
-                                echo 'Failed to connect to database: '.mysqli_connect_error();
-                            }
-                            else
-                            {   
-                                $query1 = mysqli_query($connect,"SELECT eo.Organizer_Id, eo.Organizer_Name,
-                                 eo.Description, eo.Email_Id, eo.Picture, ot.Organizer_type,ot.Organizer_Type_Id                                         
-                                from event_organizer as eo 
-                                join organizer_type as ot
-                                on eo.Organizer_Type_Id = ot.Organizer_Type_Id
-                                where eo.Organizer_Id='$ax'") or die("Error3: " . mysqli_error($connect));
-                                $row1=mysqli_fetch_array($query1);
-                                // echo "Thanks for the Input"."<br>";
-                            } 
-                            $connect->close();?>
-                    </div>
-                </div>
-                <div class="row" id="page5">
-                    
-                    <div class="col-md-8">
-                        <div class="tab-content profile-tab" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Client Name</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>
-                                                    <?php echo $row1[1]; ?>
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Client Email</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <!-- <p>
-                                                  
-                                                </p> -->
-                                                <?php
-                                                    $prtxx=$row1[3];
-                                                    if($row1[3] == "")
-                                                    {
-                                                        $prtxx = "Not Added Yet";
-                                                    }
-                                                    ?>
-                                                <input type= "text" id = "email"  
-                                                placeholder = "<?php echo $prtxx; ?>"
-                                                name = "email"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Client Description</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <textarea type= "text" id = "desc" maxlength="4096" cols="50" rows="10"
-                                                placeholder = "<?php echo $row1[2]; ?>" name = "desc"></textarea>
-                                                
-                                            </div>
-                                        </div>
-
-                                    
-
-                                       
-                                       
-                                        <a href = "changepwd.php">Change Password </a> <br>
-                                        <a href = "changedp.php">Change Profile Photo </a>
-                                    
-                            </div>
-                        </div>
-                    </div>
-                   
-
-                </div>
-            </form>           
+    <div class="row">
+        <div class="col-md-4">
+            <div class="profile-img">
+                <img src= <?php $msgx = "../".$row1[4]; echo $msgx; ?> id="responsive-image" alt=""/>
+            </div>
         </div>
+        <div class="col-md-6">
+            <div class="profile-head">
+                <h3>
+                    <?php 
+                    echo $row1[1]; ?>
+                </h3>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <form action="profile.php" method="POST">
+        <div class="col-md-2">
+            <input type="submit"  name="btnsubmit" value="Edit Profile"/>
+                <?php 
+                    if(isset($_POST["btnsubmit"]))
+                    {
+                      $con=mysqli_connect('localhost','root','','skillmatch');
+                        if(mysqli_connect_errno())
+                        {
+                            echo 'Failed to connect to database: '.mysqli_connect_error();
+                        }
+                        else
+                        {   
+                                $oid=$_SESSION["id"];
+                                $desc = $_POST['desc'];
+                                $email = $_POST['email'];
+                                if($desc == ""){
+                                    $desc = $row1[2];
+                                }
+                                else{
+                                    mysqli_query($con,"UPDATE client 
+                                  SET `Description` = '$desc'
+                                  WHERE client_id='$oid'") or die("Error2: " . mysqli_error($con));
+                                }
+                                
+                                if($email == ""){
+                                    $email = $row1[3];
+                                }
+                                mysqli_query($con,"UPDATE client 
+                                  SET `Email_Id` = '$email'
+                                  WHERE client_id='$oid'") or die("Error5: " . mysqli_error($con));
+                                $con->close();
+                        }
+                    }
+                ?>
+            <?php 
+                $connect=mysqli_connect('localhost','root','','skillmatch');
+                $ax = $_SESSION["id"];
+                if(mysqli_connect_errno())
+                {
+                    echo 'Failed to connect to database: '.mysqli_connect_error();
+                }
+                else
+                {   
+                    $query1 = mysqli_query($connect,"SELECT client_id, client_Name,
+                     Description, Email_Id, Picture, client_Type_Id                                         
+                    FROM client
+                    WHERE client_id='$ax'") or die("Error3: " . mysqli_error($connect));
+                    $row1=mysqli_fetch_array($query1);
+                } 
+                $connect->close();
+            ?>
+        </div>
+    </div>
+    <div class="row" id="page5">
+        <div class="col-md-8">
+            <div class="tab-content profile-tab" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Client Name</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>
+                                <?php echo $row1[1]; ?>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Client Email</label>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="email"  
+                            placeholder="<?php echo $row1[3]; ?>"
+                            name="email"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Client Description</label>
+                        </div>
+                        <div class="col-md-6">
+                            <textarea type="text" id="desc" maxlength="4096" cols="50" rows="10"
+                            placeholder="<?php echo $row1[2]; ?>" name="desc"></textarea>
+                        </div>
+                    </div>
+                    <a href="changepwd.php">Change Password </a> <br>
+                    <a href="changedp.php">Change Profile Photo </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>           
+</div>
 </body>
 </html>

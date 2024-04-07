@@ -1,3 +1,4 @@
+<!-- DB -->
 <?php 
 session_start();?>
 <!DOCTYPE html>
@@ -129,20 +130,20 @@ if(isset($_SESSION["id"])) {
   
 </div>
 <br>
-<h2 style = "color:green;"><center> Messages For the Event </center></h2>
+<h2 style = "color:green;"><center> Messages For Client </center></h2>
 
 <?php 
     
-    if(isset($_SESSION["eventid"])){
+    if(isset($_SESSION["project_Id"])){
         $connect=mysqli_connect('localhost','root','','skillmatch');
         if(mysqli_connect_errno())
         {
             echo 'Failed to connect to database: '.mysqli_connect_error();
         }
         else{
-            $eve = $_SESSION["eventid"]; 
-            $sql = mysqli_query($connect,"SELECT u.UserId, u.Registered_Name, m.Timestamp, m.message, e.Event_Name FROM events as e JOIN messages as m JOIN user as u
-            ON e.Event_Id = m.Event_ID AND u.UserId = m.UserId WHERE e.Event_Id= '$eve'  ORDER BY m.Timestamp DESC LIMIT 10")  or die("Error2: " . mysqli_error($connect));;
+            $eve = $_SESSION["project_Id"]; 
+            $sql = mysqli_query($connect,"SELECT u.UserId, u.Registered_Name, m.Timestamp, m.message, e.project_Name FROM projects as e JOIN messages as m JOIN `user` as u
+            ON e.project_Id = m.project_Id AND u.UserId = m.UserId WHERE e.project_Id= '$eve'  ORDER BY m.Timestamp DESC LIMIT 10")  or die("Error2: " . mysqli_error($connect));;
 
 
             ?>

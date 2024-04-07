@@ -21,17 +21,40 @@ if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["user
         // Insert new user into the appropriate authentication table based on user_type
         if ($user_type === 'professional') {
             $insert_query = "INSERT INTO user_auth (username, password_hash) VALUES ('$username', '$hash')";
+            if (mysqli_query($con, $insert_query)) {
+                $UserId = mysqli_insert_id($con);
+                echo "$UserId";
+                // Insert corresponding entry into user table
+                $insert_query_2 = "INSERT INTO user (UserId, Registered_Name) VALUES ('$UserId','$username')";
+                if (mysqli_query($con, $insert_query_2)) {
+                    $message = "Registration successful. You can now login.";
+                } else {
+                    $message = "Error: " . mysqli_error($con);
+                }
+            } else {
+                $message = "Error: " . mysqli_error($con);
+            }
+        
         } elseif ($user_type === 'client') {
             $insert_query = "INSERT INTO client_auth (username, password_hash) VALUES ('$username', '$hash')";
+            if (mysqli_query($con, $insert_query)) {
+                $client_id = mysqli_insert_id($con);
+                // Insert corresponding entry into clients table
+                $insert_query_2 = "INSERT INTO client (client_id,client_Name) VALUES ('$client_id', '$username')";
+                
+                if (mysqli_query($con, $insert_query_2)) {
+                    $message = "Registration successful. You can now login.";
+                } else {
+                    $message = "Error: " . mysqli_error($con);
+                }
+            } else {
+                $message = "Error: " . mysqli_error($con);
+            }
         } else {
             $message = "Invalid user type.";
         }
 
-        if (isset($insert_query) && mysqli_query($con, $insert_query)) {
-            $message = "Registration successful. You can now login.";
-        } else {
-            $message = "Error: " . mysqli_error($con);
-        }
+    
     }
 
     mysqli_close($con);

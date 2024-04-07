@@ -1,11 +1,12 @@
+<!-- DB -->
 <?php
 session_start();
 // echo $_SESSION["name"];
-if(isset($_POST['event_name']))
+if(isset($_POST['project_name']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventname"]=$_POST["event_name"];
+  $_SESSION["project_name"]=$_POST["project_name"];
   header("Location:register.php");
   }
 }
@@ -13,7 +14,7 @@ if(isset($_POST['ask']))
 {
   if($_SESSION["id"])
   {
-  $_SESSION["eventname"]=$_POST["ask"];
+  $_SESSION["project_name"]=$_POST["ask"];
   header("Location:send_query.php");
   }
 }
@@ -109,7 +110,7 @@ body {
 
 
 <div class="topnav">
-  <a class="active" href="loggedinpage.php">Events</a>
+  <a class="active" href="loggedinpage.php">Projects</a>
   <a href="profile.php">User Profile</a>
   <a href="dashboard.php">Dashboard</a>
   <a href="schedule.php">Schedule</a>
@@ -117,7 +118,7 @@ body {
   <a href="view_sent_queries.php">View Unresponded Queries</a>
   <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
-<?php
+  <?php
 if(isset($_SESSION["id"])) {
   ?>
 
@@ -142,7 +143,7 @@ if(isset($_SESSION["id"])) {
 
 <h2 style="color:black;">List of Projects:</h2>
 <br>
-<button type="button" class="collapsible">Technical Club Hosted Projects</button>
+<!-- <button type="button" class="collapsible">Technical Club Hosted Projects</button> -->
 <div class="card lg-12"   id = "content">
   <?php
     $connect=mysqli_connect('localhost','root','','skillmatch');
@@ -152,22 +153,23 @@ if(isset($_SESSION["id"])) {
     }
     else
     {
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date,e.Picture, L.Location_Name, S.Status 
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_organizer as eo
-        join event_org_list as eol
-        join organizer_type as o
-        on e.Location_Id=L.Location_Id 
-        and e.Status_Id=S.Status_Id
-        and e.Event_Id = eol.Event_Id 
-        and eol.Organizer_id = eo.Organizer_Id
-        and eo.Organizer_Type_Id = o.Organizer_Type_Id 
-        where o.Organizer_type = 'Technical Club' 
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
 
-         echo '<div class="row">' ;
+      $query1=mysqli_query($connect,"SELECT p.project_Name, p.project_Date, p.Picture, p.fee
+      FROM projects AS p       
+      JOIN project_client_list AS pcl ON p.project_Id = pcl.project_Id
+      JOIN client AS c ON pcl.client_id = c.client_id   
+      ORDER BY p.project_Date") or die("Error: " . mysqli_error($connect));
+        // $query1=mysqli_query($connect,"SELECT p.project_Name, p.project_Date, p.Picture, pl.Location_Name, ps.Status 
+        // FROM projects AS p 
+        // JOIN project_location AS pl ON p.Location_Id = pl.Location_Id
+        // JOIN project_status AS ps ON p.Status_Id = ps.Status_Id
+        // JOIN project_client_list AS pcl ON p.project_Id = pcl.project_Id
+        // JOIN client AS c ON pcl.client_id = c.client_id
+        // JOIN client_type AS ct ON c.client_Type_Id = ct.client_Type_Id
+        // WHERE ct.client_type = 'Technical Club' 
+        // ORDER BY p.project_Date") or die("Error: " . mysqli_error($connect));
+
+        echo '<div class="row">' ;
         while($row1=mysqli_fetch_array($query1))
         {
           $row1[2] = "../".$row1[2];
@@ -180,15 +182,15 @@ if(isset($_SESSION["id"])) {
           ?>
             <h4 class="card-title"><?php echo $row1[0]; ?></h4>
             <p class="card-text"style="color:gray;">Date:     <?php echo $row1[1]; ?></p>
-            <p class="card-text"style="color:gray;">Location: <?php echo $row1[3]; ?></p>
-            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[4]; ?></p>
+            <p class="card-text"style="color:gray;">Fee: <?php echo $row1[3]; ?></p>
+            
             <form action="loggedinpage.php" method="post">
-            <input hidden type="text"  name="event_name" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="View Event"/>
+            <input hidden type="text"  name="project_name" value="<?php echo $row1[0]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="View Project"/>
             </form>
             <form action="loggedinpage.php" method="post">
             <input hidden type="text"  name="ask" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Ask Query to the Organizer"/>
+            <input  type="submit" class="btn btn-primary" value="Ask Query to the Client"/>
             </form>
             
           <?php
@@ -204,332 +206,3 @@ if(isset($_SESSION["id"])) {
 </div>
 
 
-<br><br>
-<button type="button" class="collapsible" aria-expanded="false">Cultural Club Hosted Events</button>
-<div class="card lg-12"   id = "content">
-<?php
-    $connect=mysqli_connect('localhost','root','','skillmatch');
-    if(mysqli_connect_errno())
-    {
-        echo 'Failed to connect to database: '.mysqli_connect_error();
-    }
-    else
-    {
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date,e.Picture, L.Location_Name, S.Status 
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_organizer as eo
-        join event_org_list as eol
-        join organizer_type as o
-        on e.Location_Id=L.Location_Id 
-        and e.Status_Id=S.Status_Id
-        and e.Event_Id = eol.Event_Id 
-        and eol.Organizer_id = eo.Organizer_Id
-        and eo.Organizer_Type_Id = o.Organizer_Type_Id 
-        where o.Organizer_type = 'Cultural Club' 
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
-
-        echo '<div class="row">' ;
-        while($row1=mysqli_fetch_array($query1))
-        {
-          $row1[2] = "../".$row1[2];
-          echo '<div class="col-lg-3">' ;
-          echo '<div class="card" style="width: 22rem;">' ;
-          //echo $row1[2]; 
-          ?>
-          <img class="card-img-top" width="300px" height="300px" src="<?php echo $row1[2]; ?>" alt="Card image">
-         <?php
-            echo '<div class="card-body">';
-          ?>
-            <h4 class="card-title"><?php echo $row1[0]; ?></h4>
-            <p class="card-text"style="color:gray;">Date:     <?php echo $row1[1]; ?></p>
-            <p class="card-text"style="color:gray;">Location: <?php echo $row1[3]; ?></p>
-            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[4]; ?></p>
-            <form action="loggedinpage.php" method="post">
-            <input hidden type="text"  name="event_name" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="View Event"/>
-            </form>
-            <form action="loggedinpage.php" method="post">
-            <input hidden type="text"  name="ask" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Ask Query to the Organizer"/>
-            </form>
-          <?php
-          echo '</div>';
-          echo '</div>';
-          echo '</div>';
-          echo '<br>';
-        }
-        echo '</div>';
-      }
-    $connect->close();
-?>
-</div>
-
-<br><br>
-<button type="button" class="collapsible">Sports and Fitness Related Events</button>
-<div class="card lg-12"  id = "content">
-<?php
-    $connect=mysqli_connect('localhost','root','','skillmatch');
-    if(mysqli_connect_errno())
-    {
-        echo 'Failed to connect to database: '.mysqli_connect_error();
-    }
-    else
-    {
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date,e.Picture, L.Location_Name, S.Status 
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_organizer as eo
-        join event_org_list as eol
-        join organizer_type as o
-        on e.Location_Id=L.Location_Id 
-        and e.Status_Id=S.Status_Id
-        and e.Event_Id = eol.Event_Id 
-        and eol.Organizer_id = eo.Organizer_Id
-        and eo.Organizer_Type_Id = o.Organizer_Type_Id 
-        where o.Organizer_type = 'Sports and Fitness Clubs' 
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
-
-        echo '<div class="row">' ;
-        while($row1=mysqli_fetch_array($query1))
-        {
-          $row1[2] = "../".$row1[2];
-          echo '<div class="col-lg-3">' ;
-          echo '<div class="card" style="width: 22rem;">' ;
-          ?>
-          <img class="card-img-top" width="300px" height="300px" src="<?php echo $row1[2]; ?>" alt="Card image">
-         <?php
-            echo '<div class="card-body">';
-          ?>
-            <h4 class="card-title"><?php echo $row1[0]; ?></h4>
-            <p class="card-text"style="color:gray;">Date:     <?php echo $row1[1]; ?></p>
-            <p class="card-text"style="color:gray;">Location: <?php echo $row1[3]; ?></p>
-            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[4]; ?></p>
-            <form action="loggedinpage.php" method="post">
-            <input hidden type="text"  name="event_name" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="View Event"/>
-            </form>
-            <form action="loggedinpage.php" method="post">
-            <input hidden type="text"  name="ask" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Ask Query to the Organizer"/>
-            </form>
-          <?php
-          echo '</div>';
-          echo '</div>';
-          echo '</div>';
-          echo '<br>';
-        }
-        echo '</div>';
-      }
-    $connect->close();
-?>
-</div>
-
-<br><br>
-<button type="button" class="collapsible">Department Associations</button>
-<div class="card lg-12"   id = "content">
-<?php
-    $connect=mysqli_connect('localhost','root','','skillmatch');
-    if(mysqli_connect_errno())
-    {
-        echo 'Failed to connect to database: '.mysqli_connect_error();
-    }
-    else
-    {
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date,e.Picture, L.Location_Name, S.Status 
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_organizer as eo
-        join event_org_list as eol
-        join organizer_type as o
-        on e.Location_Id=L.Location_Id 
-        and e.Status_Id=S.Status_Id
-        and e.Event_Id = eol.Event_Id 
-        and eol.Organizer_id = eo.Organizer_Id
-        and eo.Organizer_Type_Id = o.Organizer_Type_Id 
-        where o.Organizer_type = 'Department Associations' 
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
-        
-        echo '<div class="row">' ;
-        while($row1=mysqli_fetch_array($query1))
-        {
-          $row1[2] = "../".$row1[2];
-          echo '<div class="col-lg-3">' ;
-          echo '<div class="card" style="width: 22rem;">' ;
-          ?>
-          <img class="card-img-top" width="300px" height="300px" src="<?php echo $row1[2]; ?>" alt="Card image">
-         <?php
-            echo '<div class="card-body">';
-          ?>
-            <h4 class="card-title"><?php echo $row1[0]; ?></h4>
-            <p class="card-text"style="color:gray;">Date:     <?php echo $row1[1]; ?></p>
-            <p class="card-text"style="color:gray;">Location: <?php echo $row1[3]; ?></p>
-            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[4]; ?></p>
-            <form action="loggedinpage.php" method="post">
-            <input hidden type="text"  name="event_name" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="View Event"/>
-            </form>
-            <form action="loggedinpage.php" method="post">
-            <input hidden type="text"  name="ask" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Ask Query to the Organizer"/>
-            </form>
-          <?php
-          echo '</div>';
-          echo '</div>';
-          echo '</div>';
-          echo '<br>';
-        }
-        echo '</div>';
-      }
-    $connect->close();  
-?>
-</div>
-
-<br><br>
-<button type="button" class="collapsible">SAC Hosted Events</button>
-<div class="card lg-12"   id = "content">
-<?php
-    $connect=mysqli_connect('localhost','root','','skillmatch');
-    if(mysqli_connect_errno())
-    {
-        echo 'Failed to connect to database: '.mysqli_connect_error();
-    }
-    else
-    {
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date,e.Picture, L.Location_Name, S.Status 
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_organizer as eo
-        join event_org_list as eol
-        join organizer_type as o
-        on e.Location_Id=L.Location_Id 
-        and e.Status_Id=S.Status_Id
-        and e.Event_Id = eol.Event_Id 
-        and eol.Organizer_id = eo.Organizer_Id
-        and eo.Organizer_Type_Id = o.Organizer_Type_Id 
-        where o.Organizer_type = 'Students Body/ Council' 
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
-        
-        echo '<div class="row">' ;
-        while($row1=mysqli_fetch_array($query1))
-        { $row1[2] = "../".$row1[2];
-          echo '<div class="col-lg-3">' ;
-          echo '<div class="card" style="width: 22rem;">' ;
-          ?>
-          <img class="card-img-top"  width="300px" height="300px" src="<?php echo $row1[2]; ?>" alt="Card image">
-         <?php
-            echo '<div class="card-body">';
-          ?>
-            <h4 class="card-title"><?php echo $row1[0]; ?></h4>
-            <p class="card-text"style="color:gray;">Date:     <?php echo $row1[1]; ?></p>
-            <p class="card-text"style="color:gray;">Location: <?php echo $row1[3]; ?></p>
-            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[4]; ?></p>
-            <form action="loggedinpage.php" method="post">
-            <input hidden type="text"  name="event_name" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="View Event"/>
-            </form>
-            <form action="loggedinpage.php" method="post">
-            <input hidden type="text"  name="ask" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Ask Query to the Organizer"/>
-            </form>
-          <?php
-          echo '</div>';
-          echo '</div>';
-          echo '</div>';
-          echo '<br>';
-        }
-        echo '</div>';
-      }
-    $connect->close();
-?>
-</div>
-
-<br><br>
-<button type="button" class="collapsible">Socially Related Events</button>
-<div class="card lg-12"  id = "content">
-<?php
-    $connect=mysqli_connect('localhost','root','','skillmatch');
-    if(mysqli_connect_errno())
-    {
-        echo 'Failed to connect to database: '.mysqli_connect_error();
-    }
-    else
-    {
-        $query1=mysqli_query($connect,"select e.Event_Name,e.Event_Date,e.Picture, L.Location_Name, S.Status 
-        from events as e 
-        join event_location as L
-        join event_status as S 
-        join event_organizer as eo
-        join event_org_list as eol
-        join organizer_type as o
-        on e.Location_Id=L.Location_Id 
-        and e.Status_Id=S.Status_Id
-        and e.Event_Id = eol.Event_Id 
-        and eol.Organizer_id = eo.Organizer_Id
-        and eo.Organizer_Type_Id = o.Organizer_Type_Id 
-        where o.Organizer_type = 'Social Cause Club' 
-        order by e.Event_Date") or die("Error: " . mysqli_error($connect));
-        
-        echo '<div class="row">' ;
-        while($row1=mysqli_fetch_array($query1))
-        { $row1[2] = "../".$row1[2];
-          echo '<div class="col-lg-3">' ;
-          echo '<div class="card" style="width: 22rem;">' ;
-          ?>
-          <img class="card-img-top"  width="300px" height="300px" src="<?php echo $row1[2]; ?>" alt="Card image">
-         <?php
-            echo '<div class="card-body">';
-          ?>
-            <h4 class="card-title"><?php echo $row1[0]; ?></h4>
-            <p class="card-text"style="color:gray;">Date:     <?php echo $row1[1]; ?></p>
-            <p class="card-text"style="color:gray;">Location: <?php echo $row1[3]; ?></p>
-            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[4]; ?></p>
-            <form action="loggedinpage.php" method="post">
-            <input hidden type="text"  name="event_name" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="View Event"/>
-            </form>
-            <form action="loggedinpage.php" method="post">
-            <input hidden type="text"  name="ask" value="<?php echo $row1[0]; ?>" />
-            <input  type="submit" class="btn btn-primary" value="Ask Query to the Organizer"/>
-            </form>
-          <?php
-          echo '</div>';
-          echo '</div>';
-          echo '</div>';
-          echo '<br>';
-          
-        }
-        echo '</div>';
-      }
-    $connect->close();
-?>
-</div>
-
-  
-<br>
-
-<script>
-var coll = document.getElementsByClassName("collapsible");
-var i;
-
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.display === "block") {
-      content.style.display = "none";
-    } else {
-      content.style.display = "block";
-    }
-  });
-}
-</script>
-
-        
-    
-</body>
-</html>

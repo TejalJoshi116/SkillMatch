@@ -1,3 +1,4 @@
+<!-- DB -->
 <?php
 session_start();
 ?>
@@ -163,26 +164,26 @@ $connect=mysqli_connect('localhost','root','','skillmatch');
         $eve=$_SESSION["eventid"];
         $msg = $_POST['msgs'];
         $a1=$_POST["uid"];
-        $queryz=mysqli_query($connect,"SELECT fee from events where Event_Id=$eve ") or die("Error: " . mysqli_error($connect));
+        $queryz=mysqli_query($connect,"SELECT fee from projects where project_Id=$eve ") or die("Error: " . mysqli_error($connect));
         $rowz=mysqli_fetch_array($queryz);
         if(!$rowz[0]){
-            $query1=mysqli_query($connect,"DELETE from registrants_list where UserId='$a1' AND Event_Id=$eve") or die("Error: " . mysqli_error($connect));
-            $sql1 = mysqli_query($connect,"INSERT INTO `messages`(`Event_Id`,`UserId`,`message`) VALUES ('$eve','$a1','$msg')");
+            $query1=mysqli_query($connect,"DELETE from applicants_list where UserId='$a1' AND project_Id=$eve") or die("Error: " . mysqli_error($connect));
+            $sql1 = mysqli_query($connect,"INSERT INTO `messages`(`project_Id`,`UserId`,`message`) VALUES ('$eve','$a1','$msg')");
             echo "Successfully Deleted the Registrant"."<br>";
 
             echo 'Message Successfully sent'."<br>"; 
         }
         else
         {
-          $query3=mysqli_query($connect,"Select upload from registrants_list where UserID='$a1' and Event_Id=$eve ") or die("Error: " . mysqli_error($connect));
+          $query3=mysqli_query($connect,"Select upload from applicants_list where UserID='$a1' and project_Id=$eve ") or die("Error: " . mysqli_error($connect));
           $upl=mysqli_fetch_array($query3);
           if (!unlink($upl[0])) {  
             echo $upl[0]."cannot be deleted due to an error";  
             }  
         else {  
             //echo $upl[0]. "has been deleted"; 
-            $query4=mysqli_query($connect,"DELETE from registrants_list where UserID='$a1' and Event_Id=$eve ") or die("Error: " . mysqli_error($connect)); 
-            $sql1 = mysqli_query($connect,"INSERT INTO `messages`(`Event_Id`,`UserId`,`message`) VALUES ('$eve','$a1','$msg')");
+            $query4=mysqli_query($connect,"DELETE from applicants_list where UserID='$a1' and project_Id=$eve ") or die("Error: " . mysqli_error($connect)); 
+            $sql1 = mysqli_query($connect,"INSERT INTO `messages`(`project_Id`,`UserId`,`message`) VALUES ('$eve','$a1','$msg')");
             echo "Successfully Deleted the Registrant"."<br>";
             echo 'Message Successfully sent'."<br>";
 
@@ -203,10 +204,10 @@ $connect=mysqli_connect('localhost','root','','skillmatch');
                         $eve = $_SESSION['eventid'];
                         // echo "<option>".$eve."</option>";
                         $conn=mysqli_connect('localhost','root','','skillmatch'); 
-                        $result=mysqli_query($conn,"SELECT u.UserId ,u.Registered_Name  FROM user as u 
-                        JOIN registrants_list as rl
-                        ON u.UserId = rl.UserId
-                        WHERE rl.Event_Id = $eve") or die ("Error5: " . mysqli_error($connect)); 
+                        $result=mysqli_query($conn,"SELECT u.UserId ,u.Registered_Name  FROM user u 
+                        JOIN applicants_list al
+                        ON u.UserId = al.UserId
+                        WHERE al.project_Id = $eve") or die ("Error5: " . mysqli_error($connect)); 
                         while($row=mysqli_fetch_assoc($result)) 
                         {
                             echo "<option value='$row[UserId]'>".$row[UserId]." ".$row[Registered_Name]."</option>"; 
@@ -237,7 +238,7 @@ else{
      echo "<h3>Details of registered users</h3><br>";
      $eve=$_SESSION["eventid"];
    //   $que=$_POST["uid"];
-     $query1=mysqli_query($connect,"SELECT u.UserId,u.Registered_Name,rl.Time_Stamp from user u,registrants_list rl where u.UserId=rl.UserId and rl.Event_Id=$eve") or die("Error: " . mysqli_error($connect));
+     $query1=mysqli_query($connect,"SELECT u.UserId,u.Registered_Name,al.Time_Stamp from user u,applicants_list al where u.UserId=al.UserId and al.project_Id=$eve") or die("Error: " . mysqli_error($connect));
      echo "<table border='1'> <tr>";
      echo "<th> User Id </th>";
      echo "<th> registered Name </th>";
@@ -259,5 +260,3 @@ else{
 
 </body>
 </html>
-
-

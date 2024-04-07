@@ -1,3 +1,4 @@
+<!-- DB -->
 <?php
 session_start();
 if(isset($_POST['rep']))
@@ -25,13 +26,6 @@ if(isset($_POST['rep']))
     
 <style>
   <?php include "styles.css" ?>
-  /* <img src="hdx.jpg" width="200" height="200" class="ribbon"> */
-  /* background-image: url('hdx.jpg'),url('hdx.jpg');
-  background-repeat: repeat,repeat;
-  background-attachment: scroll,scroll;
-  background-position: right top,left top;
-  background-blend-mode: lighten,lighten;
-  background-size: 500px,500px ; */
 </style>
 <link rel="stylesheet" href="css/bootstrap.min.css">
 <style>
@@ -110,14 +104,15 @@ body {
 </div>
 
 
+
 <div class="topnav">
-  <a href="loggedinpage.php">Events</a>
+  <a href="loggedinpage.php">Project</a>
   <a href="profile.php">User Profile</a>
   <a href="dashboard.php">Dashboard</a>
-  <a href="schedule.php">Schedule</a>
-  <a href="filterdate.php">Filter Event By Date</a>
+  <a class = "active" href="schedule.php">Schedule</a>
+  <a href="filterdate.php">Filter project By Date</a>
   <a href="view_sent_queries.php">View Unresponded Queries</a>
-  <a class = "active" href="user_notifications.php">View Notifications</a>
+  <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
@@ -151,8 +146,8 @@ if(isset($_SESSION["id"])) {
         }
         else{
             $id = $_SESSION["id"];
-            $sql = mysqli_query($connect,"SELECT e.Event_Name, m.Timestamp, m.message, m.message_id FROM events as e JOIN messages as m
-            ON e.Event_Id = m.Event_ID WHERE m.UserId= '$id' OR m.UserId = 'ALL'  ORDER BY m.Timestamp DESC")  or die("Error2: " . mysqli_error($connect));;
+            $sql = mysqli_query($connect,"SELECT p.project_Name, m.Timestamp, m.message, m.message_id FROM projects as p JOIN messages as m
+            ON p.project_Id = m.project_Id WHERE m.UserId= '$id' OR m.UserId = 'ALL'  ORDER BY m.Timestamp DESC")  or die("Error2: " . mysqli_error($connect));;
             ?>
             
             <div class="not">
@@ -160,7 +155,7 @@ if(isset($_SESSION["id"])) {
                 <thead class="thead-dark">
                 <tr>
                     <th scope="col">Timestamp</th>
-                    <th scope="col">Event Name</th>
+                    <th scope="col">Project Name</th>
                     <th scope="col">Message</th>
                     <th scope="col">Mark as read</th>
                 </tr>
@@ -187,35 +182,6 @@ if(isset($_SESSION["id"])) {
     }
 ?>
 
-<!-- <div class="not">
-<table class="table">
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">Date</th>
-      <th scope="col">Event Name</th>
-      
-      <th scope="col">Message</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>adkgkjs asgkjgaslgj  asfja f</td>
-      
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-     
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      
-      <td>@twitter</td>
-    </tr> -->
   </tbody>
 </table>
 </div>

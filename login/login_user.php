@@ -15,7 +15,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
     $row  = mysqli_fetch_array($result);
     
     if (is_array($row)) {
-        $_SESSION["id"] = $row['user_id'];
+        $_SESSION["id"] = $row['UserId'];
         $_SESSION["name"] = $row['username'];
 
         // $message = "entering";

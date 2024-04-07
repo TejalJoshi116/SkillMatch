@@ -1,3 +1,4 @@
+<!-- DB CHeck if UserId and reg id defined -->
 <?php
 session_start();
 ?>
@@ -147,68 +148,66 @@ if(isset($_SESSION["id"])) {
 <body>
   <div style = "padding-left: 50px;">
   <?php
-  $connect=mysqli_connect('localhost','root','','skillmatch');
-  if(mysqli_connect_errno())
-  {
-      echo 'Failed to connect to database: '.mysqli_connect_error();
-  }
-  else{
+$connect=mysqli_connect('localhost','root','','skillmatch');
+if(mysqli_connect_errno())
+{
+    echo 'Failed to connect to database: '.mysqli_connect_error();
+}
+else{
     if(isset($_POST['submit1'])){
-      $eve_stat = $_POST['status_id'];
-      $eve = $_SESSION['eventid'];
+        $eve_stat = $_POST['status_id'];
+        $eve = $_SESSION['eventid'];
 
-      
-      $sql0 = mysqli_query($connect,"SELECT Event_name FROM `events` WHERE Event_Id = $eve");
-      $eve_name = mysqli_fetch_array($sql0);
-      $eve_name = $eve_name[0];
-      
-      $sql = mysqli_query($connect,"UPDATE `events` SET `Status_Id` = $eve_stat WHERE `Event_Id` = $eve") or die("Error1: " . mysqli_error($connect));
-      $sql2 = mysqli_query($connect,"SELECT `Status` FROM `event_status` WHERE Status_Id = $eve_stat");
-
-      $eve_stat_i = mysqli_fetch_array($sql2);
-      $eve_stat_i = $eve_stat_i[0];
-      
-      $sqlx = mysqli_query($connect,"SELECT rl.UserId,u.Registered_Name from registrants_list as rl
-      JOIN user as u
-      ON u.UserId = rl.UserId
-      where rl.Event_Id = $eve");
-      while($rowx = mysqli_fetch_array($sqlx)){
         
-        $z = 'Dear '.$rowx[1].', the status of Event '.$eve_name.' has changed to '.$eve_stat_i;
-        $sql1 = mysqli_query($connect,"INSERT INTO `messages`(`Event_Id`,`UserId`,`message`) VALUES ('$eve','$rowx[0]','$z')");
-      }
-      echo 'Message Successfully sent'."<br>"; 
+        $sql0 = mysqli_query($connect,"SELECT project_Name FROM `projects` WHERE project_Id = $eve");
+        $eve_name = mysqli_fetch_array($sql0);
+        $eve_name = $eve_name[0];
+        
+        $sql = mysqli_query($connect,"UPDATE `projects` SET `Status_Id` = $eve_stat WHERE `project_Id` = $eve") or die("Error1: " . mysqli_error($connect));
+        $sql2 = mysqli_query($connect,"SELECT `Status` FROM `project_status` WHERE Status_Id = $eve_stat");
+
+        $eve_stat_i = mysqli_fetch_array($sql2);
+        $eve_stat_i = $eve_stat_i[0];
+        
+        $sqlx = mysqli_query($connect,"SELECT pcl.UserId, u.Registered_Name FROM project_client_list AS pcl
+        JOIN `user` AS u ON u.UserId = pcl.UserId
+        WHERE pcl.project_Id = $eve");
+        while($rowx = mysqli_fetch_array($sqlx)){
+            
+            $z = 'Dear '.$rowx[1].', the status of Project '.$eve_name.' has changed to '.$eve_stat_i;
+            $sql1 = mysqli_query($connect,"INSERT INTO `messages`(`project_Id`,`UserId`,`message`) VALUES ('$eve','$rowx[0]','$z')");
+        }
+        echo 'Message Successfully sent'."<br>"; 
     }
 
     if(isset($_POST['submit2'])){
-      $eve = $_SESSION['eventid'];
+        $eve = $_SESSION['eventid'];
 
-      $msg = $_POST['msg'];
-      $sqlx = mysqli_query($connect,"SELECT rl.UserId,u.Registered_Name from registrants_list as rl
-      JOIN user as u
-      ON u.UserId = rl.UserId
-      where rl.Event_Id = $eve");
-      while($rowx = mysqli_fetch_array($sqlx)){
-        $sql1 = mysqli_query($connect,"INSERT INTO `messages`(`Event_Id`,`UserId`,`message`) VALUES ('$eve','$rowx[0]','$msg')");
-      }
-      echo 'Message Successfully sent'."<br>"; 
+        $msg = $_POST['msg'];
+        $sqlx = mysqli_query($connect,"SELECT pcl.UserId, u.Registered_Name FROM project_client_list AS pcl
+        JOIN `user` AS u ON u.UserId = pcl.UserId
+        WHERE pcl.project_Id = $eve");
+        while($rowx = mysqli_fetch_array($sqlx)){
+            $sql1 = mysqli_query($connect,"INSERT INTO `messages`(`project_Id`,`UserId`,`message`) VALUES ('$eve','$rowx[0]','$msg')");
+        }
+        echo 'Message Successfully sent'."<br>"; 
 
     }
     if(isset($_POST['submit3'])){
-      $eve = $_SESSION['eventid'];
-      $uid = $_POST['uid'];
-      $msg = $_POST['msgs'];
+        $eve = $_SESSION['eventid'];
+        $uid = $_POST['uid'];
+        $msg = $_POST['msgs'];
 
-      $sql1 = mysqli_query($connect,"INSERT INTO `messages`(`Event_Id`,`UserId`,`message`) VALUES ('$eve','$uid','$msg')");
+        $sql1 = mysqli_query($connect,"INSERT INTO `messages`(`project_Id`,`UserId`,`message`) VALUES ('$eve','$uid','$msg')");
     
-      echo 'Message Successfully sent'."<br>"; 
+        echo 'Message Successfully sent'."<br>"; 
 
     }
     
     $connect->close();          
-  }
+}
 ?>
-
+<!-- 
 <h2 style = "color:green;"> Change Status </h2>
 
 <form enctype="multipart/form-data" action="send_messages.php" method="post">
@@ -222,26 +221,25 @@ if(isset($_SESSION["id"])) {
         }
         else{
             $eve = $_SESSION['eventid'];
-            $sql = mysqli_query($connect,"SELECT es.Status_Id, es.Status  FROM event_status as es
-            JOIN events as e
-            ON e.Status_id = es.Status_Id WHERE e.event_id = '$eve'") or die("Error2: " . mysqli_error($connect));
+            $sql = mysqli_query($connect,"SELECT ps.Status_Id, ps.Status FROM project_status AS ps
+            JOIN projects AS p ON p.Status_Id = ps.Status_Id WHERE p.project_Id = '$eve'") or die("Error2: " . mysqli_error($connect));
             $row1 = mysqli_fetch_array($sql);    
         }
         $connect->close();          
 
       ?>
-            Old Event Status : 
+            Old Project Status : 
             <input disabled type= "text" name = "oes" placeholder="<?php echo $row1[1]?>" value="<?php echo $row1[1]?>"  maxlength="15" size="15" required />
         </td>   
     </tr> <br> <br> 
     <tr>
         <td>
-            New Event Status : 
+            New Project Status : 
             <select name ="status_id" id = "status_id" required > 
                     <option disabled selected value> -- select an option -- </option>
                     <?php 
                         $conn=mysqli_connect('localhost','root','','skillmatch'); 
-                        $result=mysqli_query($conn,'SELECT `Status_Id`,`Status` FROM event_status ORDER BY Status'); 
+                        $result=mysqli_query($conn,'SELECT `Status_Id`,`Status` FROM project_status ORDER BY Status'); 
                         while($row=mysqli_fetch_assoc($result)) {
                             if($row['Status'] == $row1[1]){
                                 continue;
@@ -258,7 +256,7 @@ if(isset($_SESSION["id"])) {
     <br>
 </form>
 
-<br>
+<br> -->
 <h2 style = "color:green;"> Select a Specific Message to All Registrants: </h2>
 <form enctype="multipart/form-data" action="send_messages.php" method="post">
 <tr>
@@ -283,10 +281,10 @@ if(isset($_SESSION["id"])) {
                         $eve = $_SESSION['eventid'];
                         // echo "<option>".$eve."</option>";
                         $conn=mysqli_connect('localhost','root','','skillmatch'); 
-                        $result=mysqli_query($conn,"SELECT u.UserId ,u.Registered_Name  FROM user as u 
-                        JOIN registrants_list as rl
-                        ON u.UserId = rl.UserId
-                        WHERE rl.Event_Id = $eve") or die ("Error5: " . mysqli_error($connect)); 
+                        $result=mysqli_query($conn,"SELECT u.UserId ,u.Registered_Name  FROM `user` AS u 
+                        JOIN project_client_list AS pcl
+                        ON u.UserId = pcl.UserId
+                        WHERE pcl.project_Id = $eve") or die ("Error5: " . mysqli_error($connect)); 
                         while($row=mysqli_fetch_assoc($result)) 
                         {
                             echo "<option value='$row[UserId]'>".$row[UserId]." ".$row[Registered_Name]."</option>"; 
@@ -312,5 +310,3 @@ if(isset($_SESSION["id"])) {
 
 </body>
 </html>
-
-

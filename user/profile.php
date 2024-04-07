@@ -66,7 +66,7 @@ body {
 .content {
   padding: 0 18px;
   display: none;
-  /overflow: hidden;/
+  /* /overflow: hidden;/ */
   background-color: #f1f1f1;
 }
 
@@ -245,215 +245,171 @@ if(isset($_SESSION["id"])) {
     else
     {   
         $query1 = mysqli_query($connect,"SELECT u.UserId, u.Display_Name, u.Picture,
-            u.Last_Login_Info,u.Registered_name, u.Contact_No, u.Mail_Id, ua.Password                                           
-            from user as u 
-            join user_authentication as ua
-            on u.UserId = ua.UserId
-            where u.UserId='$ax'") or die("Error: " . mysqli_error($connect));
+            u.Last_Login_Info,u.Registered_Name, u.Contact_No, u.Mail_Id,ua.password_hash                                          
+            FROM user AS u 
+            join user_auth as ua
+            WHERE u.UserId='$ax'") or die("Error: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);
-        // echo "Thanks for the Input"."<br>";
     } 
-    $connect->close();?>
-    
+    $connect->close();
+?>
+
 <div class="container emp-profile">
-            <!-- <form method="post"> -->
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="profile-img">
-                            <img src= <?php $msgx = "../".$row1[2]; echo $msgx; ?> id="responsive-image" alt=""/>
-                            <!-- <div class="file btn btn-lg btn-primary">
-                                Change Photo
-                                 <input type="file" name="file"/> -->
-                            <!-- </div> --> 
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="profile-head">
-                                    <h3>
-                                        <?php 
-                                        echo $row1[4]; ?>
-                                    </h3>
-                                    <!-- <h6>
-                                        Web Developer and Designer
-                                    </h6> -->
-                                    <!-- <p class="proile-rating">RANKINGS : <span>8/10</span></p> -->
-                            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
-                                </li>
-                                <!-- <li class="nav-item">
-                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Timeline</a>
-                                </li> -->
-                            </ul>
-                        </div>
-                    </div><form action="profile.php" method="POST">
-                    <div class="col-md-2">
-                        <input type="submit"  name="btnAddMore" value="Edit Profile"/>
-                            <?php 
-                                if(isset($_POST["btnAddMore"]))
-                                {
-                                  $con=mysqli_connect('localhost','root','','skillmatch');
-                                    if(mysqli_connect_errno($con))
-                                    {
-                                        echo 'Failed to connect to database: '.mysqli_connect_error();
-                                    }
-                                    else
-                                    {   
-                                        $uid=$_SESSION["id"];
-                                        $name = $_POST['dname'];
-                                        $email = $_POST['email'];
-                                        $number = $_POST['number'];
-                                        if($name == ""){
-                                            $name = $row1[1];
-                                        }
-                                        if($email == ""){
-                                            $email = $row1[6];
-                                        }
-                                        if($number == ""){
-                                            $number = $row1[5];
-                                        }
-
-                                        $queryasd=mysqli_query($con,"UPDATE `user` SET `Display_Name` = '$name',
-                                         `Contact_No` = '$number',
-                                         `Mail_Id` = '$email'
-                                         where `UserId`='$uid'") or die("Error: " . mysqli_error($con));
-                                        
-                                        $con->close();
-
-                                    }
-                                }
-
-                                       
-                                
-                            ?>
-                        
-                        <?php 
-                            $connect=mysqli_connect('localhost','root','','skillmatch');
-                            $ax = $_SESSION["id"];
-                            if(mysqli_connect_errno())
-                            {
-                                echo 'Failed to connect to database: '.mysqli_connect_error();
+    <div class="row">
+        <div class="col-md-4">
+            <div class="profile-img">
+                <img src= <?php $msgx = "../".$row1[2]; echo $msgx; ?> id="responsive-image" alt=""/>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="profile-head">
+                <h3><?php echo $row1[4]; ?></h3>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <form action="profile.php" method="POST">
+            <div class="col-md-2">
+                <input type="submit" name="btnAddMore" value="Edit Profile"/>
+                <?php 
+                    if(isset($_POST["btnAddMore"]))
+                    {
+                        $con=mysqli_connect('localhost','root','','skillmatch');
+                        if(mysqli_connect_errno())
+                        {
+                            echo 'Failed to connect to database: '.mysqli_connect_error();
+                        }
+                        else
+                        {   
+                            $uid=$_SESSION["id"];
+                            $name = $_POST['dname'];
+                            $email = $_POST['email'];
+                            $number = $_POST['number'];
+                            if($name == ""){
+                                $name = $row1[1];
                             }
-                            else
-                            {   
-                                $query1 = mysqli_query($connect,"SELECT u.UserId, u.Display_Name, u.Picture,
-                                    u.Last_Login_Info,u.Registered_name, u.Contact_No, u.Mail_Id                                          
-                                    from user as u 
-                                    join user_authentication as ua
-                                    on u.UserId = ua.UserId
-                                    where u.UserId='$ax'") or die("Error: " . mysqli_error($connect));
-                                $row1=mysqli_fetch_array($query1);
-                                // echo "Thanks for the Input"."<br>";
-                            } 
-                            $connect->close();?>
-                    </div>
-                </div>
-                <div class="row" id="page5">
-                    
-                    <div class="col-md-8">
-                        <div class="tab-content profile-tab" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>UserID</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>
-                                                    <?php echo $row1[0]; ?>
-                                                </p>
-                                            </div>
-                                        </div>
+                            if($email == ""){
+                                $email = $row1[6];
+                            }
+                            if($number == ""){
+                                $number = $row1[5];
+                            }
 
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Registered Name</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>
-                                                    <?php echo $row1[4]; ?>
-                                                </p>
-                                            </div>
-                                        </div>
+                            $queryasd=mysqli_query($con,"UPDATE `user` SET `Display_Name` = '$name',
+                                `Contact_No` = '$number',
+                                `Mail_Id` = '$email'
+                                WHERE `UserId`='$uid'") or die("Error: " . mysqli_error($con));
+                            
+                            $con->close();
 
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Last Login Info</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>
-                                                  <?php echo $row1[3]; ?>
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Display Name</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <?php
-                                                    $prt1=$row1[1];
-                                                    if($row1[1] == "")
-                                                    {
-                                                        $prt1 = "Not Added Yet";
-                                                    }
-
-                                                    ?>
-                                                <input type= "text" id = "dname"  
-                                                placeholder = "<?php echo $prt1; ?>"
-                                                name = "dname"/>
-            
-                                            
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Email ID</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <?php
-                                                    $prt2=$row1[6];
-                                                    if($row1[6] == "")
-                                                    {
-                                                        $prt2 = "Not Added Yet";
-                                                    }
-
-                                                    ?>
-                                                <input type= "text" id = "email"  
-                                                    placeholder = "<?php echo $prt2; ?>"
-                                                    name = "email"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>Phone</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <?php
-                                                $prt3=$row1[5];
-                                                if($row1[5] == "")
-                                                {
-                                                    $prt3 = "Not Added Yet";
-                                                }
-
-                                                ?>
-                                                <input type= "text" id = "number"  
-                                                    placeholder = "<?php echo $prt3; ?>"
-                                                    name = "number"/>
-                                                    
-                                            </div>
-                                        </div>
-                                       
-                                        <a href = "changepwd.php">Change Password </a> <br>
-                                        <a href = "changedp.php">Change Profile Photo </a>
-                                    
-                            </div>
+                        }
+                    }
+                ?>
+                <?php 
+                    $connect=mysqli_connect('localhost','root','','skillmatch');
+                    $ax = $_SESSION["id"];
+                    if(mysqli_connect_errno())
+                    {
+                        echo 'Failed to connect to database: '.mysqli_connect_error();
+                    }
+                    else
+                    {   
+                        $query1 = mysqli_query($connect,"SELECT u.UserId, u.Display_Name, u.Picture,
+                            u.Last_Login_Info,u.Registered_name, u.Contact_No, u.Mail_Id                                          
+                            FROM user AS u 
+                            WHERE u.UserId='$ax'") or die("Error: " . mysqli_error($connect));
+                        $row1=mysqli_fetch_array($query1);
+                    } 
+                   
+                    $connect->close();
+                ?>
+            </div>
+        </form>
+    </div>
+    <div class="row" id="page5">
+        <div class="col-md-8">
+            <div class="tab-content profile-tab" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="row">
+                        <div class="col-md-6">
+                            
+                            <label>UserID</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p><?php echo $row1[0]; ?></p>
                         </div>
                     </div>
-                   
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Registered Name</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p><?php echo $row1[4]; ?></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Last Login Info</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p><?php echo $row1[3]; ?></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Display Name</label>
+                        </div>
+                        <div class="col-md-6">
+                            <?php
+                                $prt1=$row1[1];
+                                if($row1[1] == "")
+                                {
+                                    $prt1 = "Not Added Yet";
+                                }
+                            ?>
+                            <input type="text" id="dname" placeholder="<?php echo $prt1; ?>" name="dname"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Email ID</label>
+                        </div>
+                        <div class="col-md-6">
+                            <?php
+                                $prt2=$row1[6];
+                                if($row1[6] == "")
+                                {
+                                    $prt2 = "Not Added Yet";
+                                }
+                            ?>
+                            <input type="text" id="email" placeholder="<?php echo $prt2; ?>" name="email"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Phone</label>
+                        </div>
+                        <div class="col-md-6">
+                            <?php
+                                $prt3=$row1[5];
+                                if($row1[5] == "")
+                                {
+                                    $prt3 = "Not Added Yet";
+                                }
+                            ?>
+                            <input type="text" id="number" placeholder="<?php echo $prt3; ?>" name="number"/>
+                        </div>
+                    </div>
+                    <a href="changepwd.php">Change Password</a> <br>
+                    <a href="changedp.php">Change Profile Photo</a>
+                </div>
+            </div>
+        </div>
+  
+
 
                 </div>
             </form>           

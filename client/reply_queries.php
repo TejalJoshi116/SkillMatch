@@ -1,3 +1,4 @@
+<!-- DB -->
 <?php 
 session_start();
 if(isset($_POST['rep']))
@@ -144,16 +145,16 @@ if(isset($_SESSION["id"])) {
 
 <?php 
     
-    if(isset($_SESSION["eventid"])){
+    if(isset($_SESSION["project_Id"])){
         $connect=mysqli_connect('localhost','root','','skillmatch');
         if(mysqli_connect_errno())
         {
             echo 'Failed to connect to database: '.mysqli_connect_error();
         }
         else{
-            $eve = $_SESSION["eventid"]; 
-            $sql = mysqli_query($connect,"SELECT u.UserId, u.Registered_Name, q.Timestamp, q.Query, e.Event_Name, q.Query_Id FROM events as e JOIN queries as q JOIN user as u
-            ON e.Event_Id = q.Event_Id AND u.UserId = q.UserId WHERE e.Event_Id= '$eve'  ORDER BY q.Timestamp DESC ")  or die("Error2: " . mysqli_error($connect));;
+            $eve = $_SESSION["project_Id"]; 
+            $sql = mysqli_query($connect,"SELECT u.UserId, u.Registered_Name, q.Timestamp, q.Query, e.project_Name, q.Query_Id FROM projects as e JOIN queries as q JOIN `user` as u
+            ON e.project_Id = q.project_Id AND u.UserId = q.UserId WHERE e.project_Id= '$eve'  ORDER BY q.Timestamp DESC ")  or die("Error2: " . mysqli_error($connect));;
             ?>
             <input hidden type="text" class="btn btn-primary" style= "" value="Reply"/>
             <div class="not">

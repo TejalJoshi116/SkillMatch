@@ -1,3 +1,4 @@
+<!-- DB -->
 <?php
 session_start()
 ?>
@@ -128,6 +129,22 @@ if(isset($_SESSION["id"])) {
 <br>
 <center><h3> View Unresponded Queries </h3></center>
 <?php 
+    
+    if(isset($_SESSION["project_Id"])){
+        $connect=mysqli_connect('localhost','root','','skillmatch');
+        if(mysqli_connect_errno())
+        {
+            echo 'Failed to connect to database: '.mysqli_connect_error();
+        }
+      }
+        else{
+            $eve = $_SESSION["project_Id"]; 
+            $sql = mysqli_query($connect,"SELECT u.UserId, u.Registered_Name, m.Timestamp, m.message, p.project_Name FROM projects as p JOIN messages as m JOIN `user` as u
+            ON p.project_Id = m.project_Id AND u.UserId = m.UserId WHERE p.project_Id= '$eve'  ORDER BY m.Timestamp DESC LIMIT 10")  or die("Error2: " . mysqli_error($connect));
+        }
+      
+?>
+ <?php 
     if(isset($_SESSION["id"])){
         $connect=mysqli_connect('localhost','root','','skillmatch');
         if(mysqli_connect_errno())
@@ -136,16 +153,16 @@ if(isset($_SESSION["id"])) {
         }
         else{
             $id = $_SESSION["id"];
-            $sql = mysqli_query($connect,"SELECT e.Event_Name, q.Timestamp, q.Query FROM events as e JOIN queries as q
-            ON e.Event_Id = q.Event_Id WHERE q.UserId= '$id' ORDER BY q.Timestamp DESC LIMIT 10")  or die("Error2: " . mysqli_error($connect));;
-            ?>
+            $sql = mysqli_query($connect,"SELECT p.project_Name, q.Timestamp, q.Query FROM projects as p JOIN queries as q
+            ON p.project_Id = q.project_Id WHERE q.UserId= '$id' ORDER BY q.Timestamp DESC LIMIT 10")  or die("Error2: " . mysqli_error($connect));
+   ?>
 
             <div class="not">
             <table class="table">
                 <thead class="thead-dark">
                 <tr>
                     <th scope="col">Timestamp</th>
-                    <th scope="col">Event Name</th>
+                    <th scope="col">Project Name</th>
                     <th scope="col">Query Sent</th>
                 </tr>
                 </thead>
