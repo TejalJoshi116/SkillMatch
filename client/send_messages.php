@@ -257,7 +257,7 @@ else{
 </form>
 
 <br> -->
-<h2 style = "color:green;"> Select a Specific Message to All Registrants: </h2>
+<h2 style = "color:green;"> Select a Specific Message to All Applicants: </h2>
 <form enctype="multipart/form-data" action="send_messages.php" method="post">
 <tr>
     <td>
@@ -270,7 +270,7 @@ else{
 </form>
 <br>
 
-<h2 style = "color:green;"> Send a Specific Message to Specific Participant: </h2>
+<h2 style = "color:green;"> Send a Specific Message to Specific Applicant: </h2>
 <form enctype="multipart/form-data" action="send_messages.php" method="post">
 <tr>
         <td>
@@ -282,7 +282,7 @@ else{
                         // echo "<option>".$eve."</option>";
                         $conn=mysqli_connect('localhost','root','','skillmatch'); 
                         $result=mysqli_query($conn,"SELECT u.UserId ,u.Registered_Name  FROM `user` AS u 
-                        JOIN project_client_list AS pcl
+                        JOIN applicants_list AS pcl
                         ON u.UserId = pcl.UserId
                         WHERE pcl.project_Id = $eve") or die ("Error5: " . mysqli_error($connect)); 
                         while($row=mysqli_fetch_assoc($result)) 

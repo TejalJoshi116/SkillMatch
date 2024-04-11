@@ -147,7 +147,7 @@ body {
 }
 .text{
     position:absolute;
-    bottom: 90px;
+    bottom: 450px;
      left:350px; 
  }
 #bt1{

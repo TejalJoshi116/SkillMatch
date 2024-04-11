@@ -232,7 +232,7 @@ if (mysqli_connect_errno()) {
     exit();
 }
 
-$query = "SELECT u.UserId, u.Registered_Name, u.Picture, u.Mail_Id as Email ,al.upload
+$query = "SELECT u.UserId, u.Registered_Name, u.Mail_Id as Email ,al.upload
           FROM user u
           INNER JOIN applicants_list al ON u.UserId = al.UserId
           WHERE al.project_Id = '$project_Id'";
@@ -254,6 +254,39 @@ if (!$result) {
     <!-- Add your CSS stylesheets or link bootstrap if necessary -->
 </head>
 
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applicants for Project</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+        a {
+            color: blue;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
 <body>
     <h2>Applicants for Project</h2>
     <form action="update_applicant.php" method="post">
@@ -261,9 +294,9 @@ if (!$result) {
             <thead>
                 <tr>
                     <th>User ID</th>
-                    <th>Display Name</th>
+                    <th>Applicant Name</th>
                     <th>Email</th>
-                    <th>Profile Picture</th>
+                    
                     <th>Resume</th>
                     <th>Select</th>
                 </tr>
@@ -274,7 +307,6 @@ if (!$result) {
                         <td><?php echo $row['UserId']; ?></td>
                         <td><?php echo $row['Registered_Name']; ?></td>
                         <td><?php echo $row['Email']; ?></td>
-                        <td><img src="<?php echo $row['Picture']; ?>" alt="Profile Picture" style="width: 50px; height: 50px;"></td>
                         <td><a href="<?php echo $row['upload']; ?>" download>View Resume</a></td>
                         <td><input type="radio" name="selected_applicant" value="<?php echo $row['UserId']; ?>"></td>
                     </tr>
@@ -285,7 +317,6 @@ if (!$result) {
         <input type="submit" value="Select Applicant">
     </form>
 </body>
-
 </html>
 
 <?php

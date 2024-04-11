@@ -6,7 +6,7 @@ if (!isset($_SESSION['id'])) {
 }
 
 if (!isset($_POST['selected_applicant']) || empty($_POST['selected_applicant']) || !isset($_POST['project_id']) || empty($_POST['project_id'])) {
-    header("Location: client_dashboard.php");
+    header("Location: send_messages.php");
     exit();
 }
 
@@ -40,6 +40,6 @@ mysqli_close($conn);
 
 <script>
     setTimeout(function() {
-        window.location.href = 'client_dashboard.php';
+        window.location.href = 'send_messages.php';
     }, 3000); // 3000 milliseconds = 3 seconds
 </script>

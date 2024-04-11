@@ -415,8 +415,8 @@ if(isset($_SESSION["id"])) {
                              name="number"/>
                         </div>
                     </div>
-                    <a href="changepwd.php">Change Password</a> <br>
-                    <a href="changedp.php">Change Profile Photo</a>
+                    <a href = "changepwd.php">Change Password </a> <br>
+                                        <a href = "changedp.php">Change Profile Photo </a>
                 </div>
             </div>
         </div>

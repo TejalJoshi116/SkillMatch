@@ -322,7 +322,7 @@ if(isset($_POST['submit'])){
        
         <th>Status</th>
         <th width='200px'>Client Contacts</th>
-        <th>Contacts</th>
+        <th>Payment</th>
         </tr>";
         // Execute the query
         

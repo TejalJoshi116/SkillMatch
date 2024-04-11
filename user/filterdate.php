@@ -314,10 +314,10 @@ End Date
         </tr>"."<h4>Projects Scheduled Between ".$sdate." and ".$edate."</h4>"."<tr>
         <th width='200px'>Project Name</th>
         <th>Project Date</th>
-        <th>Location Name</th>
+        
         <th>Status</th>
-        <th width='200px'>Organizing Clubs</th>
-        <th>Contacts</th>
+       
+        <th>Payment provided</th>
         </tr>";
         // Execute the query
         
@@ -326,30 +326,14 @@ End Date
             echo "<tr>";
             echo "<td>" . $row1[0] . "</td>";
             echo "<td>" . $row1[1] . "</td>";
-            echo "<td>" . $row1[2] . "</td>";
+           // echo "<td>" . $row1[2] . "</td>";
             echo "<td>" . $row1[3] . "</td>";
             $query2 = mysqli_query($connect,"SELECT c.client_Name
             FROM projects AS p JOIN project_client_list AS pcl 
             ON p.project_Id = pcl.project_Id
             JOIN client AS c ON pcl.client_id = c.client_id
             WHERE p.project_Id = $row1[5] AND p.project_Date >= '$sdate' AND p.project_Date <= '$edate'") or die("Error: " . mysqli_error($connect));?>
-            <td> <?php 
-                $zz = mysqli_query($connect,"SELECT COUNT(*)
-                FROM project_client_list AS pcl
-                WHERE pcl.project_Id = $row1[5] AND p.project_Date >= '$sdate' AND p.project_Date <= '$edate'") or die("Error: " . mysqli_error($connect));
-                $z1 = mysqli_fetch_array($zz);
-                while($row2=mysqli_fetch_array($query2)) 
-                {
-                    if($z1[0] ==1){
-                        echo $row2[0];
-                    }
-                    else{
-                        echo $row2[0]." and ";
-                    }
-                    $z1[0] = $z1[0]-1;  
-                }
-                
-            ?></td>
+            
 
             <?php
             echo "<td>" . $row1[4] . "</td>";

@@ -232,9 +232,9 @@ if(isset($_SESSION["id"])) {
         }
         else {
             $query1 = mysqli_query($connect,"SELECT u.UserId, u.Display_Name, u.Picture,
-                u.Last_Login_Info,u.Registered_name, u.Contact_No, u.Mail_Id, ua.Password                                           
+                u.Last_Login_Info,u.Registered_name, u.Contact_No, u.Mail_Id, ua.password_hash                                         
                 from user as u 
-                join user_authentication as ua
+                join user_auth as ua
                 on u.UserId = ua.UserId
                 where u.UserId='$ax'") or die("Error: " . mysqli_error($connect));
             $row1=mysqli_fetch_array($query1);
@@ -294,9 +294,9 @@ if(isset($_SESSION["id"])) {
     else
     {   
         $query1 = mysqli_query($connect,"SELECT u.UserId, u.Display_Name, u.Picture,
-            u.Last_Login_Info,u.Registered_name, u.Contact_No, u.Mail_Id, ua.Password                                           
+            u.Last_Login_Info,u.Registered_name, u.Contact_No, u.Mail_Id, ua.password_hash                                        
             from user as u 
-            join user_authentication as ua
+            join user_auth as ua
             on u.UserId = ua.UserId
             where u.UserId='$ax'") or die("Error: " . mysqli_error($connect));
         $row1=mysqli_fetch_array($query1);

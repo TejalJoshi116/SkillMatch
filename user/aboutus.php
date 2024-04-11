@@ -258,7 +258,7 @@ if(isset($_SESSION["id"])) {
     <br>
     ● Opportunities for collaboration and networking within the tech community.
     <br>
-    ● Seamless event scheduling to ensure maximum participation and engagement.
+    ● Seamless project scheduling to ensure maximum participation and engagement.
     <br>
     ● User-friendly interface for easy project discovery, registration, and participation.
 </p>
