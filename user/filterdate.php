@@ -329,8 +329,8 @@ End Date
             echo "<td>" . $row1[2] . "</td>";
             echo "<td>" . $row1[3] . "</td>";
             $query2 = mysqli_query($connect,"SELECT c.client_Name
-            FROM projects AS p
-            JOIN project_client_list AS pcl ON p.project_Id = pcl.project_Id
+            FROM projects AS p JOIN project_client_list AS pcl 
+            ON p.project_Id = pcl.project_Id
             JOIN client AS c ON pcl.client_id = c.client_id
             WHERE p.project_Id = $row1[5] AND p.project_Date >= '$sdate' AND p.project_Date <= '$edate'") or die("Error: " . mysqli_error($connect));?>
             <td> <?php 

@@ -5,7 +5,7 @@ session_start();
 if (isset($_POST["Delrew"])) {
     $review_id = $_POST["Delr"];
     $connect = mysqli_connect('localhost', 'root', '', 'skillmatch');
-    if (mysqli_connect_errno($connect)) {
+    if (mysqli_connect_errno()) {
         echo 'Failed to connect to database: ' . mysqli_connect_error();
     } else {
         $query1 = mysqli_query($connect, "DELETE FROM review where Review_Id=$review_id") or die("Error: " . mysqli_error($connect));
