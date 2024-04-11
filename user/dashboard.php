@@ -107,7 +107,7 @@ body {
 
 
 <div class="topnav">
-  <a href="loggedinpage.php">Project</a>
+  <a href="loggedinpage.php">Projects</a>
   <a href="profile.php">User Profile</a>
   <a class= "active" href="dashboard.php">Dashboard</a>
   <a href="schedule.php">Schedule</a>

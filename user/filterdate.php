@@ -247,11 +247,11 @@ h6 {
 
 
 <div class="topnav">
-  <a href="loggedinpage.php">Events</a>
+  <a href="loggedinpage.php">Projects</a>
   <a href="profile.php">User Profile</a>
   <a href="dashboard.php">Dashboard</a>
   <a href="schedule.php">Schedule</a>
-  <a classs = "active" href="filterdate.php">Filter Event By Date</a>
+  <a class ="active" href="filterdate.php">Filter Project By Date</a>
   <a href="view_sent_queries.php">View Unresponded Queries</a>
   <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
@@ -311,9 +311,9 @@ End Date
         
         echo "<table border='2'>
         <tr>
-        </tr>"."<h4>Events Scheduled Between ".$sdate." and ".$edate."</h4>"."<tr>
-        <th width='200px'>Event Name</th>
-        <th>Event Date</th>
+        </tr>"."<h4>Projects Scheduled Between ".$sdate." and ".$edate."</h4>"."<tr>
+        <th width='200px'>Project Name</th>
+        <th>Project Date</th>
         <th>Location Name</th>
         <th>Status</th>
         <th width='200px'>Organizing Clubs</th>

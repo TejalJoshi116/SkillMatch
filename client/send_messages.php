@@ -156,7 +156,7 @@ if(mysqli_connect_errno())
 else{
     if(isset($_POST['submit1'])){
         $eve_stat = $_POST['status_id'];
-        $eve = $_SESSION['eventid'];
+        $eve = $_SESSION['project_Id'];
 
         
         $sql0 = mysqli_query($connect,"SELECT project_Name FROM `projects` WHERE project_Id = $eve");
@@ -181,7 +181,7 @@ else{
     }
 
     if(isset($_POST['submit2'])){
-        $eve = $_SESSION['eventid'];
+        $eve = $_SESSION['project_Id'];
 
         $msg = $_POST['msg'];
         $sqlx = mysqli_query($connect,"SELECT pcl.UserId, u.Registered_Name FROM project_client_list AS pcl
@@ -194,7 +194,7 @@ else{
 
     }
     if(isset($_POST['submit3'])){
-        $eve = $_SESSION['eventid'];
+        $eve = $_SESSION['project_Id'];
         $uid = $_POST['uid'];
         $msg = $_POST['msgs'];
 
@@ -220,7 +220,7 @@ else{
             echo 'Failed to connect to database: '.mysqli_connect_error();
         }
         else{
-            $eve = $_SESSION['eventid'];
+            $eve = $_SESSION['project_Id'];
             $sql = mysqli_query($connect,"SELECT ps.Status_Id, ps.Status FROM project_status AS ps
             JOIN projects AS p ON p.Status_Id = ps.Status_Id WHERE p.project_Id = '$eve'") or die("Error2: " . mysqli_error($connect));
             $row1 = mysqli_fetch_array($sql);    
@@ -278,7 +278,7 @@ else{
             <select name ="uid" id = "uid" required > 
                     <option disabled selected value> -- select an option -- </option>
                     <?php 
-                        $eve = $_SESSION['eventid'];
+                        $eve = $_SESSION['project_Id'];
                         // echo "<option>".$eve."</option>";
                         $conn=mysqli_connect('localhost','root','','skillmatch'); 
                         $result=mysqli_query($conn,"SELECT u.UserId ,u.Registered_Name  FROM `user` AS u 

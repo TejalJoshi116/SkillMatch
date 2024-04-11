@@ -325,7 +325,7 @@ if(isset($_SESSION["id"])) {
                 </td>
                 <td>
                     <select name ="type_id" id = "type_id" > 
-                        <option selected value="<?php echo $row7[0]; ?>"><?php echo $row7[0]; ?></option>
+                        <option selected value="<?php echo $row1[7]; ?>"><?php echo $row1[7]; ?></option>
                         <?php 
                             $conn=mysqli_connect('localhost','root','','skillmatch'); 
                             $result=mysqli_query($conn,'SELECT project_Type_Id,project_Type_Name FROM project_type ORDER BY project_Type_Name'); 

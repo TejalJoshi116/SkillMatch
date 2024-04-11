@@ -106,13 +106,13 @@ body {
 
 
 <div class="topnav">
-  <a href="loggedinpage.php">Project</a>
+  <a href="loggedinpage.php">Projects</a>
   <a href="profile.php">User Profile</a>
   <a href="dashboard.php">Dashboard</a>
-  <a class = "active" href="schedule.php">Schedule</a>
+  <a href="schedule.php">Schedule</a>
   <a href="filterdate.php">Filter project By Date</a>
   <a href="view_sent_queries.php">View Unresponded Queries</a>
-  <a href="user_notifications.php">View Notifications</a>
+  <a class = "active" href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {

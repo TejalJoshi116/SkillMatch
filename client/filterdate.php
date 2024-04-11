@@ -319,7 +319,7 @@ if(isset($_POST['submit'])){
         </tr>"."<h4>Projects Scheduled Between ".$sdate." and ".$edate."</h4>"."<tr>
         <th width='200px'>Project Name</th>
         <th>Project Date</th>
-        <th>Location Name</th>
+       
         <th>Status</th>
         <th width='200px'>Client Contacts</th>
         <th>Contacts</th>
@@ -331,7 +331,7 @@ if(isset($_POST['submit'])){
             echo "<tr>";
             echo "<td>" . $row1[0] . "</td>";
             echo "<td>" . $row1[1] . "</td>";
-            echo "<td>" . $row1[2] . "</td>";
+           // echo "<td>" . $row1[2] . "</td>";
             echo "<td>" . $row1[3] . "</td>";
             $query2 = mysqli_query($connect,"SELECT c.client_Name
             FROM projects AS p 

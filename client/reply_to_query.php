@@ -102,13 +102,13 @@ body {
 
 
 <div class="topnav">
-  <a  href="org_dashboard.php">Dashboard</a>
-  <a href="profile.php">Organizer Profile</a>
-  <a href="eventregister.php">Add New Event</a>
-  <a href="kyc.php">Know Your Club</a>
-  <a href="schedule.php">Schedule</a>
-  <a href="filterdate.php">Filter Events by Date</a>
-  <a  href="aboutus.php">About The Team</a>
+  <a href="client_dashboard.php">Dashboard</a>
+  <a href="profile.php">Client Profile</a>
+  <a href="projectregister.php">Add New Project</a>
+  <!--<a href="kyc.php">Know Your Club</a-->
+  <!--<a href="schedule.php">Schedule</a>-->
+  <a href="filterdate.php">Filter Project by Date</a>
+  <a href="aboutus.php">About The Team</a>
 <?php
 if(isset($_SESSION["id"])) {
   ?>
@@ -120,7 +120,7 @@ if(isset($_SESSION["id"])) {
     }
     else{
 ?>
-<a href="../login/login_organizer.php">You are not logged in</a>
+<a href="../login/login_client.php">You are not logged in</a>
 <?php
     }
     ?>
@@ -134,7 +134,7 @@ if(isset($_SESSION["id"])) {
 <?php
     if(isset($_SESSION["queryid"])){
         $connect=mysqli_connect('localhost','root','','skillmatch');
-        if(mysqli_connect_errno($connect))
+        if(mysqli_connect_errno())
         {
             echo 'Failed to connect to database: '.mysqli_connect_error();
         }
@@ -178,7 +178,7 @@ if(isset($_SESSION["id"])) {
 <?php
     if(isset($_POST["reply_"])){
     $connect=mysqli_connect('localhost','root','','skillmatch');
-    if(mysqli_connect_errno($connect))
+    if(mysqli_connect_errno())
     {
         echo 'Failed to connect to database: '.mysqli_connect_error();
     }

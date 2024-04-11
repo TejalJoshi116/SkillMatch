@@ -245,12 +245,11 @@ if(isset($_SESSION["id"])) {
             echo 'Failed to connect to database: '.mysqli_connect_error();
         }
         else {
-            $query1 = mysqli_query($connect,"SELECT eo.Organizer_Id, eo.Organizer_Name, eo.Description, 
-            eo.Email_Id, eo.Picture, ot.Organizer_type, ot.Organizer_Type_Id                                          
-            from event_organizer as eo 
-            join organizer_type as ot
-            on eo.Organizer_Type_Id = ot.Organizer_Type_Id
-            where eo.Organizer_Id='$ax'") or die("Error: " . mysqli_error($connect));
+            $query1 = mysqli_query($connect, "SELECT client_id, client_Name, Description, Email_Id, Picture
+            FROM client
+            WHERE client_id='$ax'")
+            or die("Error: " . mysqli_error($connect));
+
             $row1=mysqli_fetch_array($query1);
             $output_dir = "../upload/";
             $filename = $_FILES['file']['name']; 
@@ -275,7 +274,7 @@ if(isset($_SESSION["id"])) {
 
                 }
 
-                $sql = "UPDATE `event_organizer` SET `Picture` = '$folder1' WHERE `Organizer_Id` = '$ax'"; 
+                $sql = "UPDATE `client` SET `Picture` = '$folder1' WHERE `client_id` = '$ax'"; 
         
                 // Execute query 
                 $qzzz = mysqli_query($connect, $sql); 
@@ -307,12 +306,11 @@ if(isset($_SESSION["id"])) {
     }
     else
     {   
-        $query1 = mysqli_query($connect,"SELECT eo.Organizer_Id, eo.Organizer_Name, eo.Description, 
-        eo.Email_Id, eo.Picture, ot.Organizer_type, ot.Organizer_Type_Id                                          
-        from event_organizer as eo 
-        join organizer_type as ot
-        on eo.Organizer_Type_Id = ot.Organizer_Type_Id
-        where eo.Organizer_Id='$ax'") or die("Error: " . mysqli_error($connect));
+        $query1 = mysqli_query($connect, "SELECT client_id, client_Name, Description, Email_Id, Picture
+            FROM client
+            WHERE client_id='$ax'")
+            or die("Error: " . mysqli_error($connect));
+
         $row1=mysqli_fetch_array($query1);
         // echo "Thanks for the Input"."<br>";
     } 

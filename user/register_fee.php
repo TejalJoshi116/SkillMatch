@@ -53,7 +53,7 @@ if(isset($_POST["upload"]))
               $query2=mysqli_query($connect,"INSERT into applicants_list (UserId, project_Id) values('$a1',$row1[0])") or die("Error: " . mysqli_error($connect));
               $sql = "UPDATE `applicants_list` SET `upload` = '$folder1' WHERE `UserId` = '$a1' AND `project_Id` = $row1[0]"; 
               $qzzz = mysqli_query($connect, $sql); 
-              echo "<h3><center>".$msg."</center></h3>".'<center><h3>'."Redirecting to Events Page.....".'</center></h3>';
+              echo "<h3><center>".$msg."</center></h3>".'<center><h3>'."Redirecting to Projects Page.....".'</center></h3>';
               echo "<script>setTimeout(\"location.href = 'register.php';\",2500);</script>";
           }
           else{ 
@@ -181,18 +181,17 @@ q
 
 
      <div class="topnahv">
-    <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >Event Management System, NITC</h3>
+    <h3 style="color:green; font-size:2rem; font-family: Verdana,sans-serif;" >SkillMatch</h3>
 
 </div>
 
 
 <div class="topnav">
-  <a href="loggedinpage.php">Events</a>
+  <a href="loggedinpage.php">Projects</a>
   <a href="profile.php">User Profile</a>
   <a href="dashboard.php">Dashboard</a>
-  <a href="kyc.php">Know Your Club</a>
   <a href="schedule.php">Schedule</a>
-  <a href="filterdate.php">Filter Event By Date</a>
+  <a href="filterdate.php">Filter Projects By Date</a>
   <a href="view_sent_queries.php">View Unresponded Queries</a>
   <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>

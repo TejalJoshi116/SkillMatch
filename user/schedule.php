@@ -247,7 +247,7 @@ h6 {
 
 
 <div class="topnav">
-  <a href="loggedinpage.php">Project</a>
+  <a href="loggedinpage.php">Projects</a>
   <a href="profile.php">User Profile</a>
   <a href="dashboard.php">Dashboard</a>
   <a class = "active" href="schedule.php">Schedule</a>

@@ -97,12 +97,12 @@ body {
 
 
 <div class="topnav">
-  <a href="loggedinpage.php">Events</a>
+  <a href="loggedinpage.php">Projects</a>
   <a href="profile.php">User Profile</a>
   <a href="dashboard.php">Dashboard</a>
   <a href="schedule.php">Schedule</a>
-  <a href="filterdate.php">Filter Event By Date</a>
-  <a class= "active" href="view_sent_queries.php">View Unresponded Queries</a>
+  <a href="filterdate.php">Filter Project By Date</a>
+  <a class ="active" href="view_sent_queries.php">View Unresponded Queries</a>
   <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
 <?php
