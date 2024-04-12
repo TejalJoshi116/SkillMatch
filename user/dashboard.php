@@ -230,7 +230,7 @@ if(isset($_SESSION["id"])) {
     {
 
       $a1=$_SESSION["id"];
-      $query1 = mysqli_query($connect, "SELECT DISTINCT p.project_Name, p.project_Date, p.Picture, ps.Status 
+      $query1 = mysqli_query($connect, "SELECT DISTINCT p.project_Name, p.project_Date, p.Picture, ps.Status_Id 
       FROM projects AS p 
       JOIN applicants_list AS al ON al.project_Id = p.project_Id
       JOIN project_status AS ps ON p.Status_Id = ps.Status_Id
@@ -238,6 +238,7 @@ if(isset($_SESSION["id"])) {
       JOIN client AS c ON pcl.client_id = c.client_id
       WHERE p.project_Date >= CURDATE() 
       AND al.UserId = '$a1'
+      AND p.Status_Id = 1      
       ORDER BY p.project_Date") 
       or die("Error: new0 " . mysqli_error($connect));
   

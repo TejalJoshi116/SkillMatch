@@ -408,7 +408,7 @@ if(isset($_SESSION["id"])) {
             <!-- <p class="card-text"style="color:gray;">Status:   -->
               <!-- <?php echo $row1[4]; ?></p> --> 
             
-            <form action="project_progress.php" method="post">
+            <form action="project_submission.php" method="post">
             <input hidden type="text" name="project recieval" value="<?php echo $row1[3]; ?>" />
             <input type="submit" class="btn btn-primary" value="Project Recieval" />
             </form>
@@ -434,6 +434,9 @@ if(isset($_SESSION["id"])) {
             <form action="client_dashboard.php" method="post">
             <input hidden type="text"  name="reply" value="<?php echo $row1[3]; ?>" />
             <input  type="submit" class="btn btn-primary" value="Reply/ Address Queries"/>
+            </form>
+
+    
             </form>
             
          <?php
