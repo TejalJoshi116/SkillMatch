@@ -115,6 +115,8 @@ body {
   <a href="view_sent_queries.php">View Unresponded Queries</a>
   <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
+  <a href="submission_page.php">Submit Project</a>
+
 <?php
 if(isset($_SESSION["id"])) {
   ?>
