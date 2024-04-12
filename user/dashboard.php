@@ -9,6 +9,16 @@ if(isset($_POST['project_name']))
   header("Location:register.php");
   }
 }
+
+if(isset($_POST['submit_project']))
+{
+  if($_SESSION["id"])
+  {
+  $_SESSION["project_name"]=$_POST['submit_project'];
+  header("Location:submission_page.php");
+  }
+}
+
 if(isset($_POST['ask']))
 {
   if($_SESSION["id"])
@@ -115,8 +125,6 @@ body {
   <a href="view_sent_queries.php">View Unresponded Queries</a>
   <a href="user_notifications.php">View Notifications</a>
   <a href="aboutus.php">About The Team</a>
-  <a href="submission_page.php">Submit Project</a>
-
 <?php
 if(isset($_SESSION["id"])) {
   ?>
@@ -143,7 +151,74 @@ if(isset($_SESSION["id"])) {
 
 <h2 style="color:black;">List of Projects Registered In:</h2>
 <br>
-<button type="button" class="collapsible">All Active Projects</button>
+<button type="button" class="collapsible">My Ongoing Projects</button>
+<div class="card lg-12"   id = "content">
+  <?php
+    $connect=mysqli_connect('localhost','root','','skillmatch');
+    if(mysqli_connect_errno())
+    {
+        echo 'Failed to connect to database: '.mysqli_connect_error();
+    }
+    else
+    {
+
+      $a1=$_SESSION["id"];
+      $query1 = mysqli_query($connect, "SELECT DISTINCT p.project_Name, p.project_Date, p.Picture, p.Status_Id 
+      FROM projects AS p 
+      -- JOIN applicants_list AS al ON al.project_Id = p.project_Id
+      -- JOIN project_status AS ps ON p.Status_Id = ps.Status_Id
+      JOIN project_client_list AS pcl ON pcl.project_Id = p.project_Id
+      JOIN client AS c ON pcl.client_id = c.client_id
+      WHERE p.project_End_Time >= CURDATE() 
+      AND pcl.UserId = '$a1'
+      AND p.Status_Id = 4
+      ORDER BY p.project_Date") 
+      or die("Error: new0 " . mysqli_error($connect));
+  
+     
+        echo '<div class="row">' ;
+        while($row1=mysqli_fetch_array($query1))
+        {
+          $row1[2] = "../".$row1[2];
+          echo '<div class="col-lg-3">' ;
+          echo '<div class="card" style="width: 22rem;">' ;
+          ?>
+          <img class="card-img-top" width="300px" height="300px" src="<?php echo $row1[2]; ?>" alt="Card image">
+         <?php
+            echo '<div class="card-body">';
+          ?>
+            <h4 class="card-title"><?php echo $row1[0]; ?></h4>
+            <p class="card-text"style="color:gray;">Date:     <?php echo $row1[1]; ?></p>
+            
+            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[3]; ?></p>
+            <form action="dashboard.php" method="post">
+            <input hidden type="text"  name="project_name" value="<?php echo $row1[0]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="View Project"/>
+            </form>
+            <form action="dashboard.php" method="post">
+            <input hidden type="text"  name="ask" value="<?php echo $row1[0]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="Ask Query to the Organizer"/>
+            </form>
+            <form action="dashboard.php" method="post">
+            <input hidden type="text"  name="submit_project" value="<?php echo $row1[0]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="Submit Project"/>
+            </form>
+            
+          <?php
+          echo '</div>';
+          echo '</div>';
+          echo '</div>';
+          echo '<br>';
+        }
+        echo '</div>';
+      }
+    $connect->close();
+?>
+</div>
+
+
+<br><br>
+<button type="button" class="collapsible">Active Applied Projects</button>
 <div class="card lg-12"   id = "content">
   <?php
     $connect=mysqli_connect('localhost','root','','skillmatch');
@@ -166,25 +241,67 @@ if(isset($_SESSION["id"])) {
       ORDER BY p.project_Date") 
       or die("Error: new0 " . mysqli_error($connect));
   
-      // $a1=$_SESSION["id"];
-      //   $query1=mysqli_query($connect,"select distinct p.project_Name, p.project_Date, p.Picture, pl.Location_Name, ps.Status 
-      //   from projects as p 
-      //   join project_location as pl
-      //   join applicants_list as al
-      //   join project_status as ps 
-      //   join client as c
-      //   join project_client_list as pcl
-      //   join client_type as ct
-      //   on p.Location_Id=pl.Location_Id 
-      //   and p.Status_Id=ps.Status_Id
-      //   and p.project_Id = pcl.project_Id 
-      //   and al.project_Id = p.project_Id
-      //   and pcl.client_id = c.client_id
-      //   and c.client_id = ct.client_id 
-      //   where p.project_Date >= CURDATE() 
-      //   AND al.UserId = '$a1'
-      //   order by p.project_Date") or die("Error: new0 " . mysqli_error($connect));
-        // Change Roll No. to Session Authentication Details
+        echo '<div class="row">' ;
+        while($row1=mysqli_fetch_array($query1))
+        {
+          $row1[2] = "../".$row1[2];
+          echo '<div class="col-lg-3">' ;
+          echo '<div class="card" style="width: 22rem;">' ;
+          ?>
+          <img class="card-img-top" width="300px" height="300px" src="<?php echo $row1[2]; ?>" alt="Card image">
+         <?php
+            echo '<div class="card-body">';
+          ?>
+            <h4 class="card-title"><?php echo $row1[0]; ?></h4>
+            <p class="card-text"style="color:gray;">Date:     <?php echo $row1[1]; ?></p>
+            
+            <p class="card-text"style="color:gray;">Status:   <?php echo $row1[3]; ?></p>
+            <form action="dashboard.php" method="post">
+            <input hidden type="text"  name="project_name" value="<?php echo $row1[0]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="View Project"/>
+            </form>
+            <form action="dashboard.php" method="post">
+            <input hidden type="text"  name="ask" value="<?php echo $row1[0]; ?>" />
+            <input  type="submit" class="btn btn-primary" value="Ask Query to the Organizer"/>
+            </form>
+          <?php
+          echo '</div>';
+          echo '</div>';
+          echo '</div>';
+          echo '<br>';
+        }
+        echo '</div>';
+      }
+    $connect->close();
+?>
+</div>
+<br><br>
+
+<button type="button" class="collapsible">My Complete Projects</button>
+<div class="card lg-12"   id = "content">
+  <?php
+    $connect=mysqli_connect('localhost','root','','skillmatch');
+    if(mysqli_connect_errno())
+    {
+        echo 'Failed to connect to database: '.mysqli_connect_error();
+    }
+    else
+    {
+
+      $a1=$_SESSION["id"];
+      $query1 = mysqli_query($connect, "SELECT DISTINCT p.project_Name, p.project_Date, p.Picture, p.Status_Id 
+      FROM projects AS p 
+      -- JOIN applicants_list AS al ON al.project_Id = p.project_Id
+      -- JOIN project_status AS ps ON p.Status_Id = ps.Status_Id
+      JOIN project_client_list AS pcl ON pcl.project_Id = p.project_Id
+      JOIN client AS c ON pcl.client_id = c.client_id
+      WHERE p.project_End_Time >= CURDATE() 
+      AND pcl.UserId = '$a1'
+      AND p.Status_Id = 3
+      ORDER BY p.project_Date") 
+      or die("Error: new0 " . mysqli_error($connect));
+  
+     
         echo '<div class="row">' ;
         while($row1=mysqli_fetch_array($query1))
         {
@@ -220,9 +337,8 @@ if(isset($_SESSION["id"])) {
 ?>
 </div>
 
-
 <br><br>
-<button type="button" class="collapsible" >All Inactive Projects</button>
+<button type="button" class="collapsible" >Inactive Projects</button>
 <div class="card lg-12"   id = "content">
 <?php
     $connect=mysqli_connect('localhost','root','','skillmatch');

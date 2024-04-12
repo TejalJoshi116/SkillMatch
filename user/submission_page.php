@@ -222,7 +222,7 @@ if(isset($_SESSION["id"])) {
 <div style = "padding-left: 50px;">
 
 <?php
-echo "<h3 style = 'color: green;'> Upload the zip file of Project file (Max 2048 KB)</h3>";
+echo "<h3 style = 'color: green;'> Upload the zip file of Project (Max 2048 KB)</h3>";
     ?>
     <form enctype="multipart/form-data" action="submission_page.php" method="post">
     <input type="file" name="file" id="file" required/> <br> <br>
